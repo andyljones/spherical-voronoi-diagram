@@ -13,24 +13,43 @@ namespace Events
                 return 0;
             }
 
-            var azimuthOfA = AzimuthOfLeftEndpointOf(a);
-            var azimuthOfB = AzimuthOfLeftEndpointOf(b);
+            var leftAzimuthOfA = AzimuthOfLeftEndpointOf(a);
+            var leftAzimuthOfB = AzimuthOfLeftEndpointOf(b);
 
-            var differenceInAzimuth = azimuthOfA - azimuthOfB;
+            var differenceInLeftAzimuth = leftAzimuthOfA - leftAzimuthOfB;
 
-            if (differenceInAzimuth == 0)
+            if (differenceInLeftAzimuth != 0)
             {
-                return 1; // Arbitrary, but neccessary as Compare is used to deduplicate the TreeSet. Stupid mechanism.
+                return Math.Sign(differenceInLeftAzimuth);
             }
             else
             {
-                return Math.Sign(differenceInAzimuth);
+                var rightAzimuthOfA = AzimuthOfRightEndpointOf(a);
+                var rightAzimuthOfB = AzimuthOfRightEndpointOf(b);
+
+                var differenceInRightazimuth = rightAzimuthOfA - rightAzimuthOfB;
+
+                if (differenceInRightazimuth != 0)
+                {
+                    return Math.Sign(differenceInRightazimuth);
+                }
+                else
+                {
+                    return 1; //Arbitrary but necessary to stop treeset deduplicating
+                }
             }
         }
 
         private float AzimuthOfLeftEndpointOf(Arc a)
         {
             var leftAzimuth = Mathf.Atan2(-a.LeftEndpoint.y, a.LeftEndpoint.x);
+
+            return MathMod(leftAzimuth, 2 * Mathf.PI);
+        }
+
+        private float AzimuthOfRightEndpointOf(Arc a)
+        {
+            var leftAzimuth = Mathf.Atan2(-a.RightEndpoint.y, a.RightEndpoint.x);
 
             return MathMod(leftAzimuth, 2 * Mathf.PI);
         }

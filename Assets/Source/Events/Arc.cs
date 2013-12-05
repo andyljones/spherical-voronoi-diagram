@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using C5;
 using UnityEngine;
 using Diag = System.Diagnostics;
 
@@ -11,7 +12,7 @@ namespace Events
         public Endpoint RightEndpoint;
 
         public SiteEvent Site;
-        public CircleEvent CircleEvent;
+        public IPriorityQueueHandle<IEvent> CircleEventHandle;
 
         public Arc()
         {
@@ -94,6 +95,11 @@ namespace Events
         public void ConnectToLeftOf(Arc anotherArc)
         {
             RightEndpoint = anotherArc.LeftEndpoint;
+        }
+
+        public void ConnectToRightOf(Arc anotherArc)
+        {
+            LeftEndpoint = anotherArc.RightEndpoint;
         }
     }
 }

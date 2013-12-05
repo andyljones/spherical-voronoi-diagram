@@ -10,6 +10,13 @@ public class EventQueue : IntervalHeap<IEvent>
 {
     public EventQueue() : base(new LexicographicEventComparer())
     {
-    
+    }
+
+    public void TryDelete(IPriorityQueueHandle<IEvent> handle)
+    {
+        if (handle != null)
+        {
+            Delete(handle);
+        }
     }
 }

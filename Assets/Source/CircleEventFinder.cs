@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Events;
 using UnityEngine;
 
@@ -14,37 +11,49 @@ public class CircleEventFinder
         _beachLine = beachLine;
     }
 
-    public CircleEvent Check(Arc arc, Vector3 pointOnSweepLine)
+    public CircleEvent Check(Arc newArc, Vector3 pointOnSweepLine)
     {
-        var sites = SortedSites(arc);
-        var vectorA = sites[0].Position;
-        var vectorB = sites[1].Position;
-        var vectorC = sites[2].Position;
+        var arcs = SortedArcs(newArc);
+        var vectorA = arcs[0].Site.Position;
+        var vectorB = arcs[1].Site.Position;
+        var vectorC = arcs[2].Site.Position;
 
         var circumcenter = Vector3.Cross(vectorA - vectorB, vectorC - vectorB).normalized;
         var radius = Mathf.Acos(Vector3.Dot(circumcenter, vectorA));
 
-        return new CircleEvent(circumcenter, radius);
-    }
+        var northPole = new Vector3(0, 0, 1);
+        var polarAngleOfCenter = Mathf.Acos(Vector3.Dot(circumcenter.normalized, northPole));
+        var polarAngleOfSweepline = Mathf.Acos(Vector3.Dot(pointOnSweepLine.normalized, northPole));
 
-    private List<SiteEvent> SortedSites(Arc arc)
-    {
-        var siteA = arc.Site;
-        var siteB = _beachLine.CircularPredecessor(arc).Site;
-        var siteC = _beachLine.CircularSuccessor(arc).Site;
-
-        var vectorBA = (siteB.Position - siteA.Position);
-        var vectorCA = (siteC.Position - siteA.Position);
-
-        var areOrdered = Vector3.Dot(Vector3.Cross(vectorBA, vectorCA), siteA.Position) > 0;
-
-        if (areOrdered)
+        if (polarAngleOfCenter + radius > polarAngleOfSweepline)
         {
-            return new List<SiteEvent> { siteA, siteB, siteC };
+            var newCircleEvent = new CircleEvent(newArc, circumcenter, radius);
+            return newCircleEvent;
         }
         else
         {
-            return new List<SiteEvent> { siteA, siteC, siteB };
+            return null;
+        }
+    }
+
+    private List<Arc> SortedArcs(Arc arc)
+    {
+        var arcA = arc;
+        var arcB = _beachLine.CircularPredecessor(arc);
+        var arcC = _beachLine.CircularSuccessor(arc);
+
+        var vectorBA = (arcB.Site.Position - arcA.Site.Position);
+        var vectorCA = (arcC.Site.Position - arcA.Site.Position);
+
+        var areOrdered = Vector3.Dot(Vector3.Cross(vectorBA, vectorCA), arcA.Site.Position) > 0;
+
+        if (areOrdered)
+        {
+            return new List<Arc> { arcA, arcB, arcC };
+        }
+        else
+        {
+            return new List<Arc> { arcA, arcC, arcB };
         }
     }
 }

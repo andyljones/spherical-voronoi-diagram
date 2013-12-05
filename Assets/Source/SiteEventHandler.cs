@@ -1,18 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using C5;
 using Events;
+using UnityEngine;
 
 public class SiteEventHandler
 {
+    public List<VoronoiVertex> VoronoiGraph; 
+
     private readonly BeachLine _beachLine;
     private readonly EventQueue _eventQueue;
     private readonly CircleEventFinder _finder;
 
     public SiteEventHandler(BeachLine beachLine, EventQueue queue)
     {
+        VoronoiGraph = new List<VoronoiVertex>();
         _beachLine = beachLine;
-        _eventQueue = _eventQueue;
+        _eventQueue = queue;
         _finder = new CircleEventFinder(beachLine);
     }
 
@@ -60,21 +65,36 @@ public class SiteEventHandler
     private void CreateArcWithinArc(Arc oldArc, Arc newArc)
     {
         _beachLine.Remove(oldArc);
-
+        _eventQueue.TryDelete(oldArc.CircleEventHandle);
+        
         var newNeighbouringArcs = oldArc.SplitAt(newArc);
+        
         _beachLine.AddAll(newNeighbouringArcs);
         _beachLine.Add(newArc);
 
-        _finder.Check(newNeighbouringArcs.First(), newArc.Site.Position);
-        _finder.Check(newNeighbouringArcs.Last(), newArc.Site.Position);
+        var pointOnSweepline = newArc.Site.Position;
+        CheckArcForCircleEvent(newNeighbouringArcs.First(), pointOnSweepline);
+        CheckArcForCircleEvent(newNeighbouringArcs.Last(), pointOnSweepline);
     }
 
     private void CreateArcBetweenArcs(List<Arc> oldArcs, Arc newArc)
     {
         oldArcs[0].ConnectToLeftOf(newArc);
-        newArc.ConnectToLeftOf(oldArcs[1]);
+        oldArcs[1].ConnectToRightOf(newArc);
+
         _beachLine.Add(newArc);
 
-        _finder.Check(newArc, newArc.Site.Position);
+        VoronoiGraph.Add(new VoronoiVertex { oldArcs.First().Site, oldArcs.Last().Site, newArc.Site });
+    }
+
+    private void CheckArcForCircleEvent(Arc arcToCheck, Vector3 pointOnSweepline)
+    {
+        var circleEvent = _finder.Check(arcToCheck, pointOnSweepline);
+        if (circleEvent != null)
+        {
+            IPriorityQueueHandle<IEvent> handle = null;
+            _eventQueue.Add(ref handle, circleEvent);
+            arcToCheck.CircleEventHandle = handle;
+        }
     }
 }
