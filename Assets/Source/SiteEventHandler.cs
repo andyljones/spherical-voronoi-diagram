@@ -7,11 +7,13 @@ public class SiteEventHandler
 {
     private readonly BeachLine _beachLine;
     private readonly EventQueue _eventQueue;
+    private readonly CircleEventFinder _finder;
 
     public SiteEventHandler(BeachLine beachLine, EventQueue queue)
     {
         _beachLine = beachLine;
         _eventQueue = _eventQueue;
+        _finder = new CircleEventFinder(beachLine);
     }
 
     public void Handle(SiteEvent site)
@@ -58,9 +60,13 @@ public class SiteEventHandler
     private void CreateArcWithinArc(Arc oldArc, Arc newArc)
     {
         _beachLine.Remove(oldArc);
+
         var newNeighbouringArcs = oldArc.SplitAt(newArc);
         _beachLine.AddAll(newNeighbouringArcs);
         _beachLine.Add(newArc);
+
+        _finder.Check(newNeighbouringArcs.First(), newArc.Site.Position);
+        _finder.Check(newNeighbouringArcs.Last(), newArc.Site.Position);
     }
 
     private void CreateArcBetweenArcs(List<Arc> oldArcs, Arc newArc)
@@ -68,5 +74,7 @@ public class SiteEventHandler
         oldArcs[0].ConnectToLeftOf(newArc);
         newArc.ConnectToLeftOf(oldArcs[1]);
         _beachLine.Add(newArc);
+
+        _finder.Check(newArc, newArc.Site.Position);
     }
 }
