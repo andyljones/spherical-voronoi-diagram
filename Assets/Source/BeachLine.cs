@@ -12,7 +12,7 @@ public class BeachLine : TreeSet<Arc>
     {
     }
 
-    public void Insert(SiteEvent site)
+    public void CreateArcAt(SiteEvent site)
     {
         var newArc = new Arc(site);
 
@@ -71,6 +71,24 @@ public class BeachLine : TreeSet<Arc>
         return results;
     }
 
+    public bool TryRemove(Arc arc)
+    {
+        if (this.Contains(arc))
+        {
+            var predecessor = CircularPredecessor(arc);
+            var successor = CircularSuccessor(arc);
+
+            predecessor.ConnectToLeftOf(successor);
+            Remove(arc);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
     private Arc CircularPredecessor(Arc arc)
     {
         Arc predecessor;
@@ -87,7 +105,7 @@ public class BeachLine : TreeSet<Arc>
     {
         Arc successor;
 
-        if (!TryPredecessor(arc, out successor) && !base.IsEmpty)
+        if (!TrySuccessor(arc, out successor) && !base.IsEmpty)
         {
             successor = FindMin();
         }
