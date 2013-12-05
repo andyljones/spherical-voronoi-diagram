@@ -1,10 +1,18 @@
-﻿namespace Events
+﻿using UnityEngine;
+
+namespace Events
 {
     public class SiteEvent
     {
-        public SiteEvent(BeachLine beachline)
+        public readonly Vector3 Position;
+
+        public SiteEvent()
+        {   
+        }
+
+        public SiteEvent(Vector3 position)
         {
-            
+            Position = position;
         }
     }
 }

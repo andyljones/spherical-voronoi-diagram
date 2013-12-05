@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Events
 {
-    public class EventComparer : IComparer<IEvent>
+    public class LexicographicEventComparer : IComparer<IEvent>
     {
         public int Compare(IEvent lhs, IEvent rhs)
         {
