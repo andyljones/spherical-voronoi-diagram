@@ -12,58 +12,21 @@ public class BeachLine : TreeSet<Arc>
     {
     }
 
-    public void CreateArcAt(SiteEvent site)
-    {
-        var newArc = new Arc(site);
-
-        if (Count == 0)
-        {
-            Add(newArc);
-        }
-        else if (Count == 1)
-        {
-            var onlyCurrentArc = this.Single();
-            onlyCurrentArc.ConnectToLeftOf(newArc);
-            newArc.ConnectToLeftOf(onlyCurrentArc);
-            Add(newArc);
-        }
-        else
-        {
-            var containingArcs = ArcsContaining(newArc);
-
-            if (containingArcs.Count == 1)
-            {
-                var containingArc = containingArcs.Single();
-                Remove(containingArc);
-                var newNeighbouringArcs = containingArc.SplitAt(newArc);
-                AddAll(newNeighbouringArcs);
-                Add(newArc);
-            }
-            else if (containingArcs.Count == 2)
-            {
-                containingArcs[0].ConnectToLeftOf(newArc);
-                newArc.ConnectToLeftOf(containingArcs[1]);
-                Add(newArc);
-            }
-            else
-            {
-                throw new InvalidDataException("More than two arcs intersected by the site!");
-            }
-        }
-    }
-
-    private List<Arc> ArcsContaining(Arc arc)
+    public List<Arc> ArcsContaining(Arc arc)
     {
         var results = new List<Arc>();
 
         var predecessor = CircularPredecessor(arc);
-        if (predecessor.Contains(arc))
+        if (predecessor != null && 
+            predecessor.Contains(arc))
         {
             results.Add(predecessor);
         }
 
         var successor = CircularSuccessor(arc);
-        if (successor.Contains(arc) && successor != predecessor)
+        if (successor != null && 
+            successor != predecessor &&
+            successor.Contains(arc))
         {
             results.Add(successor);
         }
@@ -89,7 +52,7 @@ public class BeachLine : TreeSet<Arc>
 
     }
 
-    private Arc CircularPredecessor(Arc arc)
+    public Arc CircularPredecessor(Arc arc)
     {
         Arc predecessor;
 
@@ -101,7 +64,7 @@ public class BeachLine : TreeSet<Arc>
         return predecessor;
     }
 
-    private Arc CircularSuccessor(Arc arc)
+    public Arc CircularSuccessor(Arc arc)
     {
         Arc successor;
 

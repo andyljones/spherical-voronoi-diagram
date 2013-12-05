@@ -1,4 +1,5 @@
-﻿using Events;
+﻿using Comparers;
+using Events;
 using FakeItEasy;
 using FakeItEasy.ExtensionSyntax;
 using FakeItEasy.ExtensionSyntax.Full;

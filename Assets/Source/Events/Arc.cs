@@ -11,6 +11,7 @@ namespace Events
         public Endpoint RightEndpoint;
 
         public SiteEvent Site;
+        public CircleEvent CircleEvent;
 
         public Arc()
         {

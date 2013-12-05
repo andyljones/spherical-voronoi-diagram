@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Events;
 using UnityEngine;
 
-namespace Events
+namespace Comparers
 {
     public class LexicographicEventComparer : IComparer<IEvent>
     {
