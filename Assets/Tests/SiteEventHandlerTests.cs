@@ -23,24 +23,30 @@ namespace Tests
         [Test]
         public void CreateArcAt_WhenSetContainsOneArc_ShouldConnectArcsToEachother()
         {
-            var arc = new Arc(new Vector3(1, 0, 0), new Vector3(1, 0, 0));
+            var arc = new Arc();
             var site = new SiteEvent(new Vector3(-1, 0, 0));
             var beachline = new BeachLine { arc };
             var handler = new SiteEventHandler(beachline, new EventQueue());
 
             handler.Handle(site);
 
-            Assert.That(beachline.First().LeftEndpoint, Is.EqualTo(beachline.Last().RightEndpoint));
-            Assert.That(beachline.First().RightEndpoint, Is.EqualTo(beachline.Last().LeftEndpoint));
+            Assert.That(beachline.First().LeftArc, Is.EqualTo(beachline.Last().RightArc));
+            Assert.That(beachline.First().RightArc, Is.EqualTo(beachline.Last().LeftArc));
         }
 
         [Test]
         public void CreateArcAt_WhenGivenASiteIntersectingOneArc_ShouldSplitOldArc()
         {
             var firstSite = new SiteEvent();
-            var firstArc = new Arc(new Vector3(0, 1, 0), new Vector3(0, -1, 0), firstSite);
+            var firstArc = new Arc
+            {
+                Site = firstSite
+            };
             var secondSite = new SiteEvent();
-            var secondArc = new Arc(new Vector3(0, -1, 0), new Vector3(0, 1, 0), secondSite);
+            var secondArc = new Arc
+            {
+                Site = secondSite
+            };
             var newSite = new SiteEvent(new Vector3(1, 0, 0));
             var beachline = new BeachLine { firstArc, secondArc };
             var handler = new SiteEventHandler(beachline, new EventQueue());
@@ -58,9 +64,15 @@ namespace Tests
         public void CreateArcAt_WhenGivenASiteIntersectingTwoArcs_ShouldAddNewArcBetweenOldArcs()
         {
             var firstSite = new SiteEvent();
-            var firstArc = new Arc(new Vector3(1, 0, 0), new Vector3(-1, 0, 0), firstSite);
+            var firstArc = new Arc
+            {
+                Site = firstSite
+            };
             var secondSite = new SiteEvent();
-            var secondArc = new Arc(new Vector3(-1, 0, 0), new Vector3(1, 0, 0), secondSite);
+            var secondArc = new Arc
+            {
+                Site = secondSite
+            };
             var newSite = new SiteEvent(new Vector3(1, 0, 0));
             var beachline = new BeachLine { firstArc, secondArc };
             var handler = new SiteEventHandler(beachline, new EventQueue());

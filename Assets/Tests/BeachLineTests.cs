@@ -13,16 +13,9 @@ namespace Tests
         [Test]
         public void BeachLine_ShouldStoreArcsInAzimuthalOrder()
         {
-            var endpoints = new List<Endpoint>
-            {
-                new Endpoint(0, -1, 0),
-                new Endpoint(-1, 0, 0),
-                new Endpoint(1, 1, 0),
-            };
-
-            var firstArc = new Arc(endpoints[0], endpoints[1]);
-            var secondArc = new Arc(endpoints[1], endpoints[2]);
-            var thirdArc = new Arc(endpoints[2], endpoints[0]);
+            var firstArc =  new Arc { Site = new SiteEvent(new Vector3(1, 0, 0))};
+            var secondArc = new Arc { Site = new SiteEvent(new Vector3(1, -1, -1)) };
+            var thirdArc = new Arc { Site = new SiteEvent(new Vector3(1, 1, 1)) };
 
             var beachline = new BeachLine {thirdArc, firstArc, secondArc};
 
@@ -36,7 +29,7 @@ namespace Tests
         [Test]
         public void TryRemove_WhenGivenAnArcInBeachline_ShouldRemoveArc()
         {
-            var arc = new Arc(default(Vector3), default(Vector3));
+            var arc = new Arc();
             var beachline = new BeachLine {arc};
 
             beachline.TryRemove(arc);
@@ -47,7 +40,7 @@ namespace Tests
         [Test]
         public void TryRemove_WhenGivenAnArcInBeachline_ShouldReturnTrue()
         {
-            var arc = new Arc(default(Vector3), default(Vector3));
+            var arc = new Arc();
             var beachline = new BeachLine { arc };
 
             Assert.That(beachline.TryRemove(arc), Is.True);
@@ -56,8 +49,8 @@ namespace Tests
         [Test]
         public void TryRemove_WhenGivenAnArcNotInBeachline_ShouldReturnFalse()
         {
-            var firstArc = new Arc(default(Vector3), default(Vector3));
-            var secondArc = new Arc(default(Vector3), default(Vector3));
+            var firstArc = new Arc();
+            var secondArc = new Arc();
             var beachline = new BeachLine { firstArc };
 
             Assert.That(beachline.TryRemove(secondArc), Is.False);
@@ -66,14 +59,15 @@ namespace Tests
         [Test]
         public void TryRemove_WhenGivenAnArcInBeachline_ShouldConnectNeighbours()
         {
-            var firstArc = new Arc(new Vector3(1, 0, 0), new Vector3(0, -1, 0));
-            var secondArc = new Arc(new Vector3(0, -1, 0), new Vector3(-1, 0, 0));
-            var thirdArc = new Arc(new Vector3(-1, 0, 0), new Vector3(1, 0, 0));
+            var firstArc = new Arc();
+            var secondArc = new Arc();
+            var thirdArc = new Arc();
             var beachline = new BeachLine { firstArc, secondArc, thirdArc };
 
             beachline.TryRemove(secondArc);
 
-            Assert.That(firstArc.RightEndpoint, Is.EqualTo(thirdArc.LeftEndpoint));
+            Assert.That(firstArc.RightArc, Is.EqualTo(thirdArc));
+            Assert.That(firstArc.LeftArc, Is.EqualTo(firstArc));
         }
     }
 }

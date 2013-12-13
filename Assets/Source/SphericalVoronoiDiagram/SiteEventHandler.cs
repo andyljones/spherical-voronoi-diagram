@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Assets.Source.SphericalVoronoiDiagram.Events;
 using C5;
 using Events;
 using UnityEngine;
@@ -28,7 +29,7 @@ public class SiteEventHandler
 
     private void CreateArcAt(SiteEvent site)
     {
-        var newArc = new Arc(site);
+        var newArc = new Arc {Site = site};
         var containingArcs = _beachLine.ArcsContaining(newArc);
 
         if (_beachLine.Count == 0)
@@ -53,7 +54,7 @@ public class SiteEventHandler
         }
     }
 
-    private void CreateArcInSingleElementBeachline(Arc newArc)
+    private void CreateArcInSingleElementBeachline(IArc newArc)
     {
         var onlyCurrentArc = _beachLine.Single();
         onlyCurrentArc.ConnectToLeftOf(newArc);
@@ -62,7 +63,7 @@ public class SiteEventHandler
         //TODO: What to do if they're the same polar angle?
     }
 
-    private void CreateArcWithinArc(Arc oldArc, Arc newArc)
+    private void CreateArcWithinArc(IArc oldArc, IArc newArc)
     {
         _beachLine.Remove(oldArc);
         _eventQueue.TryDelete(oldArc.CircleEventHandle);
@@ -77,7 +78,7 @@ public class SiteEventHandler
         CheckArcForCircleEvent(newNeighbouringArcs.Last(), pointOnSweepline);
     }
 
-    private void CreateArcBetweenArcs(List<Arc> oldArcs, Arc newArc)
+    private void CreateArcBetweenArcs(List<IArc> oldArcs, IArc newArc)
     {
         oldArcs[0].ConnectToLeftOf(newArc);
         oldArcs[1].ConnectToRightOf(newArc);
@@ -87,7 +88,7 @@ public class SiteEventHandler
         VoronoiGraph.Add(new VoronoiVertex { oldArcs.First().Site, oldArcs.Last().Site, newArc.Site });
     }
 
-    private void CheckArcForCircleEvent(Arc arcToCheck, Vector3 pointOnSweepline)
+    private void CheckArcForCircleEvent(IArc arcToCheck, Vector3 pointOnSweepline)
     {
         var circleEvent = _finder.Check(arcToCheck, pointOnSweepline);
         if (circleEvent != null)

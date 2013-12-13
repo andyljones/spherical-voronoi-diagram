@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Source.SphericalVoronoiDiagram.Events;
 using C5;
 using Events;
 using UnityEngine;
@@ -44,7 +45,7 @@ public class CircleEventHandler
         }
     }
 
-    private void CheckArcForCircleEvent(Arc arcToCheck, Vector3 pointOnSweepline)
+    private void CheckArcForCircleEvent(IArc arcToCheck, Vector3 pointOnSweepline)
     {
         var circleEvent = _finder.Check(arcToCheck, pointOnSweepline);
         if (circleEvent != null)

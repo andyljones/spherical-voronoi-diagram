@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Source.SphericalVoronoiDiagram.Events;
 using Events;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class CircleEventFinder
         _beachLine = beachLine;
     }
 
-    public CircleEvent Check(Arc newArc, Vector3 pointOnSweepLine)
+    public CircleEvent Check(IArc newArc, Vector3 pointOnSweepLine)
     {
         var arcs = SortedArcs(newArc);
         var vectorA = arcs[0].Site.Position;
@@ -36,7 +37,7 @@ public class CircleEventFinder
         }
     }
 
-    private List<Arc> SortedArcs(Arc arc)
+    private List<IArc> SortedArcs(IArc arc)
     {
         var arcA = arc;
         var arcB = _beachLine.CircularPredecessor(arc);
@@ -49,11 +50,11 @@ public class CircleEventFinder
 
         if (areOrdered)
         {
-            return new List<Arc> { arcA, arcB, arcC };
+            return new List<IArc> { arcA, arcB, arcC };
         }
         else
         {
-            return new List<Arc> { arcA, arcC, arcB };
+            return new List<IArc> { arcA, arcC, arcB };
         }
     }
 }

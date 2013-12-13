@@ -1,15 +1,16 @@
-﻿using UnityEngine;
+﻿using Assets.Source.SphericalVoronoiDiagram.Events;
+using UnityEngine;
 
 namespace Events
 {
     public class CircleEvent : IEvent
     {
         public readonly Vector3 Circumcenter;
-        public readonly Arc CentralArc;
+        public readonly IArc CentralArc;
 
         public Vector3 Position { get; private set; }
 
-        public CircleEvent(Arc arc, Vector3 circumcenter, float radius)
+        public CircleEvent(IArc arc, Vector3 circumcenter, float radius)
         {
             CentralArc = arc;
             Circumcenter = circumcenter;

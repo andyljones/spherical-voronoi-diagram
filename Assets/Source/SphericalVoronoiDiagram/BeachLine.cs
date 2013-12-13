@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Assets.Source.SphericalVoronoiDiagram.Events;
 using Diag = System.Diagnostics;
 using C5;
 using Events;
 
-public class BeachLine : TreeSet<Arc>
+public class BeachLine : TreeSet<IArc>
 {
     public BeachLine() : base(new AzimuthalArcComparer())
     {
     }
 
-    public List<Arc> ArcsContaining(Arc arc)
+    public List<IArc> ArcsContaining(IArc arc)
     {
-        var results = new List<Arc>();
+        var results = new List<IArc>();
 
         var predecessor = CircularPredecessor(arc);
         if (predecessor != null && 
@@ -34,7 +35,7 @@ public class BeachLine : TreeSet<Arc>
         return results;
     }
 
-    public bool TryRemove(Arc arc)
+    public bool TryRemove(IArc arc)
     {
         if (this.Contains(arc))
         {
@@ -52,9 +53,9 @@ public class BeachLine : TreeSet<Arc>
 
     }
 
-    public Arc CircularPredecessor(Arc arc)
+    public IArc CircularPredecessor(IArc arc)
     {
-        Arc predecessor;
+        IArc predecessor;
 
         if (!TryPredecessor(arc, out predecessor) && !base.IsEmpty)
         {
@@ -64,9 +65,9 @@ public class BeachLine : TreeSet<Arc>
         return predecessor;
     }
 
-    public Arc CircularSuccessor(Arc arc)
+    public IArc CircularSuccessor(IArc arc)
     {
-        Arc successor;
+        IArc successor;
 
         if (!TrySuccessor(arc, out successor) && !base.IsEmpty)
         {

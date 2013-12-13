@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Events
 {
-    public class SiteEvent
+    public class SiteEvent : IEvent
     {
-        public readonly Vector3 Position;
+        public Vector3 Position { get; private set; }
 
         public SiteEvent()
         {   
