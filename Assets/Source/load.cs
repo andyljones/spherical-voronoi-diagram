@@ -10,12 +10,12 @@ public class load : MonoBehaviour {
 	{
         var a = new Vector3(1, 0, -1).normalized;
 	    var b = new Vector3(0, -1, 1).normalized;
-	    var h = -.8f;
+	    var h = .8f;
 
 	    MakeEllipse(a, h);
         MakeEllipse(b, h);
 
-	    var p = EndpointOrdering.FindIntersection(new Site(a), new Site(b), h);
+	    var p = new Intersection(new Site(a), new Site(b), new Sweepline(h)).Longitude();
         //var x = Mathf.Sqrt(1 - h*h)*Mathf.Cos(p);
         //var y = Mathf.Sqrt(1 - h*h)*Mathf.Sin(p);
 
