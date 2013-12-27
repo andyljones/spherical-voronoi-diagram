@@ -39,5 +39,29 @@ namespace SphericalVoronoiDiagramTests
 
             // Teardown
         }
+
+        [Theory]
+        [SphericalVectorAndSweeplineData]
+        public void Longitude_WhenConvertedToAPointOnTheEllipse_ShouldBeEquidistantFromBothSitesAndTheSweepline
+            (Intersection sut, Sweepline sweepline)
+        {
+            // Fixture setup
+
+            // Exercise system
+            var longitude = sut.Longitude();
+
+            // Verify outcome
+            var pointOnEllipse = EllipseDrawer.PointOnEllipse(sut.LeftSite.Position, sweepline.Height, longitude);
+
+            var distanceToLeftSite = Mathf.Acos(Vector3.Dot(pointOnEllipse, sut.LeftSite.Position));
+            var distanceToRightSite = Mathf.Acos(Vector3.Dot(pointOnEllipse, sut.RightSite.Position));
+            var distanceToSweepline = Mathf.Abs(Mathf.Acos(sweepline.Height) - Mathf.Acos(pointOnEllipse.z));
+
+            Assert.Equal(distanceToLeftSite, distanceToRightSite, Tolerance);
+            Assert.Equal(distanceToRightSite, distanceToSweepline, Tolerance);
+            Assert.Equal(distanceToSweepline, distanceToLeftSite, Tolerance);
+
+            // Teardown
+        }
     }
 }
