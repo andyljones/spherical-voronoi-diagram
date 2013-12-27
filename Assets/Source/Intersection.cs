@@ -19,20 +19,21 @@ public class Intersection
     {
         var a = LeftSite.Position;
         var b = RightSite.Position;
+        var z = _sweepline.Height;
 
-        var aDeltaZ = a.z - _sweepline.Height;
-        var bDeltaZ = b.z - _sweepline.Height;
+        var A = a.x*(z - b.z) - b.x*(z - a.z);
+        var B = -(a.y*(z - b.z) - b.y*(z - a.z));
+        var c = (a.z - b.z) * Mathf.Sqrt(1 - z*z);
 
-        var B = aDeltaZ * b.x - bDeltaZ * a.x;
-        var A = -(aDeltaZ * b.y - bDeltaZ * a.y);
-        var c = (a.z - b.z) * Mathf.Sqrt(1 - _sweepline.Height*_sweepline.Height);
-
-        var R = Mathf.Sqrt(B * B + A * A);
-        var psi = Mathf.Atan2(B, A);
-
-        Debug.Log("R:" + R);
-        Debug.Log("psi:" + psi * 180 / Math.PI);
+        var R = Mathf.Sqrt(A*A + B*B);
+        //var psi = Mathf.Atan2(A, B);
+        var psi = Mathf.Sign(A) * Mathf.Acos(B/Mathf.Sqrt(A*A + B*B));
 
         return Mathf.Asin(c / R) - psi;
+    }
+
+    public override string ToString()
+    {
+        return "Left Site: " + LeftSite.ToString() + "\n Right Site: " + RightSite.ToString();
     }
 }

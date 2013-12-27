@@ -12,4 +12,9 @@ public class Site
     {
         Position = position.normalized;
     }
+
+    public override string ToString()
+    {
+        return Position.ToString();
+    }
 }

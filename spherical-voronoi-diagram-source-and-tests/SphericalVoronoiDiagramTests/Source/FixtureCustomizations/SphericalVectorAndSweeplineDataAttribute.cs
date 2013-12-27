@@ -8,7 +8,7 @@ namespace SphericalVoronoiDiagramTests.FixtureCustomizations
         public SphericalVectorAndSweeplineDataAttribute()
         {
             Fixture.Customize(new SweeplineCustomization());
-            Fixture.Customizations.Add(new SphericalVectorSpecimenBuilder());
+            Fixture.Customizations.Add(new SphericalVectorSpecimenBuilder(Fixture.Create<Sweepline>()));
         }
     }
 }

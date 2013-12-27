@@ -8,9 +8,9 @@ public class load : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-        var a = new Vector3(1, 0, -1).normalized;
-	    var b = new Vector3(0, -1, 1).normalized;
-	    var h = .8f;
+        var a = new Vector3(-0.9f, 0.4f, 0.1f).normalized;
+	    var b = new Vector3(-0.2f, 0.7f, -0.7f).normalized;
+	    var h = -0.756f;
 
 	    MakeEllipse(a, h);
         MakeEllipse(b, h);
@@ -19,9 +19,11 @@ public class load : MonoBehaviour {
         //var x = Mathf.Sqrt(1 - h*h)*Mathf.Cos(p);
         //var y = Mathf.Sqrt(1 - h*h)*Mathf.Sin(p);
 
-	    var v = EllipseDrawer.PointOnEllipse(a, h, p);
+        var v = EllipseDrawer.PointOnEllipse(a, h, p);
+        //var v = 1.1f * new Vector3(Mathf.Cos(p), -Mathf.Sin(p), 0);
 
         Debug.Log(Vector3.Dot(a, v) + "; " + Vector3.Dot(b, v));
+        Debug.Log(p*180/Mathf.PI);
 
 	    var pObj = new GameObject("p: "+v);
 	    var pRenderer = pObj.AddComponent<MeshRenderer>();

@@ -11,4 +11,9 @@ public class Sweepline
     {
         Height = height;
     }
+
+    public override string ToString()
+    {
+        return Height.ToString();
+    }
 }

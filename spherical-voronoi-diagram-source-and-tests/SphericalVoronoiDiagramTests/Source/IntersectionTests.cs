@@ -11,19 +11,31 @@ namespace SphericalVoronoiDiagramTests
 {
     public class IntersectionTests
     {
+        private const int Tolerance = 3;
+
         [Theory]
         [SphericalVectorAndSweeplineData]
         public void Longitude_WhenConvertedToAPointOnTheEllipse_ShouldBePerpendicularToTheVectorBetweenItsSites
-            (Intersection sut, float sweeplinePosition)
+            (Intersection sut, Sweepline sweepline)
         {
+
+            //var a = new Vector3(1.0f, -0.1f, 0.1f).normalized;
+            //var b = new Vector3(0.0f, -0.4f, -0.9f).normalized;
+            //var h = 0.05f;
+            //sut = new Intersection(new Site(a), new Site(b), new Sweepline(h));
+
             // Fixture setup
             var vectorBetweenSites = sut.LeftSite.Position - sut.RightSite.Position;
 
             // Exercise system
-
+            var longitude = sut.Longitude();
 
             // Verify outcome
-            Assert.True(false, "Test not implemented");
+            var pointOnEllipse = EllipseDrawer.PointOnEllipse(sut.LeftSite.Position, sweepline.Height, longitude);
+
+            var result = Vector3.Dot(vectorBetweenSites, pointOnEllipse);
+
+            Assert.Equal(0, result, Tolerance);
 
             // Teardown
         }

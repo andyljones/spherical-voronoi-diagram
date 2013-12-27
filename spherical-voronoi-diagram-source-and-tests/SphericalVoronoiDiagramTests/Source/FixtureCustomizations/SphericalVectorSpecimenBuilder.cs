@@ -8,10 +8,12 @@ namespace SphericalVoronoiDiagramTests.FixtureCustomizations
     public class SphericalVectorSpecimenBuilder : ISpecimenBuilder
     {
         private readonly System.Random _random;
+        private readonly Sweepline _sweepline;
 
-        public SphericalVectorSpecimenBuilder()
+        public SphericalVectorSpecimenBuilder(Sweepline sweepline)
         {
             _random = new System.Random();
+            _sweepline = sweepline;
         }
 
         public object Create(object request, ISpecimenContext context)
@@ -22,7 +24,7 @@ namespace SphericalVoronoiDiagramTests.FixtureCustomizations
                 return new NoSpecimen(request);
             }
 
-            var z = (float)(-1.0f + 2*_random.NextDouble());
+            var z = (float)(_sweepline.Height + (1-_sweepline.Height)*_random.NextDouble());
             var longitude = (float) (2*Mathf.PI * _random.NextDouble());
 
             var x = Mathf.Sqrt(1 - z*z)*Mathf.Cos(longitude);
