@@ -54,6 +54,5 @@ namespace SphericalVoronoiDiagramTests
         {
             return ((x%m) + m)%m;
         }
-
     }
 }

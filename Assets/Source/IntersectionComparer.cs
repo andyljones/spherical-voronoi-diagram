@@ -4,8 +4,8 @@ public class IntersectionComparer : IComparer<Intersection>
 {
     public int Compare(Intersection x, Intersection y)
     {
-        var leftLongitude = x.Longitude();
-        var rightLongitude = y.Longitude();
+        var leftLongitude = x.Azimuth;
+        var rightLongitude = y.Azimuth;
 
         return leftLongitude.CompareTo(rightLongitude);
     }

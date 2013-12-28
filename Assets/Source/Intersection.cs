@@ -6,6 +6,8 @@ public class Intersection
     public readonly Site LeftSite;
     public readonly Site RightSite;
 
+    public float Azimuth { get { return CalculateAzimuth(); } }
+
     private readonly Sweepline _sweepline;
 
     public Intersection(Site leftSite, Site rightSite, Sweepline sweepline)
@@ -15,8 +17,13 @@ public class Intersection
         _sweepline = sweepline;
     }
 
-    public float Longitude()
+    private float CalculateAzimuth()
     {
+        if (RightSite == null)
+        {
+            return LeftSite.Azimuth;
+        }
+
         var a = LeftSite.Position;
         var b = RightSite.Position;
         var z = _sweepline.Height;

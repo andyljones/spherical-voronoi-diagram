@@ -15,7 +15,7 @@ public class load : MonoBehaviour {
 	    MakeEllipse(a, h);
         MakeEllipse(b, h);
 
-	    var p = new Intersection(new Site(a), new Site(b), new Sweepline(h)).Longitude();
+	    var p = new Intersection(new Site(a), new Site(b), new Sweepline(h)).Azimuth;
         //var x = Mathf.Sqrt(1 - h*h)*Mathf.Cos(p);
         //var y = Mathf.Sqrt(1 - h*h)*Mathf.Sin(p);
 
