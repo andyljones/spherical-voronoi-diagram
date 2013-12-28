@@ -1,5 +1,4 @@
-﻿using Ploeh.AutoFixture.Xunit;
-using SphericalVoronoiDiagramTests.FixtureCustomizations;
+﻿using SphericalVoronoiDiagramTests.DataAttributes;
 using UnityEngine;
 using Xunit;
 using Xunit.Extensions;

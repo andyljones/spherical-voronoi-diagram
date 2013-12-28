@@ -8,8 +8,8 @@ public class load : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-        var a = new Vector3(6f, 0f, 1f).normalized;
-	    var b = new Vector3(0f, -1f, 1f).normalized;
+        var a = new Vector3(-6f, -6f, 6f).normalized;
+	    var b = new Vector3(-4f, 4f, 8f).normalized;
 	    var h = 0f;
 
 	    MakeEllipse(a, h);
@@ -19,7 +19,7 @@ public class load : MonoBehaviour {
 	    var siteB = new Site(b);
 	    var arcA = new Arc(siteA, new Sweepline(h)) {LeftNeighbour = siteB, RightNeighbour = siteB};
 
-	    var p = arcA.AzimuthOfLeftIntersection();
+	    var p = arcA.AzimuthOfRightIntersection();
         //var x = Mathf.Sqrt(1 - h*h)*Mathf.Cos(p);
         //var y = Mathf.Sqrt(1 - h*h)*Mathf.Sin(p);
 

@@ -10,23 +10,52 @@ using UnityEngine;
 public class Beachline : IEnumerable<Arc>
 {
     private readonly Skiplist<Arc> _intersections;
-    private readonly Sweepline _sweepline;
+    public readonly Sweepline Sweepline;
 
-    public Beachline(Sweepline sweepline)
+    public int Count { get; private set; }
+
+    public Beachline()
     {
-        _sweepline = sweepline;
+        Sweepline = new Sweepline(1);
         _intersections = new Skiplist<Arc>();
-    }
-
-    public Beachline(IEnumerable<Arc> intersections, Sweepline sweepline)
-        : this(sweepline)
-    {
-        _intersections = SkiplistFactory.CreateFrom(intersections);
     }
 
     public void Insert(Site site)
     {
-        throw new NotImplementedException();
+        if (Count <= 1)
+        {
+            Sweepline.Height = site.Position.z;
+            var arc = new Arc(site, Sweepline);
+            _intersections.Add(arc);
+
+            var node = _intersections.FetchNode(arc);
+            arc.LeftNeighbour = node.Left.Key.Site;
+            arc.RightNeighbour = node.Right.Key.Site;
+
+            node.Left.Key.RightNeighbour = arc.Site;
+            node.Right.Key.LeftNeighbour = arc.Site;
+
+            Count++;
+        }
+        else
+        {
+            Sweepline.Height = site.Position.z;
+            var arcA = new Arc(site, Sweepline);
+
+            var arcBeingSplit = _intersections.FetchNode(arcA).Key;
+            arcA.LeftNeighbour = arcBeingSplit.Site;
+            arcA.RightNeighbour = arcBeingSplit.Site;
+
+            var arcB = new Arc(arcBeingSplit.Site, Sweepline);
+            arcB.LeftNeighbour = site;
+            arcB.RightNeighbour = arcBeingSplit.RightNeighbour;
+
+            arcBeingSplit.RightNeighbour = site;
+
+            _intersections.Add(arcA);
+            _intersections.Add(arcB);
+        }
+
     }
 
     public IEnumerator<Arc> GetEnumerator()

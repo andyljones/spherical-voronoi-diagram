@@ -1,7 +1,7 @@
-﻿using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.Xunit;
+﻿using Ploeh.AutoFixture.Xunit;
+using SphericalVoronoiDiagramTests.FixtureCustomizations;
 
-namespace SphericalVoronoiDiagramTests.FixtureCustomizations
+namespace SphericalVoronoiDiagramTests.DataAttributes
 {
     public class SphericalVectorAndSweeplineDataAttribute : AutoDataAttribute
     {

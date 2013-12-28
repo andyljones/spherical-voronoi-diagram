@@ -1,4 +1,4 @@
-﻿using SphericalVoronoiDiagramTests.FixtureCustomizations;
+﻿using SphericalVoronoiDiagramTests.DataAttributes;
 using UnityEngine;
 using Xunit;
 using Xunit.Extensions;
@@ -31,7 +31,7 @@ namespace SphericalVoronoiDiagramTests
 
         [Theory]
         [SphericalVectorAndSweeplineData]
-        public void Azimuth_WhenBothSitesAreDefined_ShouldBeEquidistantFromBothSitesAndTheSweeplineWhenConvertedToAPointOnTheEllipse
+        public void AzimuthOfLeftIntersection_WhenBothSitesAreDefined_ShouldBeEquidistantFromBothSitesAndTheSweeplineWhenConvertedToAPointOnTheEllipse
             (Site siteA, Site siteB, Sweepline sweepline)
         {
             // Fixture setup

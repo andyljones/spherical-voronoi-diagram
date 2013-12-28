@@ -22,13 +22,23 @@ public class Arc : IComparable<Arc>
 
     public float AzimuthOfLeftIntersection()
     {
-        if (Equals(LeftNeighbour.Position, Site.Position))
+        return AzimuthOfIntersectionBetween(LeftNeighbour, Site);
+    }
+
+    public float AzimuthOfRightIntersection()
+    {
+        return AzimuthOfIntersectionBetween(Site, RightNeighbour);
+    }
+
+    private float AzimuthOfIntersectionBetween(Site siteA, Site siteB)
+    {
+        if (Equals(siteA.Position, siteB.Position))
         {
-            return Site.Azimuth;
+            return siteA.Azimuth;
         }
 
-        var a = Site.Position;
-        var b = LeftNeighbour.Position;
+        var a = siteA.Position;
+        var b = siteB.Position;
         var z = _sweepline.Height;
 
         var A = a.x * (z - b.z) - b.x * (z - a.z);
@@ -48,9 +58,19 @@ public class Arc : IComparable<Arc>
             180 / Mathf.PI * AzimuthOfLeftIntersection());
     }
 
-
     public int CompareTo(Arc otherArc)
     {
-        return AzimuthOfLeftIntersection().CompareTo(otherArc.AzimuthOfLeftIntersection());
+        //TODO: Test.
+        var compareOnLeft = AzimuthOfLeftIntersection().CompareTo(otherArc.AzimuthOfLeftIntersection());
+        var compareOnRight = AzimuthOfRightIntersection().CompareTo(otherArc.AzimuthOfRightIntersection());
+
+        if (compareOnLeft != 0)
+        {
+            return compareOnLeft;
+        }
+        else
+        {
+            return compareOnRight;
+        }
     }
 }
