@@ -61,16 +61,11 @@ Thumbs.db
 *.opensdf
 *.unsuccessfulbuild
 ipch/
-[Oo]bj/
-[Bb]in
-[Dd]ebug*/
-[Rr]elease*/
-/**/[Oo]bj/
-/**/[Bb]in/
-/**/[Dd]ebug/
-/**/[Rr]elease/
+**/[Oo]bj/
+**/[Bb]in
+**/[Dd]ebug*/
+**/[Rr]elease*/
 Ankh.NoLoad
-/spherical-voronoi-diagram-source-and-tests/
 
 #MonoDevelop
 *.pidb
