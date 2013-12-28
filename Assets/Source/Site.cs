@@ -17,12 +17,14 @@ public class Site
 
     public override string ToString()
     {
-        return Position.ToString();
+        return String.Format("({0,3:N0},{1,3:N0})",
+            180 / Mathf.PI * Mathf.Acos(Position.z),
+            180 / Mathf.PI * Azimuth);
     }
 
-    public float CalculateAzimuth()
+    private float CalculateAzimuth()
     {
-        return MathMod(Mathf.Atan2(Position.y, Position.x), 2*Mathf.PI);
+        return Mathf.Atan2(Position.y, Position.x);
     }
 
     private static float MathMod(float x, float m)
