@@ -15,9 +15,6 @@ public static class IntersectionOrderer
 
     private static int LinearCompare(Intersection x, Intersection y)
     {
-        var leftLongitude = x.Azimuth;
-        var rightLongitude = y.Azimuth;
-
-        return leftLongitude.CompareTo(rightLongitude);
+        return x.CompareTo(y);
     }
 }

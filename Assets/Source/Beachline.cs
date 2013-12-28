@@ -1,13 +1,27 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CyclicalSkipList;
 using UnityEngine;
 
-public class Beachline
+public class Beachline : IEnumerable<Intersection>
 {
-    private Skiplist<Vector3> _intersections;
+    private readonly Skiplist<Intersection> _intersections;
 
+    public Beachline(IEnumerable<Intersection> intersections)
+    {
+        _intersections = SkiplistFactory.CreateFrom(intersections);
+    }
 
+    public IEnumerator<Intersection> GetEnumerator()
+    {
+        return _intersections.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class Intersection
+public class Intersection : IComparable<Intersection>
 {
     public Site LeftSite { get; set; }
     public Site RightSite { get; set; }
@@ -42,5 +42,10 @@ public class Intersection
     public override string ToString()
     {
         return "Left Site: " + LeftSite.ToString() + "\n Right Site: " + RightSite.ToString();
+    }
+
+    public int CompareTo(Intersection y)
+    {
+        return Azimuth.CompareTo(y.Azimuth);
     }
 }

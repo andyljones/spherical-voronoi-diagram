@@ -3,12 +3,14 @@ using Ploeh.AutoFixture.Xunit;
 
 namespace SphericalVoronoiDiagramTests.FixtureCustomizations
 {
-    public class SphericalVectorAndSweeplineDataAttribute : AutoDataAttribute
+    public class BeachlineDataAttribute : AutoDataAttribute
     {
-        public SphericalVectorAndSweeplineDataAttribute()
+        public BeachlineDataAttribute(int count)
         {
+            Fixture.RepeatCount = count;
             Fixture.Customize(new SweeplineCustomization());
             Fixture.Customize(new SphericalVectorCustomization());
+            Fixture.Customize(new BeachlineCustomization());
         }
     }
 }
