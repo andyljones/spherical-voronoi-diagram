@@ -60,5 +60,74 @@ namespace SphericalVoronoiDiagramTests
 
             // Teardown
         }
+
+        [Theory]
+        [SphericalVectorAndSweeplineData]
+        public void InOrder_ForThreeIntersectionsOrderedByNondecreasingAzimuthWithTheFirstTwoElementsEqual_ShouldReturnTrue
+            (List<Intersection> intersections)
+        {
+            // Fixture setup
+            intersections = intersections.OrderBy(intersection => intersection.Azimuth).ToList();
+
+            // Exercise system
+            var result = IntersectionOrderer.InOrder(intersections[0], intersections[0], intersections[2]);
+
+            // Verify outcome
+            Assert.True(result);
+
+            // Teardown
+        }
+
+        [Theory]
+        [SphericalVectorAndSweeplineData]
+        public void InOrder_ForThreeIntersectionsOrderedByNondecreasingAzimuthWithTheLastTwoElementsEqual_ShouldReturnFalse
+            (List<Intersection> intersections)
+        {
+            // Fixture setup
+            intersections = intersections.OrderBy(intersection => intersection.Azimuth).ToList();
+
+            // Exercise system
+            var result = IntersectionOrderer.InOrder(intersections[0], intersections[1], intersections[1]);
+
+            // Verify outcome
+            Assert.False(result);
+
+            // Teardown
+        }
+
+        [Theory]
+        [SphericalVectorAndSweeplineData]
+        public void InOrder_ForThreeIntersectionsWithEqualFirstAndLastAzimuths_ShouldReturnTrue
+            (List<Intersection> intersections)
+        {
+            // Fixture setup
+            intersections = intersections.OrderBy(intersection => intersection.Azimuth).ToList();
+
+            // Exercise system
+            var result = IntersectionOrderer.InOrder(intersections[0], intersections[1], intersections[0]);
+
+            // Verify outcome
+            Assert.True(result);
+
+            // Teardown
+        }
+
+
+        [Theory]
+        [SphericalVectorAndSweeplineData]
+        public void InOrder_ForThreeIntersectionsWithAllEqualAzimuths_ShouldReturnTrue
+            (List<Intersection> intersections)
+        {
+            // Fixture setup
+            intersections = intersections.OrderBy(intersection => intersection.Azimuth).ToList();
+
+            // Exercise system
+            var result = IntersectionOrderer.InOrder(intersections[0], intersections[0], intersections[0]);
+
+            // Verify outcome
+            Assert.True(result);
+
+            // Teardown
+        }
     }
 }
