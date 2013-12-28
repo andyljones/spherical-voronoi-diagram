@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Intersection
 {
-    public readonly Site LeftSite;
-    public readonly Site RightSite;
+    public Site LeftSite { get; set; }
+    public Site RightSite { get; set; }
 
     public float Azimuth { get { return CalculateAzimuth(); } }
 
@@ -19,9 +19,9 @@ public class Intersection
 
     private float CalculateAzimuth()
     {
-        if (RightSite == null)
+        if (LeftSite == null)
         {
-            return LeftSite.Azimuth;
+            return RightSite.Azimuth;
         }
 
         var a = LeftSite.Position;

@@ -12,13 +12,13 @@ namespace SphericalVoronoiDiagramTests
 
         [Theory]
         [SphericalVectorAndSweeplineData]
-        public void Azimuth_WhenRightSiteIsUndefined_ShouldReturnLongitudeOfLeftSite
-            (Site leftSite, Sweepline sweepline)
+        public void Azimuth_WhenLeftSiteIsNull_ShouldReturnAzimuthOfRightSite
+            (Intersection sut, Sweepline sweepline)
         {
             // Fixture setup
-            var expectedResult = leftSite.Azimuth;
+            sut.LeftSite = null;
 
-            var sut = new Intersection(leftSite, null, sweepline);
+            var expectedResult = sut.RightSite.Azimuth;
 
             // Exercise system
             var result = sut.Azimuth;
