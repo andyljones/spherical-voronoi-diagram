@@ -24,7 +24,7 @@ public class Beachline : IEnumerable<Arc>
     {
         if (Count <= 1)
         {
-            Sweepline.Height = site.Position.z;
+            Sweepline.Z = site.Position.z;
             var arc = new Arc(site, Sweepline);
             _intersections.Add(arc);
 
@@ -39,21 +39,25 @@ public class Beachline : IEnumerable<Arc>
         }
         else
         {
-            Sweepline.Height = site.Position.z;
+            Sweepline.Z = site.Position.z;
             var arcA = new Arc(site, Sweepline);
 
             var arcBeingSplit = _intersections.FetchNode(arcA).Key;
+
+            Debug.Log(arcBeingSplit);
             arcA.LeftNeighbour = arcBeingSplit.Site;
             arcA.RightNeighbour = arcBeingSplit.Site;
 
             var arcB = new Arc(arcBeingSplit.Site, Sweepline);
-            arcB.LeftNeighbour = site;
-            arcB.RightNeighbour = arcBeingSplit.RightNeighbour;
+            arcB.LeftNeighbour = arcBeingSplit.LeftNeighbour;
+            arcB.RightNeighbour = site;
 
-            arcBeingSplit.RightNeighbour = site;
+            arcBeingSplit.LeftNeighbour = site;
 
-            _intersections.Add(arcA);
             _intersections.Add(arcB);
+            _intersections.Add(arcA);
+
+            Count++;
         }
 
     }
@@ -66,5 +70,10 @@ public class Beachline : IEnumerable<Arc>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    public override string ToString()
+    {
+        return BeachlineStringFormatter.ConvertToString(this);
     }
 }

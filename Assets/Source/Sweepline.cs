@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 public class Sweepline
 {
-    public float Height;
+    public float Z;
 
-    public Sweepline(float height)
+    public Sweepline(float z)
     {
-        Height = height;
+        Z = z;
+    }
+
+    public float Colatitude()
+    {
+        return Mathf.Acos(Z);
     }
 
     public override string ToString()
     {
-        return Height.ToString();
+        return Z.ToString();
     }
 }

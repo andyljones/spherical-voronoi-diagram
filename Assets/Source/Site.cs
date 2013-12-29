@@ -8,8 +8,6 @@ public class Site
 {
     public readonly Vector3 Position;
 
-    public float Azimuth { get { return CalculateAzimuth(); } }
-
     public Site(Vector3 position)
     {
         Position = position.normalized;
@@ -19,16 +17,16 @@ public class Site
     {
         return String.Format("({0,3:N0},{1,3:N0})",
             180 / Mathf.PI * Mathf.Acos(Position.z),
-            180 / Mathf.PI * Azimuth);
+            180 / Mathf.PI * Azimuth());
     }
 
-    private float CalculateAzimuth()
+    public float Azimuth()
     {
-        return Mathf.Atan2(Position.y, Position.x);
+        return Mathf.Atan2(-Position.y, Position.x);
     }
 
-    private static float MathMod(float x, float m)
+    public float Colatitude()
     {
-        return ((x % m) + m) % m;
+        return Mathf.Acos(Position.z);
     }
 }

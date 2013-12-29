@@ -19,7 +19,7 @@ namespace SphericalVoronoiDiagramTests
             var longitude = (float) (2*Mathf.PI*new System.Random().NextDouble());
 
             // Exercise system
-            var result = EllipseDrawer.PointOnEllipse(focus, sweepline.Height, longitude);
+            var result = BeachlineDrawer.PointOnEllipse(focus, sweepline.Height, longitude);
 
             // Verify outcome
             var distanceFromSite = Mathf.Acos(Vector3.Dot(result, focus));
@@ -39,7 +39,7 @@ namespace SphericalVoronoiDiagramTests
             var expectedLongitude = (float)(2 * Mathf.PI * new System.Random().NextDouble());
 
             // Exercise system
-            var result = EllipseDrawer.PointOnEllipse(focus, sweepline.Height, expectedLongitude);
+            var result = BeachlineDrawer.PointOnEllipse(focus, sweepline.Height, expectedLongitude);
 
             // Verify outcome
             var actualLongitude = MathMod(Mathf.Atan2(-result.y, result.x), 2*Mathf.PI);

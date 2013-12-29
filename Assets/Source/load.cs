@@ -8,38 +8,21 @@ public class load : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-        var a = new Vector3(-6f, -6f, 6f).normalized;
-	    var b = new Vector3(-4f, 4f, 8f).normalized;
-	    var h = 0f;
+        var beachline = new Beachline();
+        beachline.Insert(new Site(new Vector3(1f, 0f, 1f)));
+        beachline.Insert(new Site(new Vector3(2f, 0f, 1f)));
+        beachline.Insert(new Site(new Vector3(4f, 0f, 1f)));
+        beachline.Insert(new Site(new Vector3(8f, 0f, 1f)));
 
-	    MakeEllipse(a, h);
-        MakeEllipse(b, h);
+	    beachline.Sweepline.Z = 0.08f;
+        Debug.Log(beachline);
 
-	    var siteA = new Site(a);
-	    var siteB = new Site(b);
-	    var arcA = new Arc(siteA, new Sweepline(h)) {LeftNeighbour = siteB, RightNeighbour = siteB};
+	    BeachlineDrawer.DrawBeachline(beachline);
 
-	    var p = arcA.AzimuthOfRightIntersection();
-        //var x = Mathf.Sqrt(1 - h*h)*Mathf.Cos(p);
-        //var y = Mathf.Sqrt(1 - h*h)*Mathf.Sin(p);
+        //var intersection = BeachlineDrawer.PointOnEllipse(beachline.First(), beachline.First().AzimuthOfLeftIntersection());
+        //DrawLineThrough(intersection);
 
-        var v = EllipseDrawer.PointOnEllipse(a, h, p);
-        //var v = 1.1f * new Vector3(Mathf.Cos(p), -Mathf.Sin(p), 0);
-
-        Debug.Log(Vector3.Dot(a, v) + "; " + Vector3.Dot(b, v));
-        Debug.Log(p*180/Mathf.PI);
-
-	    var pObj = new GameObject("p: "+v);
-	    var pRenderer = pObj.AddComponent<MeshRenderer>();
-	    var pFilter = pObj.AddComponent<MeshFilter>();
-        pFilter.mesh.vertices = new[] { 1.5f * v, new Vector3(0, 0, 0) };
-        pFilter.mesh.SetIndices(Enumerable.Range(0, 2).ToArray(), MeshTopology.LineStrip, 0);
-
-        //var poleObj = new GameObject("Pole");
-        //var poleRenderer = poleObj.AddComponent<MeshRenderer>();
-        //var poleFilter = poleObj.AddComponent<MeshFilter>();
-        //poleFilter.mesh.vertices = new[] {new Vector3(0, 0, -1.5f), new Vector3(0, 0, 1.5f)};
-        //poleFilter.mesh.SetIndices(Enumerable.Range(0, 2).ToArray(), MeshTopology.LineStrip, 0);
+        DrawLineThrough(new Vector3(1, 0, 0));
 	}
 	
 	// Update is called once per frame
@@ -47,15 +30,12 @@ public class load : MonoBehaviour {
 	
 	}
 
-    private static void MakeEllipse(Vector3 focus, float height)
+    private void DrawLineThrough(Vector3 vector)
     {
-        const int count = 1000;
-
-        var ellipsePoints = EllipseDrawer.PointsOnEllipse(focus, height, count);
-        var ellipseObj = new GameObject("Ellipse" + focus);
-        var ellipseRenderer = ellipseObj.AddComponent<MeshRenderer>();
-        var ellipseFilter = ellipseObj.AddComponent<MeshFilter>();
-        ellipseFilter.mesh.vertices = ellipsePoints.ToArray();
-        ellipseFilter.mesh.SetIndices(Enumerable.Range(0, count+1).ToArray(), MeshTopology.LineStrip, 0);
+        var vectorObject = new GameObject("Point " + vector);
+        var vectorRenderer = vectorObject.AddComponent<MeshRenderer>();
+        var vectorMeshFilter = vectorObject.AddComponent<MeshFilter>();
+        vectorMeshFilter.mesh.vertices = new[] { 1.1f *vector, new Vector3(0, 0, 0) };
+        vectorMeshFilter.mesh.SetIndices(Enumerable.Range(0, 2).ToArray(), MeshTopology.LineStrip, 0);
     }
 }

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using CyclicalSkipList;
 using SphericalVoronoiDiagramTests.DataAttributes;
 using Xunit;
 using Xunit.Extensions;
@@ -85,6 +88,8 @@ namespace SphericalVoronoiDiagramTests
             var result1 = sut.First();
             var result2 = sut.Last();
 
+            Debug.WriteLine(sut);
+
             Assert.Equal(result2.Site, result1.LeftNeighbour);
             Assert.Equal(result2.Site, result1.RightNeighbour);
 
@@ -139,6 +144,9 @@ namespace SphericalVoronoiDiagramTests
             var expectedResult = sites.Skip(1).Concat(sites.Take(1)).ToList();
             var result = sut.Select(arc => arc.RightNeighbour).ToList();
 
+            Debug.WriteLine(expectedResult);
+            Debug.WriteLine(result);
+
             Assert.Equal(expectedResult, result);
 
             // Teardown
@@ -159,6 +167,8 @@ namespace SphericalVoronoiDiagramTests
             sut.Insert(anonymousSiteB);
             sut.Insert(anonymousSiteC);
 
+            Debug.WriteLine(sut);
+
             // Verify outcome
             var sites = sut.Select(arc => arc.Site).ToList();
             var expectedResult = sites.Skip(sites.Count-1).Concat(sites.Take(sites.Count-1)).ToList();
@@ -171,7 +181,7 @@ namespace SphericalVoronoiDiagramTests
 
         [Theory]
         [BeachlineData(3)]
-        public void Insert_ingThreeSitesIntoAnEmptyBeachlineInDescendingOrderOfHeight_ShouldGiveArcsOrderedByTheirLeftThenRightAzimuth
+        public void Insert_ingThreeSitesIntoAnEmptyBeachlineInDescendingOrderOfHeight_ShouldGiveArcsOrderedByTheAverageAzimuthOfTheirEndpoints
             (Beachline sut, List<Site> anonymousSites)
         {
             // Fixture setup
@@ -179,17 +189,21 @@ namespace SphericalVoronoiDiagramTests
             var anonymousSiteB = anonymousSites[1];
             var anonymousSiteC = anonymousSites[2];
 
+            Func<Arc, Arc, Arc, bool> inOrder = new CompareToCyclicOrdererAdapter<Arc>(Comparer<Arc>.Default.Compare).InOrder;
+
             // Exercise system
             sut.Insert(anonymousSiteA);
             sut.Insert(anonymousSiteB);
             sut.Insert(anonymousSiteC);
 
             // Verify outcome
-            var sites = sut.Select(arc => arc.Site).ToList();
-            var expectedResult = sites.Skip(sites.Count - 1).Concat(sites.Take(sites.Count - 1)).ToList();
-            var result = sut.Select(arc => arc.LeftNeighbour).ToList();
-
-            Assert.Equal(expectedResult, result);
+            var arcs = sut.ToList();
+            for (int i = 1; i < arcs.Count-1; i++)
+            {
+                Assert.True(inOrder(arcs[i-1], arcs[i], arcs[i+1]));
+            }
+            Assert.True(inOrder(arcs[arcs.Count - 2], arcs[arcs.Count - 1], arcs[0]));            
+            Assert.True(inOrder(arcs[arcs.Count-1], arcs[0], arcs[1]));
 
             // Teardown
         }
