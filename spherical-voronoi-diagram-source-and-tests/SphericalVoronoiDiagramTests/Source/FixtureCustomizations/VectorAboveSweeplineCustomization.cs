@@ -17,7 +17,7 @@ namespace SphericalVoronoiDiagramTests.FixtureCustomizations
 
         private Vector3 CreateSphericalVector(Sweepline sweepline)
         {
-            var z = (float)(sweepline.Height + (1-sweepline.Height)*_random.NextDouble());
+            var z = (float)(sweepline.Z + (1-sweepline.Z)*_random.NextDouble());
             var azimuth = (float) (2*Mathf.PI * _random.NextDouble());
 
             var x = Mathf.Sqrt(1 - z*z)*Mathf.Cos(azimuth);

@@ -34,7 +34,7 @@ public class Arc : IComparable<Arc>
     {
         if (Equals(site1.Position, site2.Position))
         {
-            return site1.Azimuth();
+            return NormalizeAngle(site1.Azimuth());
         }
 
         var a = site1.Position;

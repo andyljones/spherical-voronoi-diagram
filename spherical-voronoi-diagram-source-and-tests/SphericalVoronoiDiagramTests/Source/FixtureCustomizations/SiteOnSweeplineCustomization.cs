@@ -21,7 +21,7 @@ namespace SphericalVoronoiDiagramTests.FixtureCustomizations
         private Site CreateSiteOnSweepline(IFixture fixture)
         {
             var sweepline = fixture.Create<Sweepline>();
-            var z = sweepline.Height;
+            var z = sweepline.Z;
 
             var azimuth = (float)(2 * Mathf.PI * _random.NextDouble());
             var x = Mathf.Sqrt(1 - z * z) * Mathf.Cos(azimuth);

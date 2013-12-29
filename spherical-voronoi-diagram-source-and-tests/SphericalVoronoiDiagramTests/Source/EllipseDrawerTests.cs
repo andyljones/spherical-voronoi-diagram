@@ -13,17 +13,17 @@ namespace SphericalVoronoiDiagramTests
         [Theory]
         [SphericalVectorAndSweeplineData]
         public void PointOnEllipse_ShouldGenerateAPointEquidistantFromTheFocusAndTheSweepline
-            (Vector3 focus, Sweepline sweepline)
+            (Arc arc)
         {
             // Fixture setup
             var longitude = (float) (2*Mathf.PI*new System.Random().NextDouble());
 
             // Exercise system
-            var result = BeachlineDrawer.PointOnEllipse(focus, sweepline.Height, longitude);
+            var result = BeachlineDrawer.PointOnEllipse(arc, longitude);
 
             // Verify outcome
-            var distanceFromSite = Mathf.Acos(Vector3.Dot(result, focus));
-            var distanceFromSweepline = Mathf.Abs(Mathf.Acos(result.z) - Mathf.Acos(sweepline.Height));
+            var distanceFromSite = Mathf.Acos(Vector3.Dot(result, arc.Site.Position));
+            var distanceFromSweepline = Mathf.Abs(Mathf.Acos(result.z) - Mathf.Acos(arc.Sweepline.Z));
 
             Assert.Equal(distanceFromSite, distanceFromSweepline, Tolerance);
 
@@ -33,18 +33,18 @@ namespace SphericalVoronoiDiagramTests
         [Theory]
         [SphericalVectorAndSweeplineData]
         public void PointOnEllipse_ShouldGenerateAPointAtTheRequestedLongitude
-            (Vector3 focus, Sweepline sweepline)
+            (Arc arc)
         {
             // Fixture setup
-            var expectedLongitude = (float)(2 * Mathf.PI * new System.Random().NextDouble());
+            var longitude = (float)(2 * Mathf.PI * new System.Random().NextDouble());
 
             // Exercise system
-            var result = BeachlineDrawer.PointOnEllipse(focus, sweepline.Height, expectedLongitude);
+            var result = BeachlineDrawer.PointOnEllipse(arc, longitude);
 
             // Verify outcome
             var actualLongitude = MathMod(Mathf.Atan2(-result.y, result.x), 2*Mathf.PI);
 
-            Assert.Equal(expectedLongitude, actualLongitude, Tolerance);
+            Assert.Equal(longitude, actualLongitude, Tolerance);
 
             // Teardown
         }

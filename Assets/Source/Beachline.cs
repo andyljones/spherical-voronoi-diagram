@@ -44,7 +44,6 @@ public class Beachline : IEnumerable<Arc>
 
             var arcBeingSplit = _intersections.FetchNode(arcA).Key;
 
-            Debug.Log(arcBeingSplit);
             arcA.LeftNeighbour = arcBeingSplit.Site;
             arcA.RightNeighbour = arcBeingSplit.Site;
 

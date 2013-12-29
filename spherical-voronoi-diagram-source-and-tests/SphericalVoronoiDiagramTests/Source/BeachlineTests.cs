@@ -25,7 +25,7 @@ namespace SphericalVoronoiDiagramTests
             sut.Insert(anonymousSite);
 
             // Verify outcome
-            var result = sut.Sweepline.Height;
+            var result = sut.Sweepline.Z;
 
             Assert.Equal(expectedResult, result);
 
@@ -139,13 +139,14 @@ namespace SphericalVoronoiDiagramTests
             sut.Insert(anonymousSiteB);
             sut.Insert(anonymousSiteC);
 
+            Debug.WriteLine(String.Join(", ", anonymousSites));
+            Debug.WriteLine(anonymousSiteC);
+            Debug.WriteLine(sut);
+
             // Verify outcome
             var sites = sut.Select(arc => arc.Site).ToList();
             var expectedResult = sites.Skip(1).Concat(sites.Take(1)).ToList();
             var result = sut.Select(arc => arc.RightNeighbour).ToList();
-
-            Debug.WriteLine(expectedResult);
-            Debug.WriteLine(result);
 
             Assert.Equal(expectedResult, result);
 

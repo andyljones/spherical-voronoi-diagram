@@ -21,7 +21,7 @@ namespace SphericalVoronoiDiagramTests
             // Fixture setup
             var sut = new Arc(siteA, sweepline);
 
-            var expectedResult = sut.Site.Azimuth;
+            var expectedResult = sut.Site.Azimuth();
 
             // Exercise system
             var result = sut.AzimuthOfLeftIntersection();
@@ -44,11 +44,11 @@ namespace SphericalVoronoiDiagramTests
             var result = sut.AzimuthOfLeftIntersection();
 
             // Verify outcome
-            var pointOnEllipse = BeachlineDrawer.PointOnEllipse(sut.Site.Position, sweepline.Height, result);
+            var pointOnEllipse = BeachlineDrawer.PointOnEllipse(sut, result);
 
             var distanceToLeftNeighbour = Mathf.Acos(Vector3.Dot(pointOnEllipse, sut.LeftNeighbour.Position));
             var distanceToSite = Mathf.Acos(Vector3.Dot(pointOnEllipse, sut.Site.Position));
-            var distanceToSweepline = Mathf.Abs(Mathf.Acos(sweepline.Height) - Mathf.Acos(pointOnEllipse.z));
+            var distanceToSweepline = Mathf.Abs(Mathf.Acos(sweepline.Z) - Mathf.Acos(pointOnEllipse.z));
 
             Assert.Equal(distanceToLeftNeighbour, distanceToSite, Tolerance);
             Assert.Equal(distanceToSite, distanceToSweepline, Tolerance);
@@ -69,11 +69,11 @@ namespace SphericalVoronoiDiagramTests
             var result = sut.AzimuthOfRightIntersection();
 
             // Verify outcome
-            var pointOnEllipse = BeachlineDrawer.PointOnEllipse(sut.Site.Position, sweepline.Height, result);
+            var pointOnEllipse = BeachlineDrawer.PointOnEllipse(sut, result);
 
             var distanceToLeftNeighbour = Mathf.Acos(Vector3.Dot(pointOnEllipse, sut.LeftNeighbour.Position));
             var distanceToSite = Mathf.Acos(Vector3.Dot(pointOnEllipse, sut.Site.Position));
-            var distanceToSweepline = Mathf.Abs(Mathf.Acos(sweepline.Height) - Mathf.Acos(pointOnEllipse.z));
+            var distanceToSweepline = Mathf.Abs(Mathf.Acos(sweepline.Z) - Mathf.Acos(pointOnEllipse.z));
 
             Assert.Equal(distanceToLeftNeighbour, distanceToSite, Tolerance);
             Assert.Equal(distanceToSite, distanceToSweepline, Tolerance);
@@ -95,7 +95,7 @@ namespace SphericalVoronoiDiagramTests
 
             // Exercise system
             var leftAzimuth = sut.AzimuthOfLeftIntersection();
-            var siteAzimuth = sut.Site.Azimuth;
+            var siteAzimuth = sut.Site.Azimuth();
             var rightAzimuth = sut.AzimuthOfRightIntersection();
 
             // Verify outcome
