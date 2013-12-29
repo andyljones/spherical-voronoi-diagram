@@ -10,8 +10,6 @@ public class Arc : IComparable<Arc>
     public Site LeftNeighbour;
     public Site RightNeighbour;
 
-    public float Tolerance = 0.0001f;
-
     public readonly Sweepline Sweepline;
 
     public Arc(Site site, Sweepline sweepline)
@@ -67,9 +65,10 @@ public class Arc : IComparable<Arc>
     public int CompareTo(Arc otherArc)
     {
         //TODO: Test.
+        //TODO: Compare arcs rather than intersections!
         var thisLeftAzimuth = AzimuthOfLeftIntersection();
         var otherLeftAzimuth = otherArc.AzimuthOfLeftIntersection();       
-        if (Mathf.Abs(thisLeftAzimuth - otherLeftAzimuth) > Tolerance)
+        if (Mathf.Abs(thisLeftAzimuth - otherLeftAzimuth) > MathUtils.AngleComparisonTolerance)
         {
             //Debug.Log("Compared on left");
             return thisLeftAzimuth.CompareTo(otherLeftAzimuth);
@@ -79,7 +78,7 @@ public class Arc : IComparable<Arc>
             var thisRightAzimuth = AzimuthOfRightIntersection();
             var otherRightAzimuth = otherArc.AzimuthOfRightIntersection();
 
-            if (Mathf.Abs(thisLeftAzimuth - otherLeftAzimuth) <= Tolerance)
+            if (Mathf.Abs(thisRightAzimuth - otherRightAzimuth) <= MathUtils.AngleComparisonTolerance)
             {
                 return 0;
             }

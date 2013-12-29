@@ -5,7 +5,6 @@ using SphericalVoronoiDiagramTests.DataAttributes;
 using UnityEngine;
 using Xunit;
 using Xunit.Extensions;
-using Debug = System.Diagnostics.Debug; 
 
 namespace SphericalVoronoiDiagramTests
 {
@@ -27,7 +26,7 @@ namespace SphericalVoronoiDiagramTests
             var result = sut.AzimuthOfLeftIntersection();
 
             // Verify outcome
-            Assert.Equal(result, expectedResult);
+            Assert.Equal(result, expectedResult, 2);
 
             // Teardown
         }

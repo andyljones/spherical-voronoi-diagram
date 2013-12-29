@@ -6,6 +6,8 @@ using UnityEngine;
 
 public static class MathUtils
 {
+    public const float AngleComparisonTolerance = 0.00001f;
+
     public static float NormalizeAngle(float angle)
     {
         return MathMod(angle, 2 * Mathf.PI);
