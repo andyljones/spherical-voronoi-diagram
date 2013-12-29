@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 using CyclicalSkipList;
 using System.Collections;
@@ -7,19 +8,17 @@ public class load : MonoBehaviour {
 
 	// Use this for initialization
 	void Start ()
-	{
+    {
         var beachline = new Beachline();
-        beachline.Insert(SiteAt(49, 109));
-        beachline.Insert(SiteAt(59, 13));
-        beachline.Insert(SiteAt(72, -177));
+        beachline.Insert(MathUtils.SiteAt(26, 117));
+        beachline.Insert(MathUtils.SiteAt(97, -122));
+        beachline.Insert(MathUtils.SiteAt(100, -69));
 
-        //beachline.Insert(new Site(new Vector3(8f, 0f, 1f)));
-        //beachline.Insert(new Site(new Vector3(8f, 0f, 1f)));
-
-        beachline.Sweepline.Z = Mathf.Cos(Mathf.PI / 180 * 75);
-        Debug.Log(beachline.First());
-        Debug.Log(beachline.Last());
+	    var arcs = beachline.ToList();
         Debug.Log(beachline);
+        Debug.Log(arcs[1].AzimuthOfLeftIntersection().CompareTo(arcs[2].AzimuthOfLeftIntersection()));
+
+        //beachline.Sweepline.Z = Mathf.Cos(Mathf.PI / 180 * 100.001f);
 
 	    BeachlineDrawer.DrawBeachline(beachline);
 

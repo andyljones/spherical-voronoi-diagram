@@ -11,11 +11,11 @@ namespace SphericalVoronoiDiagramTests
 {
     public class ArcTests
     {
-        private const int Tolerance = 3;
+        private const int Tolerance = 2;
 
         [Theory]
         [SphericalVectorAndSweeplineData]
-        public void AzimuthOfLeftIntersection_WhenLeftNeighbourSiteIsTheSame_ShouldReturnAzimuthOfTheSite
+        public void AzimuthOfLeftIntersection_WhenLeftNeighbourSiteIsTheSameAsArcSite_ShouldReturnAzimuthOfArcSite
             (Site siteA, Sweepline sweepline)
         {
             // Fixture setup

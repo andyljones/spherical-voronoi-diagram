@@ -22,7 +22,7 @@ public class Site
 
     public float Azimuth()
     {
-        return Mathf.Atan2(-Position.y, Position.x);
+        return MathUtils.NormalizeAngle(Mathf.Atan2(-Position.y, Position.x));
     }
 
     public float Colatitude()

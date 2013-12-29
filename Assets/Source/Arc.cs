@@ -10,6 +10,8 @@ public class Arc : IComparable<Arc>
     public Site LeftNeighbour;
     public Site RightNeighbour;
 
+    public float Tolerance = 0.0001f;
+
     public readonly Sweepline Sweepline;
 
     public Arc(Site site, Sweepline sweepline)
@@ -34,7 +36,7 @@ public class Arc : IComparable<Arc>
     {
         if (Equals(site1.Position, site2.Position))
         {
-            return NormalizeAngle(site1.Azimuth());
+            return MathUtils.NormalizeAngle(site1.Azimuth());
         }
 
         var a = site1.Position;
@@ -50,7 +52,7 @@ public class Arc : IComparable<Arc>
 
         var result = Mathf.Asin(c / R) - psi;
 
-        return NormalizeAngle(result);
+        return MathUtils.NormalizeAngle(result);
     }
 
     public override string ToString()
@@ -65,27 +67,42 @@ public class Arc : IComparable<Arc>
     public int CompareTo(Arc otherArc)
     {
         //TODO: Test.
-        var compareOnLeftIntersections = 
-            AzimuthOfLeftIntersection().CompareTo(otherArc.AzimuthOfLeftIntersection());
-        if (compareOnLeftIntersections != 0)
+        var thisLeftAzimuth = AzimuthOfLeftIntersection();
+        var otherLeftAzimuth = otherArc.AzimuthOfLeftIntersection();       
+        if (Mathf.Abs(thisLeftAzimuth - otherLeftAzimuth) > Tolerance)
         {
-            return compareOnLeftIntersections;
+            //Debug.Log("Compared on left");
+            return thisLeftAzimuth.CompareTo(otherLeftAzimuth);
         }
         else
         {
-            var compareOnRightIntersections =
-                AzimuthOfRightIntersection().CompareTo(otherArc.AzimuthOfRightIntersection());
-            return compareOnRightIntersections;
+            var thisRightAzimuth = AzimuthOfRightIntersection();
+            var otherRightAzimuth = otherArc.AzimuthOfRightIntersection();
+
+            if (Mathf.Abs(thisLeftAzimuth - otherLeftAzimuth) <= Tolerance)
+            {
+                return 0;
+            }
+            if (thisLeftAzimuth > thisRightAzimuth && otherLeftAzimuth > otherRightAzimuth)
+            {
+                // Case where both arcs cross the origin.
+                return thisRightAzimuth.CompareTo(otherRightAzimuth);
+            }
+            else if (thisLeftAzimuth > thisRightAzimuth && otherLeftAzimuth <= otherRightAzimuth)
+            {
+                // Case where this arc crosses the origin, but the other doesn't.
+                return 1;
+            }
+            else if (thisLeftAzimuth <= thisRightAzimuth && otherLeftAzimuth > otherRightAzimuth)
+            {
+                // Case where the other arc crosses the origin, but this one doesn't.
+                return -1;
+            }
+            else//if (leftAzimuth <= thisRightAzimuth && otherLeftAzimuth <= otherRightAzimuth)
+            {
+                // Case where neither arc cross the origin.
+                return thisRightAzimuth.CompareTo(otherRightAzimuth);
+            }
         }
-    }
-
-    private static float NormalizeAngle(float angle)
-    {
-        return MathMod(angle, 2*Mathf.PI);
-    }
-
-    private static float MathMod(float x, float m)
-    {
-        return ((x % m) + m) % m;
     }
 }

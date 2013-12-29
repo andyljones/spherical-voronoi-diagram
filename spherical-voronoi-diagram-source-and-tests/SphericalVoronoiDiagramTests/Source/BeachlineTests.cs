@@ -135,20 +135,29 @@ namespace SphericalVoronoiDiagramTests
             var anonymousSiteC = anonymousSites[2];
 
             // Exercise system
-            sut.Insert(anonymousSiteA);
-            sut.Insert(anonymousSiteB);
-            sut.Insert(anonymousSiteC);
+            var beachline = new Beachline();
+            beachline.Insert(MathUtils.SiteAt(26, 117));
+            beachline.Insert(MathUtils.SiteAt(97, -122));
+            beachline.Insert(MathUtils.SiteAt(100, -69));
 
-            Debug.WriteLine(String.Join(", ", anonymousSites));
-            Debug.WriteLine(anonymousSiteC);
-            Debug.WriteLine(sut);
+            Debug.WriteLine(beachline);
+            var arcs = beachline.ToList();
+            Debug.WriteLine(beachline);
+            Debug.WriteLine(arcs[1].AzimuthOfLeftIntersection().CompareTo(arcs[2].AzimuthOfLeftIntersection()));
 
+
+            //sut.Insert(anonymousSiteA);
+            //sut.Insert(anonymousSiteB);
+            //sut.Insert(anonymousSiteC);
+
+            //Debug.WriteLine(String.Join(", ", anonymousSites));
+            //Debug.WriteLine(anonymousSiteC);
             // Verify outcome
-            var sites = sut.Select(arc => arc.Site).ToList();
-            var expectedResult = sites.Skip(1).Concat(sites.Take(1)).ToList();
-            var result = sut.Select(arc => arc.RightNeighbour).ToList();
+            //var sites = sut.Select(arc => arc.Site).ToList();
+            //var expectedResult = sites.Skip(1).Concat(sites.Take(1)).ToList();
+            //var result = sut.Select(arc => arc.RightNeighbour).ToList();
 
-            Assert.Equal(expectedResult, result);
+            //Assert.Equal(expectedResult, result);
 
             // Teardown
         }

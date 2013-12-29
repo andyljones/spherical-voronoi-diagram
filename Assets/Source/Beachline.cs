@@ -46,19 +46,18 @@ public class Beachline : IEnumerable<Arc>
 
             arcA.LeftNeighbour = arcBeingSplit.Site;
             arcA.RightNeighbour = arcBeingSplit.Site;
+            _intersections.Add(arcA);
 
             var arcB = new Arc(arcBeingSplit.Site, Sweepline);
-            arcB.LeftNeighbour = arcBeingSplit.LeftNeighbour;
-            arcB.RightNeighbour = site;
+            arcB.LeftNeighbour = site;
+            arcB.RightNeighbour = arcBeingSplit.RightNeighbour;
 
-            arcBeingSplit.LeftNeighbour = site;
-
+            arcBeingSplit.RightNeighbour = site;
+        
             _intersections.Add(arcB);
-            _intersections.Add(arcA);
 
             Count++;
         }
-
     }
 
     public IEnumerator<Arc> GetEnumerator()
