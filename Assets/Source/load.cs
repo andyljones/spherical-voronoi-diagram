@@ -42,7 +42,7 @@ public class load : MonoBehaviour {
         vectorMeshFilter.mesh.SetIndices(Enumerable.Range(0, 2).ToArray(), MeshTopology.LineStrip, 0);
     }
 
-    private Site SiteAt(float colatitude, float azimuth)
+    private SiteEvent SiteAt(float colatitude, float azimuth)
     {
         colatitude = colatitude*Mathf.PI/180;
         azimuth = azimuth*Mathf.PI/180;
@@ -51,6 +51,6 @@ public class load : MonoBehaviour {
         var y = Mathf.Sin(colatitude) * -Mathf.Sin(azimuth);
         var z = Mathf.Cos(colatitude);
 
-        return new Site(new Vector3(x, y, z));
+        return new SiteEvent(new Vector3(x, y, z));
     }
 }

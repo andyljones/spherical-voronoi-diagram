@@ -5,7 +5,7 @@ using CyclicalSkipList;
 
 public class Beachline : IEnumerable<Arc>
 {
-    private readonly Skiplist<Arc> _intersections;
+    private readonly Skiplist<Arc> _arcs;
     public readonly Sweepline Sweepline;
 
     public int Count { get; private set; }
@@ -13,62 +13,88 @@ public class Beachline : IEnumerable<Arc>
     public Beachline()
     {
         Sweepline = new Sweepline(1);
-        _intersections = new Skiplist<Arc>();
+        _arcs = new Skiplist<Arc>();
     }
 
-    public void Insert(Site site)
+    public IEnumerable<CircleEvent> Insert(SiteEvent siteEvent)
     {
         if (Count <= 1)
         {
-            InsertOneOfFirstTwoSites(site);
+            return InsertOneOfFirstTwoSites(siteEvent);
         }
         else
         {
-            InsertSiteOtherThanTheFirstTwo(site);
+            return InsertSiteOtherThanTheFirstTwo(siteEvent);
         }
     }
 
-    private void InsertOneOfFirstTwoSites(Site site)
+    private IEnumerable<CircleEvent> InsertOneOfFirstTwoSites(SiteEvent siteEvent)
     {
-        Sweepline.Z = site.Position.z;
-        var arc = new Arc(site, Sweepline);
-        _intersections.Add(arc);
+        Sweepline.Z = siteEvent.Position.z;
+        var arc = new Arc(siteEvent, Sweepline);
+        _arcs.Add(arc);
 
-        var node = _intersections.FetchNode(arc);
-        arc.LeftNeighbour = node.Left.Key.Site;
-        arc.RightNeighbour = node.Right.Key.Site;
+        var node = _arcs.FetchNode(arc);
+        arc.LeftNeighbour = node.Left.Key.SiteEvent;
+        arc.RightNeighbour = node.Right.Key.SiteEvent;
 
-        node.Left.Key.RightNeighbour = arc.Site;
-        node.Right.Key.LeftNeighbour = arc.Site;
+        node.Left.Key.RightNeighbour = arc.SiteEvent;
+        node.Right.Key.LeftNeighbour = arc.SiteEvent;
 
         Count++;
+
+        return new List<CircleEvent>();
     }
 
-    private void InsertSiteOtherThanTheFirstTwo(Site site)
+    private IEnumerable<CircleEvent> InsertSiteOtherThanTheFirstTwo(SiteEvent siteEvent)
     {
-        Sweepline.Z = site.Position.z;
-        var arcA = new Arc(site, Sweepline);
+        Sweepline.Z = siteEvent.Position.z;
+        var arcA = new Arc(siteEvent, Sweepline);
 
-        var arcBeingSplit = _intersections.FetchNode(arcA).Key;
+        var arcBeingSplit = _arcs.FetchNode(arcA).Key;
 
-        arcA.LeftNeighbour = arcBeingSplit.Site;
-        arcA.RightNeighbour = arcBeingSplit.Site;
-        _intersections.Add(arcA);
+        arcA.LeftNeighbour = arcBeingSplit.SiteEvent;
+        arcA.RightNeighbour = arcBeingSplit.SiteEvent;
+        _arcs.Add(arcA);
 
-        var arcB = new Arc(arcBeingSplit.Site, Sweepline);
-        arcB.LeftNeighbour = site;
-        arcB.RightNeighbour = arcBeingSplit.RightNeighbour;
+        var arcB = new Arc(arcBeingSplit.SiteEvent, Sweepline)
+        {
+            LeftNeighbour = siteEvent,
+            RightNeighbour = arcBeingSplit.RightNeighbour
+        };
 
-        arcBeingSplit.RightNeighbour = site;
+        arcBeingSplit.RightNeighbour = siteEvent;
 
-        _intersections.Add(arcB);
+        _arcs.Add(arcB);
 
         Count++;
+
+        var newCircleEvents = new List<CircleEvent>
+        {
+            new CircleEvent(arcBeingSplit),
+            new CircleEvent(arcA),
+            new CircleEvent(arcB)
+        };
+
+        return newCircleEvents;
+    }
+
+    //TODO: Test.
+    public bool Remove(CircleEvent circleEvent)
+    {
+        if (circleEvent.StillHasSameSites())
+        {
+            return _arcs.Remove(circleEvent.Arc);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public IEnumerator<Arc> GetEnumerator()
     {
-        return _intersections.GetEnumerator();
+        return _arcs.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()

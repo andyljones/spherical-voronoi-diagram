@@ -1,16 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
-public class Site
+public class SiteEvent
 {
     public readonly Vector3 Position;
+    public readonly float Priority;
 
-    public Site(Vector3 position)
+    public SiteEvent(Vector3 position)
     {
         Position = position.normalized;
+        Priority = CalculatePriority(position);
+    }
+
+    private float CalculatePriority(Vector3 position)
+    {
+        return 1 + position.z;
     }
 
     public override string ToString()

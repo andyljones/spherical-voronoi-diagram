@@ -16,7 +16,7 @@ public static class BeachlineStringFormatter
             stringBuilder.AppendFormat(
                 "({0,3:N0},{1,3:N0},{2,3:N0})", 
                 180 / Mathf.PI * arc.AzimuthOfLeftIntersection(),
-                180 / Mathf.PI * arc.Site.Azimuth(),
+                180 / Mathf.PI * arc.SiteEvent.Azimuth(),
                 180 / Mathf.PI * arc.AzimuthOfRightIntersection());
         }
 

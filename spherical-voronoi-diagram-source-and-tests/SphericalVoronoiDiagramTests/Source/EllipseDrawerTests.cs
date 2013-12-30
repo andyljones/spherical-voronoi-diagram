@@ -22,7 +22,7 @@ namespace SphericalVoronoiDiagramTests
             var result = BeachlineDrawer.PointOnEllipse(arc, longitude);
 
             // Verify outcome
-            var distanceFromSite = Mathf.Acos(Vector3.Dot(result, arc.Site.Position));
+            var distanceFromSite = Mathf.Acos(Vector3.Dot(result, arc.SiteEvent.Position));
             var distanceFromSweepline = Mathf.Abs(Mathf.Acos(result.z) - Mathf.Acos(arc.Sweepline.Z));
 
             Assert.Equal(distanceFromSite, distanceFromSweepline, Tolerance);

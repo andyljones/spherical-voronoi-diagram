@@ -7,7 +7,7 @@ namespace SphericalVoronoiDiagramTests.FixtureCustomizations
     {
         public void Customize(IFixture fixture)
         {
-            var sites = fixture.CreateMany<Site>();
+            var sites = fixture.CreateMany<SiteEvent>();
             var orderedSites = sites.OrderByDescending(site => site.Position.z).ToList();
             fixture.Inject(orderedSites);
         }

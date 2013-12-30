@@ -15,7 +15,7 @@ namespace SphericalVoronoiDiagramTests
         [Theory]
         [BeachlineData(1)]
         public void Insert_ingASiteIntoABeachline_ShouldSetTheSweeplinesHeightToTheNodesHeight
-            (Beachline sut, List<Site> anonymousSites)
+            (Beachline sut, List<SiteEvent> anonymousSites)
         {
             // Fixture setup
             var anonymousSite = anonymousSites.First();
@@ -36,7 +36,7 @@ namespace SphericalVoronoiDiagramTests
         [Theory]
         [BeachlineData(1)]
         public void Insert_ingASiteIntoAnEmptyBeachline_ShouldAddAnArcWithThatSiteAsItsSite
-            (Beachline sut, List<Site> anonymousSites)
+            (Beachline sut, List<SiteEvent> anonymousSites)
         {
             // Fixture setup
             var anonymousSite = anonymousSites.First();
@@ -47,7 +47,7 @@ namespace SphericalVoronoiDiagramTests
             // Verify outcome
             var result = sut.First();
 
-            Assert.Equal(anonymousSite, result.Site);
+            Assert.Equal(anonymousSite, result.SiteEvent);
 
             // Teardown
         }
@@ -55,7 +55,7 @@ namespace SphericalVoronoiDiagramTests
         [Theory]
         [BeachlineData(1)]
         public void Insert_ingASiteIntoAnEmptyBeachline_ShouldAddAnArcNeighbouredByItself
-            (Beachline sut, List<Site> anonymousSites)
+            (Beachline sut, List<SiteEvent> anonymousSites)
         {
             // Fixture setup
             var anonymousSite = anonymousSites.First();
@@ -76,7 +76,7 @@ namespace SphericalVoronoiDiagramTests
         [BeachlineData(2)]
         public void
             Insert_ingTwoSitesIntoAnEmptyBeachlineWhenTheSecondIsLowerThanTheFirst_ShouldAddTwoArcsNeighbouredByEachother
-            (Beachline sut, List<Site> anonymousSites)
+            (Beachline sut, List<SiteEvent> anonymousSites)
         {
             // Fixture setup
             var anonymousSiteA = anonymousSites[0];
@@ -92,11 +92,11 @@ namespace SphericalVoronoiDiagramTests
 
             Debug.WriteLine(sut);
 
-            Assert.Equal(result2.Site, result1.LeftNeighbour);
-            Assert.Equal(result2.Site, result1.RightNeighbour);
+            Assert.Equal(result2.SiteEvent, result1.LeftNeighbour);
+            Assert.Equal(result2.SiteEvent, result1.RightNeighbour);
 
-            Assert.Equal(result1.Site, result2.LeftNeighbour);
-            Assert.Equal(result1.Site, result2.RightNeighbour);
+            Assert.Equal(result1.SiteEvent, result2.LeftNeighbour);
+            Assert.Equal(result1.SiteEvent, result2.RightNeighbour);
 
             // Teardown
         }
@@ -104,7 +104,7 @@ namespace SphericalVoronoiDiagramTests
         [Theory]
         [BeachlineData(3)]
         public void Insert_ingThreeSitesIntoAnEmptyBeachlineInDescendingOrderOfHeight_ShouldAddFourArcs
-            (Beachline sut, List<Site> anonymousSites)
+            (Beachline sut, List<SiteEvent> anonymousSites)
         {
             // Fixture setup
             var expectedResult = 4;
@@ -130,7 +130,7 @@ namespace SphericalVoronoiDiagramTests
         [BeachlineData(3)]
         public void
             Insert_ingThreeSitesIntoAnEmptyBeachlineInDescendingOrderOfHeight_ShouldGiveArcsWithEachRightNeighbourBeingTheNextArcsSite
-            (Beachline sut, List<Site> anonymousSites)
+            (Beachline sut, List<SiteEvent> anonymousSites)
         {
             // Fixture setup
             var anonymousSiteA = anonymousSites[0];
@@ -143,7 +143,7 @@ namespace SphericalVoronoiDiagramTests
             sut.Insert(anonymousSiteC);
 
             // Verify outcome
-            var sites = sut.Select(arc => arc.Site).ToList();
+            var sites = sut.Select(arc => arc.SiteEvent).ToList();
             var expectedResult = sites.Skip(1).Concat(sites.Take(1)).ToList();
             var result = sut.Select(arc => arc.RightNeighbour).ToList();
 
@@ -156,7 +156,7 @@ namespace SphericalVoronoiDiagramTests
         [BeachlineData(3)]
         public void
             Insert_ingThreeSitesIntoAnEmptyBeachlineInDescendingOrderOfHeight_ShouldGiveArcsWithEachLeftNeighbourBeingThePreviousArcsSite
-            (Beachline sut, List<Site> anonymousSites)
+            (Beachline sut, List<SiteEvent> anonymousSites)
         {
             // Fixture setup
             var anonymousSiteA = anonymousSites[0];
@@ -168,10 +168,8 @@ namespace SphericalVoronoiDiagramTests
             sut.Insert(anonymousSiteB);
             sut.Insert(anonymousSiteC);
 
-            Debug.WriteLine(sut);
-
             // Verify outcome
-            var sites = sut.Select(arc => arc.Site).ToList();
+            var sites = sut.Select(arc => arc.SiteEvent).ToList();
             var expectedResult = sites.Skip(sites.Count - 1).Concat(sites.Take(sites.Count - 1)).ToList();
             var result = sut.Select(arc => arc.LeftNeighbour).ToList();
 
@@ -183,16 +181,12 @@ namespace SphericalVoronoiDiagramTests
         [Theory]
         [BeachlineData(3)]
         public void Insert_ingThreeSitesIntoAnEmptyBeachlineInDescendingOrderOfHeight_ShouldGiveOrderedArcs
-            (Beachline sut, List<Site> anonymousSites)
+            (Beachline sut, List<SiteEvent> anonymousSites)
         {
             // Fixture setup
             var anonymousSiteA = anonymousSites[0];
             var anonymousSiteB = anonymousSites[1];
             var anonymousSiteC = anonymousSites[2];
-
-            anonymousSiteA = SiteAt(20, 157);
-            anonymousSiteB = SiteAt(50, 168);
-            anonymousSiteC = SiteAt(107, 219);
 
             Func<Arc, Arc, Arc, bool> inOrder =
                 new CompareToCyclicOrdererAdapter<Arc>(Comparer<Arc>.Default.Compare).InOrder;
@@ -201,9 +195,6 @@ namespace SphericalVoronoiDiagramTests
             sut.Insert(anonymousSiteA);
             sut.Insert(anonymousSiteB);
             sut.Insert(anonymousSiteC);
-
-            //Debug.WriteLine(String.Join(", ", anonymousSites.Select(site => site.ToString())));
-            Debug.WriteLine(sut);
 
             // Verify outcome
             var arcs = sut.ToList();
@@ -217,16 +208,45 @@ namespace SphericalVoronoiDiagramTests
             // Teardown
         }
 
-        private Site SiteAt(float colatitude, float azimuth)
+        [Theory]
+        [BeachlineData(3)]
+        public void Insert_ingThreeSitesIntoAnEmptyBeachlineInDescendingOrderOfHeight_ShouldReturnThreeCircleEvents
+            (Beachline sut, List<SiteEvent> anonymousSites)
         {
-            colatitude = colatitude*Mathf.PI/180;
-            azimuth = azimuth*Mathf.PI/180;
+            // Fixture setup
+            var anonymousSiteA = anonymousSites[0];
+            var anonymousSiteB = anonymousSites[1];
+            var anonymousSiteC = anonymousSites[2];
 
-            var x = Mathf.Sin(colatitude)*Mathf.Cos(azimuth);
-            var y = Mathf.Sin(colatitude)*-Mathf.Sin(azimuth);
-            var z = Mathf.Cos(colatitude);
+            // Exercise system
+            sut.Insert(anonymousSiteA);
+            sut.Insert(anonymousSiteB);
+            var result = sut.Insert(anonymousSiteC).Count();
 
-            return new Site(new Vector3(x, y, z));
+            // Verify outcome
+            var expectedResult = 3;
+            Assert.Equal(expectedResult, result);
+
+            // Teardown
+        }
+
+        [Theory]
+        [BeachlineData(3)]
+        public void Insert_ingOneOrTwoSitesIntoAnEmptyBeachlineInDescendingOrderOfHeight_ShouldReturnNoCircleEvents
+            (Beachline sut, List<SiteEvent> anonymousSites)
+        {
+            // Fixture setup
+            var anonymousSiteA = anonymousSites[0];
+            var anonymousSiteB = anonymousSites[1];
+
+            // Exercise system
+            var result = sut.Insert(anonymousSiteB).Count() + sut.Insert(anonymousSiteA).Count();
+
+            // Verify outcome
+            var expectedResult = 0;
+            Assert.Equal(expectedResult, result);
+
+            // Teardown
         }
     }
 }

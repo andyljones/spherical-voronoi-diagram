@@ -18,7 +18,7 @@ namespace SphericalVoronoiDiagramTests.FixtureCustomizations
             fixture.Register(() => CreateSiteOnSweepline(fixture));
         }
 
-        private Site CreateSiteOnSweepline(IFixture fixture)
+        private SiteEvent CreateSiteOnSweepline(IFixture fixture)
         {
             var sweepline = fixture.Create<Sweepline>();
             var z = sweepline.Z;
@@ -27,7 +27,7 @@ namespace SphericalVoronoiDiagramTests.FixtureCustomizations
             var x = Mathf.Sqrt(1 - z * z) * Mathf.Cos(azimuth);
             var y = -Mathf.Sqrt(1 - z * z) * Mathf.Sin(azimuth);
 
-            return new Site(new Vector3(x, y, z));
+            return new SiteEvent(new Vector3(x, y, z));
         }
     }
 }

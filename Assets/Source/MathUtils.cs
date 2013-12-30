@@ -6,7 +6,7 @@ using UnityEngine;
 
 public static class MathUtils
 {
-    public const float AngleComparisonTolerance = 0.00001f;
+    public const float AngleComparisonTolerance = 0.0001f;
 
     public static float NormalizeAngle(float angle)
     {
@@ -18,7 +18,7 @@ public static class MathUtils
         return ((x % m) + m) % m;
     }
 
-    public static Site SiteAt(float colatitude, float azimuth)
+    public static SiteEvent SiteAt(float colatitude, float azimuth)
     {
         colatitude = colatitude * Mathf.PI / 180;
         azimuth = azimuth * Mathf.PI / 180;
@@ -27,6 +27,6 @@ public static class MathUtils
         var y = Mathf.Sin(colatitude) * -Mathf.Sin(azimuth);
         var z = Mathf.Cos(colatitude);
 
-        return new Site(new Vector3(x, y, z));
+        return new SiteEvent(new Vector3(x, y, z));
     }
 }

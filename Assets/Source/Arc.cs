@@ -6,31 +6,31 @@ using UnityEngine;
 
 public class Arc : IComparable<Arc>
 {
-    public readonly Site Site;
-    public Site LeftNeighbour;
-    public Site RightNeighbour;
+    public readonly SiteEvent SiteEvent;
+    public SiteEvent LeftNeighbour;
+    public SiteEvent RightNeighbour;
 
     public readonly Sweepline Sweepline;
 
-    public Arc(Site site, Sweepline sweepline)
+    public Arc(SiteEvent siteEvent, Sweepline sweepline)
     {
-        Site = site;
-        LeftNeighbour = site;
-        RightNeighbour = site;
+        SiteEvent = siteEvent;
+        LeftNeighbour = siteEvent;
+        RightNeighbour = siteEvent;
         Sweepline = sweepline;
     }
 
     public float AzimuthOfLeftIntersection()
     {
-        return AzimuthOfIntersectionBetween(LeftNeighbour, Site);
+        return AzimuthOfIntersectionBetween(LeftNeighbour, SiteEvent);
     }
 
     public float AzimuthOfRightIntersection()
     {
-        return AzimuthOfIntersectionBetween(Site, RightNeighbour);
+        return AzimuthOfIntersectionBetween(SiteEvent, RightNeighbour);
     }
 
-    private float AzimuthOfIntersectionBetween(Site site1, Site site2)
+    private float AzimuthOfIntersectionBetween(SiteEvent site1, SiteEvent site2)
     {
         if (Equals(site1.Position, site2.Position))
         {
@@ -48,7 +48,9 @@ public class Arc : IComparable<Arc>
         var R = Mathf.Sqrt(A * A + B * B);
         var psi = Mathf.Sign(A) * Mathf.Acos(B / Mathf.Sqrt(A * A + B * B));
 
-        var result = Mathf.Asin(c / R) - psi;
+        var ratioOfCtoR = c != 0 ? c/R : 0;
+
+        var result = Mathf.Asin(ratioOfCtoR) - psi;
 
         return MathUtils.NormalizeAngle(result);
     }
@@ -58,7 +60,7 @@ public class Arc : IComparable<Arc>
         return String.Format(
             "({0,3:N0},{1,3:N0},{2,3:N0})",
             180 / Mathf.PI * AzimuthOfLeftIntersection(),
-            180 / Mathf.PI * Site.Azimuth(),
+            180 / Mathf.PI * SiteEvent.Azimuth(),
             180 / Mathf.PI * AzimuthOfRightIntersection());
     }
 
