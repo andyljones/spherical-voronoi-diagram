@@ -138,10 +138,17 @@ namespace SphericalVoronoiDiagramTests
             var anonymousSiteC = anonymousSites[2];
 
             // Exercise system
-            sut.Insert(anonymousSiteA);
-            sut.Insert(anonymousSiteB);
-            sut.Insert(anonymousSiteC);
+            //sut.Insert(anonymousSiteA);
+            //sut.Insert(anonymousSiteB);
+            //sut.Insert(anonymousSiteC);
 
+            sut.Insert(MathUtils.SiteAt(26, 117));
+            sut.Insert(MathUtils.SiteAt(97, -122));
+            sut.Insert(MathUtils.SiteAt(100, -69));
+
+            var arcs = sut.ToList();
+            Debug.WriteLine(sut);
+            Debug.WriteLine(arcs[1].CompareTo(arcs[2]));
             // Verify outcome
             var sites = sut.Select(arc => arc.SiteEvent).ToList();
             var expectedResult = sites.Skip(1).Concat(sites.Take(1)).ToList();

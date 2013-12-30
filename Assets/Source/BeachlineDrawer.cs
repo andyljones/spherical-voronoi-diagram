@@ -66,11 +66,11 @@ public static class BeachlineDrawer
 
     public static Vector3 PointOnEllipse(Arc arc, float azimuth)
     {
-        var focus = arc.Site.Position;
+        var focus = arc.SiteEvent.Position;
         var height = arc.Sweepline.Z;
 
         var Y = focus.z - height;
-        var X = Mathf.Sqrt(1-height*height) - (focus.x * Mathf.Cos(azimuth) - focus.y * Mathf.Sin(azimuth));
+        var X = Mathf.Sqrt(1 - height * height) - (focus.x * Mathf.Cos(azimuth) - focus.y * Mathf.Sin(azimuth));
 
         var x = Y/Mathf.Sqrt(X*X+Y*Y) * Mathf.Cos(azimuth);
         var y = Y/Mathf.Sqrt(X*X+Y*Y) * -Mathf.Sin(azimuth);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using SDebug = System.Diagnostics.Debug;
 
 public class Arc : IComparable<Arc>
 {
@@ -43,14 +44,25 @@ public class Arc : IComparable<Arc>
 
         var A = a.x * (z - b.z) - b.x * (z - a.z);
         var B = -(a.y * (z - b.z) - b.y * (z - a.z));
-        var c = (a.z - b.z) * Mathf.Sqrt(1 - z * z);
+        var C = (a.z - b.z) * Mathf.Sqrt(1 - z * z);  //TODO: Does this need a Sign(z), since it represents Sin(zeta)?
 
-        var R = Mathf.Sqrt(A * A + B * B);
-        var psi = Mathf.Sign(A) * Mathf.Acos(B / Mathf.Sqrt(A * A + B * B));
+        //var R = Mathf.Sqrt(A * A + B * B);
+        //var psi = Mathf.Sign(A) * Mathf.Acos(B / Mathf.Sqrt(A * A + B * B));
 
-        var ratioOfCtoR = c != 0 ? c/R : 0;
+        //var ratioOfCtoR = C != 0 ? C / R : 0;
 
-        var result = Mathf.Asin(ratioOfCtoR) - psi;
+        //var result = Mathf.Asin(ratioOfCtoR) - psi;
+
+        var x =  (A*C + B*Mathf.Sqrt(A*A + B*B - C*C)) / (A*A + B*B);
+        var y = -(B*C - A*Mathf.Sqrt(A*A + B*B - C*C)) / (A*A + B*B);
+
+        var result = Mathf.Atan2(-y, x);
+
+        SDebug.WriteLine("Old x: " + Mathf.Cos(result));
+        SDebug.WriteLine("New x: " + x);
+        SDebug.WriteLine("Old y: " + Mathf.Sin(result));
+        SDebug.WriteLine("New y: " + y);
+        //SDebug.WriteLine(x * x + y * y);
 
         return MathUtils.NormalizeAngle(result);
     }
@@ -72,7 +84,6 @@ public class Arc : IComparable<Arc>
         var otherLeftAzimuth = otherArc.AzimuthOfLeftIntersection();       
         if (Mathf.Abs(thisLeftAzimuth - otherLeftAzimuth) > MathUtils.AngleComparisonTolerance)
         {
-            //Debug.Log("Compared on left");
             return thisLeftAzimuth.CompareTo(otherLeftAzimuth);
         }
         else
