@@ -10,18 +10,18 @@ public class load : MonoBehaviour {
 	void Start ()
     {
         var beachline = new Beachline();
-        //beachline.Insert(MathUtils.SiteAt(26, 117));
-        //beachline.Insert(MathUtils.SiteAt(97, -122));
-        //beachline.Insert(MathUtils.SiteAt(100, -69));
+        beachline.Insert(MathUtils.SiteAt(26, 117));
+        beachline.Insert(MathUtils.SiteAt(97, -122));
+        beachline.Insert(MathUtils.SiteAt(100, -69));
 
-        beachline.Insert(MathUtils.SiteAt(0, 0));
-        beachline.Insert(MathUtils.SiteAt(45, 45));
+        //beachline.Insert(MathUtils.SiteAt(0, 0));
+        //beachline.Insert(MathUtils.SiteAt(45, 305));
 
 	    var arcs = beachline.ToList();
         Debug.Log(beachline);
         //Debug.Log(arcs[1].CompareTo(arcs[2]));
 
-        beachline.Sweepline.Z = Mathf.Cos(Mathf.PI / 180 * 50f);
+        beachline.Sweepline.Z = Mathf.Cos(Mathf.PI / 180 * 101f);
 
 	    BeachlineDrawer.DrawBeachline(beachline);
 
