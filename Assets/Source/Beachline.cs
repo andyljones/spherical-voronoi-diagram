@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using CyclicalSkipList;
 
 public class Beachline : IEnumerable<Arc>
 {
-    private readonly Skiplist<Arc> _arcs;
-    public readonly Sweepline Sweepline;
+    private readonly Skiplist<Arc> _arcs = new Skiplist<Arc> {InOrder = Arc.AreInOrder};
+    public readonly Sweepline Sweepline = new Sweepline(2);
 
     public int Count { get; private set; }
-
-    public Beachline()
-    {
-        Sweepline = new Sweepline(1);
-        _arcs = new Skiplist<Arc> {InOrder = Arc.AreInOrder};
-    }
 
     public IEnumerable<CircleEvent> Insert(SiteEvent siteEvent)
     {
@@ -72,7 +67,7 @@ public class Beachline : IEnumerable<Arc>
         var newCircleEvents = new List<CircleEvent>
         {
             new CircleEvent(arcBeingSplit),
-            new CircleEvent(arcA),
+            //new CircleEvent(arcA),
             new CircleEvent(arcB)
         };
 
@@ -82,8 +77,13 @@ public class Beachline : IEnumerable<Arc>
     //TODO: Test.
     public bool Remove(CircleEvent circleEvent)
     {
+        Sweepline.Z = circleEvent.Priority - 1;
         if (circleEvent.StillHasSameSites())
         {
+            var node = _arcs.FetchNode(circleEvent.Arc);
+            node.Left.Key.RightNeighbour = node.Key.RightNeighbour;
+            node.Right.Key.LeftNeighbour = node.Key.LeftNeighbour;
+
             return _arcs.Remove(circleEvent.Arc);
         }
         else

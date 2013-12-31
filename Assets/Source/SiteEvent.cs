@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class SiteEvent
+public class SiteEvent : IComparable<SiteEvent>
 {
     public readonly Vector3 Position;
     public readonly float Priority;
@@ -15,6 +15,11 @@ public class SiteEvent
     private float CalculatePriority(Vector3 position)
     {
         return 1 + position.z;
+    }
+
+    public int CompareTo(SiteEvent other)
+    {
+        return Priority.CompareTo(other.Priority);
     }
 
     public override string ToString()

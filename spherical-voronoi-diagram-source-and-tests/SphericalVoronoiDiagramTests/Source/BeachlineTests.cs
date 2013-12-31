@@ -208,7 +208,7 @@ namespace SphericalVoronoiDiagramTests
 
         [Theory]
         [BeachlineData(3)]
-        public void Insert_ingThreeSitesIntoAnEmptyBeachlineInDescendingOrderOfHeight_ShouldReturnThreeCircleEvents
+        public void Insert_ingThreeSitesIntoAnEmptyBeachlineInDescendingOrderOfHeight_ShouldReturnTwoCircleEvents
             (Beachline sut, List<SiteEvent> anonymousSites)
         {
             // Fixture setup
@@ -222,7 +222,7 @@ namespace SphericalVoronoiDiagramTests
             var result = sut.Insert(anonymousSiteC).Count();
 
             // Verify outcome
-            var expectedResult = 3;
+            var expectedResult = 2;
             Assert.Equal(expectedResult, result);
 
             // Teardown

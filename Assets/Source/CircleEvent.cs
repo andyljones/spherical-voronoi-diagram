@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class CircleEvent
+public class CircleEvent : IComparable<CircleEvent>
 {
     public Arc Arc;
 
@@ -39,5 +40,10 @@ public class CircleEvent
         var numerator = delta + r*v.z - Mathf.Sqrt((delta - v.z*v.z)*(delta - r*r));
 
         return numerator != 0 ? numerator/delta : 0;
+    }
+
+    public int CompareTo(CircleEvent other)
+    {
+        return Priority.CompareTo(other.Priority);
     }
 }

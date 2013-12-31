@@ -1,4 +1,5 @@
-﻿using SphericalVoronoiDiagramTests.DataAttributes;
+﻿using Graphics;
+using SphericalVoronoiDiagramTests.DataAttributes;
 using UnityEngine;
 using Xunit;
 using Xunit.Extensions;
