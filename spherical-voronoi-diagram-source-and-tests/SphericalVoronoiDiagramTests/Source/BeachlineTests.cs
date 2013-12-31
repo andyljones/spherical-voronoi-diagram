@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CyclicalSkipList;
 using SphericalVoronoiDiagramTests.DataAttributes;
 using UnityEngine;
 using Xunit;
@@ -138,17 +137,10 @@ namespace SphericalVoronoiDiagramTests
             var anonymousSiteC = anonymousSites[2];
 
             // Exercise system
-            //sut.Insert(anonymousSiteA);
-            //sut.Insert(anonymousSiteB);
-            //sut.Insert(anonymousSiteC);
+            sut.Insert(anonymousSiteA);
+            sut.Insert(anonymousSiteB);
+            sut.Insert(anonymousSiteC);
 
-            sut.Insert(MathUtils.SiteAt(26, 117));
-            sut.Insert(MathUtils.SiteAt(97, -122));
-            sut.Insert(MathUtils.SiteAt(100, -69));
-
-            var arcs = sut.ToList();
-            Debug.WriteLine(sut);
-            Debug.WriteLine(arcs[1].CompareTo(arcs[2]));
             // Verify outcome
             var sites = sut.Select(arc => arc.SiteEvent).ToList();
             var expectedResult = sites.Skip(1).Concat(sites.Take(1)).ToList();
@@ -195,22 +187,21 @@ namespace SphericalVoronoiDiagramTests
             var anonymousSiteB = anonymousSites[1];
             var anonymousSiteC = anonymousSites[2];
 
-            Func<Arc, Arc, Arc, bool> inOrder =
-                new CompareToCyclicOrdererAdapter<Arc>(Comparer<Arc>.Default.Compare).InOrder;
-
             // Exercise system
             sut.Insert(anonymousSiteA);
             sut.Insert(anonymousSiteB);
             sut.Insert(anonymousSiteC);
 
+            Debug.WriteLine(String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()));
+
             // Verify outcome
             var arcs = sut.ToList();
             for (int i = 1; i < arcs.Count - 1; i++)
             {
-                Assert.True(inOrder(arcs[i - 1], arcs[i], arcs[i + 1]));
+                Assert.True(Arc.AreInOrder(arcs[i - 1], arcs[i], arcs[i + 1]));
             }
-            Assert.True(inOrder(arcs[arcs.Count - 2], arcs[arcs.Count - 1], arcs[0]));
-            Assert.True(inOrder(arcs[arcs.Count - 1], arcs[0], arcs[1]));
+            Assert.True(Arc.AreInOrder(arcs[arcs.Count - 2], arcs[arcs.Count - 1], arcs[0]));
+            Assert.True(Arc.AreInOrder(arcs[arcs.Count - 1], arcs[0], arcs[1]));
 
             // Teardown
         }

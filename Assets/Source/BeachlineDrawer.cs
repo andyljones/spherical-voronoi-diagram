@@ -18,7 +18,7 @@ public static class BeachlineDrawer
 
             var arcMesh = arcMeshFilter.mesh;
 
-            var azimuths = AzimuthsInRange(arc.AzimuthOfLeftIntersection(), arc.AzimuthOfRightIntersection());
+            var azimuths = AzimuthsInRange(MathUtils.AzimuthOf(arc.LeftIntersection()), MathUtils.AzimuthOf(arc.RightIntersection()));
             var pointsOnArc = PointsOnArc(arc, azimuths).ToList();
 
             arcMesh.vertices = pointsOnArc.ToArray();
@@ -72,25 +72,11 @@ public static class BeachlineDrawer
         var tx = Mathf.Cos(azimuth);
         var ty = -Mathf.Sin(azimuth);
 
-        //var Y = p.z - Z;
-        //var X = Mathf.Sqrt(1 - Z * Z) - (p.x * tx - p.y * ty);
-
-        //var x = Y / Mathf.Sqrt(X * X + Y * Y) * Mathf.Cos(azimuth);
-        //var y = Y / Mathf.Sqrt(X * X + Y * Y) * -Mathf.Sin(azimuth);
-        //var z = X / Mathf.Sqrt(X * X + Y * Y);
-
         var tz = (Z - p.z) / (p.x * tx + p.y * ty - Mathf.Sqrt(1 - Z * Z));
 
         var x = 1/Mathf.Sqrt(1 + 1/(tz*tz))*tx;
         var y = 1/Mathf.Sqrt(1 + 1/(tz*tz))*ty;
         var z = Mathf.Sign(tz)*1/Mathf.Sqrt(1 + tz*tz);
-
-        ////var z = Mathf.Sqrt(Mathf.Pow(p.x*tx - p.y*ty - Mathf.Sqrt(1-Z*Z), 2) + Mathf.Pow(p.z - Z, 2)) / (p.z - Z);
-        //var tz = (Z - p.z) / (p.x * tx - p.y * ty - Mathf.Sqrt(1 - Z * Z));
-
-        //var z = 1 / Mathf.Sqrt(tz * tz - 1);
-        //var x = tx * Mathf.Sqrt(1 - z * z);
-        //var y = -ty * Mathf.Sqrt(1 - z * z);
 
         return new Vector3(x, y, z);
     }

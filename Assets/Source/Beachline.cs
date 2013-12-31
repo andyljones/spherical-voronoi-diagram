@@ -13,7 +13,7 @@ public class Beachline : IEnumerable<Arc>
     public Beachline()
     {
         Sweepline = new Sweepline(1);
-        _arcs = new Skiplist<Arc>();
+        _arcs = new Skiplist<Arc> {InOrder = Arc.AreInOrder};
     }
 
     public IEnumerable<CircleEvent> Insert(SiteEvent siteEvent)

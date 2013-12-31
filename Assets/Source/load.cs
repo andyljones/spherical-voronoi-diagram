@@ -10,23 +10,24 @@ public class load : MonoBehaviour {
 	void Start ()
     {
         var beachline = new Beachline();
-        beachline.Insert(MathUtils.SiteAt(26, 117));
-        beachline.Insert(MathUtils.SiteAt(97, -122));
-        beachline.Insert(MathUtils.SiteAt(100, -69));
+        //beachline.Insert(MathUtils.SiteAt(26, 117));
+        //beachline.Insert(MathUtils.SiteAt(97, -122));
+        //beachline.Insert(MathUtils.SiteAt(100, -69));
 
-        //beachline.Insert(MathUtils.SiteAt(0, 0));
-        //beachline.Insert(MathUtils.SiteAt(45, 305));
+        beachline.Insert(MathUtils.CreateSiteAt(24, 272));
+        beachline.Insert(MathUtils.CreateSiteAt(24, 297));
+        beachline.Insert(MathUtils.CreateSiteAt(28, 221));
 
 	    var arcs = beachline.ToList();
-        Debug.Log(beachline);
         //Debug.Log(arcs[1].CompareTo(arcs[2]));
 
-        beachline.Sweepline.Z = Mathf.Cos(Mathf.PI / 180 * 101f);
+        beachline.Sweepline.Z = Mathf.Cos(Mathf.PI / 180 * 31f);
+        Debug.Log(beachline);
 
 	    BeachlineDrawer.DrawBeachline(beachline);
 
-        //var intersection = BeachlineDrawer.PointOnEllipse(beachline.First(), beachline.First().AzimuthOfLeftIntersection());
-        //DrawLineThrough(intersection);
+        var intersection = beachline.Last().LeftIntersection();
+        DrawLineThrough(intersection);
 
         DrawLineThrough(new Vector3(1, 0, 0));
 	}

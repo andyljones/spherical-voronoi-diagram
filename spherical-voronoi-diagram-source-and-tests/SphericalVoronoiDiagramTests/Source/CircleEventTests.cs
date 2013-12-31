@@ -12,10 +12,10 @@ namespace SphericalVoronoiDiagramTests
             // Fixture setup
             var anonymousSweepline = new Sweepline(-1f);
             var sut =
-                new CircleEvent(new Arc(MathUtils.SiteAt(90, 0), anonymousSweepline)
+                new CircleEvent(new Arc(MathUtils.CreateSiteAt(90, 0), anonymousSweepline)
                 {
-                    LeftNeighbour = MathUtils.SiteAt(0, 90),
-                    RightNeighbour = MathUtils.SiteAt(0, -90)
+                    LeftNeighbour = MathUtils.CreateSiteAt(0, 90),
+                    RightNeighbour = MathUtils.CreateSiteAt(0, -90)
                 });
 
             // Exercise system
@@ -35,10 +35,10 @@ namespace SphericalVoronoiDiagramTests
             // Fixture setup
             var anonymousSweepline = new Sweepline(-1f);
             var sut =
-                new CircleEvent(new Arc(MathUtils.SiteAt(45, 0), anonymousSweepline)
+                new CircleEvent(new Arc(MathUtils.CreateSiteAt(45, 0), anonymousSweepline)
                 {
-                    LeftNeighbour = MathUtils.SiteAt(90, 90),
-                    RightNeighbour = MathUtils.SiteAt(90, -90)
+                    LeftNeighbour = MathUtils.CreateSiteAt(90, 90),
+                    RightNeighbour = MathUtils.CreateSiteAt(90, -90)
                 });
 
             // Exercise system
