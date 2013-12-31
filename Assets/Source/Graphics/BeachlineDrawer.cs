@@ -11,8 +11,6 @@ namespace Graphics
 
         public static void DrawBeachline(Beachline beachline)
         {
-            beachline.Sweepline.Z = beachline.Sweepline.Z - 0.0001f;
-
             foreach (var arc in beachline)
             {
                 DrawArc(arc);
@@ -23,7 +21,8 @@ namespace Graphics
         {
             var arcObject = new GameObject("Arc" + arc);
             var arcMeshFilter = arcObject.AddComponent<MeshFilter>();
-            arcObject.AddComponent<MeshRenderer>();
+            var arcRenderer = arcObject.AddComponent<MeshRenderer>();
+            arcRenderer.material = Resources.Load("WindArrows", typeof(Material)) as Material;
 
             IEnumerable<float> azimuths;
             if (arc.LeftNeighbour == arc.SiteEvent && arc.SiteEvent == arc.RightNeighbour)
@@ -45,6 +44,9 @@ namespace Graphics
                 Enumerable.Range(0, pointsOnArc.Count).ToArray(),
                 MeshTopology.LineStrip,
                 0);
+
+            arcMeshFilter.mesh.RecalculateNormals();
+            arcMeshFilter.mesh.uv = Enumerable.Repeat(new Vector2(0, 0), pointsOnArc.Count()).ToArray();
         }
 
         private static IEnumerable<Vector3> PointsOnArc(Arc arc, IEnumerable<float> azimuths)

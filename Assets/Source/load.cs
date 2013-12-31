@@ -14,7 +14,7 @@ public class load : MonoBehaviour {
 	    var positions = new List<Vector3>
 	    {
 	        MathUtils.CreateVectorAt(45, 0),
-	        MathUtils.CreateVectorAt(90, -10),
+	        MathUtils.CreateVectorAt(95, 5),
 	        MathUtils.CreateVectorAt(90, 10),
 	        MathUtils.CreateVectorAt(100, 0)
 	    };
@@ -24,7 +24,7 @@ public class load : MonoBehaviour {
         generator.ProcessNextEvent();
         generator.ProcessNextEvent();
         generator.ProcessNextEvent();
-        generator.ProcessNextEvent();
+        //generator.ProcessNextEvent();
 
         VoronoiGeneratorDrawer.DrawVoronoiGenerator(generator);
 
