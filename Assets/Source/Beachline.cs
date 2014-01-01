@@ -10,6 +10,7 @@ public class Beachline : IEnumerable<Arc>
     private readonly Skiplist<Arc> _arcs = new Skiplist<Arc> {InOrder = Arc.AreInOrder};
     public readonly Sweepline Sweepline = new Sweepline(2);
 
+    //TODO: Test.
     public int Count { get; private set; }
 
     public IEnumerable<CircleEvent> Insert(SiteEvent siteEvent)
@@ -37,7 +38,7 @@ public class Beachline : IEnumerable<Arc>
         node.Left.Key.RightNeighbour = arc.SiteEvent;
         node.Right.Key.LeftNeighbour = arc.SiteEvent;
 
-        Count++;
+        Count = Count + 1;
 
         return new List<CircleEvent>();
     }
@@ -63,7 +64,7 @@ public class Beachline : IEnumerable<Arc>
 
         _arcs.Add(arcB);
 
-        Count++;
+        Count = Count + 2;
 
         var newCircleEvents = new List<CircleEvent>
         {
@@ -86,7 +87,7 @@ public class Beachline : IEnumerable<Arc>
 
             var removalSuccessful = _arcs.Remove(circleEvent.Arc);
 
-            UnityEngine.Debug.Log(_arcs.Find(circleEvent.Arc));
+            Count = Count - 1;
 
             return removalSuccessful;
         }
