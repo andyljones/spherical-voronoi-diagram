@@ -73,37 +73,5 @@ public class Arc
 
             return orderingOnMidpoints >= 0;
         }
-
-        //Debug.Log(aLength + ", " + bLength + ", " + cLength);
-
-        ////if (aLength <= MathUtils.ComparisonTolerance)
-        ////{
-        ////    return MathUtils.AreInCyclicOrder(aLeft, bRight, cRight) > 0;
-        ////}
-
-        ////if (bLength <= MathUtils.ComparisonTolerance)
-        ////{
-        ////    return MathUtils.AreInCyclicOrder(aLeft, bLeft, cRight) > 0;
-        ////}
-
-        ////if (cLength <= MathUtils.ComparisonTolerance)
-        ////{
-        ////    return MathUtils.AreInCyclicOrder(aLeft, bLeft, cLeft) > 0;
-        ////}
-
-        //var orderingOnLeftIntersections =
-        //    MathUtils.AreInCyclicOrder(aLeft, bLeft, cLeft);
-
-        //if (orderingOnLeftIntersections != 0)
-        //{
-        //    return orderingOnLeftIntersections > 0;
-        //}
-        //else
-        //{
-        //    var orderingOnRightIntersections =
-        //        MathUtils.AreInCyclicOrder(aRight, bRight, cRight);
-
-        //    return orderingOnRightIntersections >= 0;
-        //}
     }
 }

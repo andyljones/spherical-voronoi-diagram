@@ -5,28 +5,44 @@ using UnityEngine;
 
 namespace Graphics
 {
-    public static class BeachlineDrawer
+    public class BeachlineDrawer
     {
         public static int NumberOfVerticesPerArc = 100;
 
-        public static void DrawBeachline(Beachline beachline)
-        {
-            var beachlineObject = new GameObject("Beachline");
+        private GameObject _gameObject;
+        private readonly Beachline _beachline;
 
-            foreach (var arc in beachline)
-            {
-                var arcObject = DrawArc(arc);
-                arcObject.transform.parent = beachlineObject.transform;
-            }
+        public BeachlineDrawer(Beachline beachline)
+        {
+            _beachline = beachline;
+            _gameObject = InitializeBeachlineObject(beachline);
         }
 
-        private static GameObject DrawArc(Arc arc)
+        private static GameObject InitializeBeachlineObject(Beachline beachline)
         {
-            var arcObject = new GameObject("Arc" + arc);
-            var arcMeshFilter = arcObject.AddComponent<MeshFilter>();
-            var arcRenderer = arcObject.AddComponent<MeshRenderer>();
-            arcRenderer.material = Resources.Load("WindArrows", typeof(Material)) as Material;
+            var vertices = BeachlineVertices(beachline);
+            var gameObject = DrawingUtilities.CreateLineObject("Beachline", vertices, "BeachlineMaterial");
 
+            return gameObject;
+        }
+
+        public void Update()
+        {
+            _beachline.Sweepline.Z = _beachline.Sweepline.Z - 0.0001f;
+            var mesh = _gameObject.GetComponent<MeshFilter>().mesh;
+            var vertices = BeachlineVertices(_beachline);
+            DrawingUtilities.UpdateLineMesh(mesh, vertices);
+        }
+
+        private static Vector3[] BeachlineVertices(Beachline beachline)
+        {
+            var vertices = beachline.SelectMany(arc => ArcVertices(arc));
+
+            return vertices.ToArray();
+        }
+
+        private static IEnumerable<Vector3> ArcVertices(Arc arc)
+        {
             IEnumerable<float> azimuths;
             if (arc.LeftNeighbour == arc.SiteEvent && arc.SiteEvent == arc.RightNeighbour)
             {
@@ -39,26 +55,9 @@ namespace Graphics
                 azimuths =  DrawingUtilities.AzimuthsInRange(leftLimit, rightLimit, NumberOfVerticesPerArc);
             }
 
-            var pointsOnArc = PointsOnArc(arc, azimuths).ToList();
-            pointsOnArc.RemoveAll(vector => vector == new Vector3(0, 0, 0));
+            var vertices = azimuths.Select(azimuth => PointOnEllipse(arc, azimuth)).ToList();
 
-            arcMeshFilter.mesh.vertices = pointsOnArc.ToArray();
-            arcMeshFilter.mesh.SetIndices(
-                Enumerable.Range(0, pointsOnArc.Count).ToArray(),
-                MeshTopology.LineStrip,
-                0);
-
-            arcMeshFilter.mesh.RecalculateNormals();
-            arcMeshFilter.mesh.uv = Enumerable.Repeat(new Vector2(0, 0), pointsOnArc.Count()).ToArray();
-
-            return arcObject;
-        }
-
-        private static IEnumerable<Vector3> PointsOnArc(Arc arc, IEnumerable<float> azimuths)
-        {
-            var points = azimuths.Select(azimuth => PointOnEllipse(arc, azimuth)).ToList();
-
-            return points;
+            return vertices;
         }
 
         public static Vector3 PointOnEllipse(Arc arc, float azimuth)

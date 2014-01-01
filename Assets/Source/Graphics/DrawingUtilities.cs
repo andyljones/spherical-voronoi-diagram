@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -32,6 +33,33 @@ namespace Graphics
 
                 return pointsFromLeft.Concat(pointsFromRight);
             }
+        }
+
+        public static GameObject CreateLineObject(String name, Vector3[] points, String materialName)
+        {
+            var gameObject = new GameObject(name);
+            var meshFilter = gameObject.AddComponent<MeshFilter>();
+            var renderer = gameObject.AddComponent<MeshRenderer>();
+            renderer.material = Resources.Load(materialName, typeof(Material)) as Material;
+
+            meshFilter.mesh.vertices = points;
+            meshFilter.mesh.SetIndices(
+                Enumerable.Range(0, points.Count()).ToArray(),
+                MeshTopology.LineStrip,
+                0);
+
+            meshFilter.mesh.RecalculateNormals();
+            meshFilter.mesh.uv = Enumerable.Repeat(new Vector2(0, 0), points.Count()).ToArray();
+
+            return gameObject;
+        }
+
+        public static void UpdateLineMesh(Mesh mesh, Vector3[] vertices)
+        {
+            mesh.vertices = vertices;
+            mesh.SetIndices(Enumerable.Range(0, mesh.vertexCount).ToArray(), MeshTopology.LineStrip, 0);
+            mesh.RecalculateNormals();
+            mesh.uv = Enumerable.Repeat(new Vector2(0, 0), mesh.vertexCount).ToArray();
         }
     }
 }

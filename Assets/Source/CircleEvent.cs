@@ -46,4 +46,13 @@ public class CircleEvent : IComparable<CircleEvent>
     {
         return Priority.CompareTo(other.Priority);
     }
+
+    public override string ToString()
+    {
+        return String.Format(
+            "({0,3:N0},{1,3:N0},{2,3:N0})",
+            OriginalLeftNeighbour.ToString(),
+            OriginalSiteEvent.ToString(),
+            OriginalRightNeighbour.ToString());
+    }
 }

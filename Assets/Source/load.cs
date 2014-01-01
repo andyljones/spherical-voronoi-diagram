@@ -6,7 +6,10 @@ using UnityEngine;
 using CyclicalSkipList;
 using System.Collections;
 
-public class load : MonoBehaviour {
+public class load : MonoBehaviour
+{
+    private VoronoiDiagramDrawer _drawer;
+    private VoronoiDiagram _diagram;
 
 	// Use this for initialization
 	void Start ()
@@ -19,26 +22,23 @@ public class load : MonoBehaviour {
 	        MathUtils.CreateVectorAt(100, 0)
 	    };
 
-        var generator = new VoronoiGenerator(positions);
-        generator.ProcessNextEvent();
-        generator.ProcessNextEvent();
-        generator.ProcessNextEvent();
-        generator.ProcessNextEvent();
-        //generator.ProcessNextEvent();
+        _diagram = new VoronoiDiagram(positions);
 
-        VoronoiGeneratorDrawer.DrawVoronoiGenerator(generator);
+	    _drawer = new VoronoiDiagramDrawer(_diagram);
 
-        Debug.Log(generator.Beachline);
+        Debug.Log(_diagram.Beachline);
 
-        //var beachline = new Beachline();
-        //beachline.Insert(new SiteEvent(positions[0]));
-        //beachline.Insert(new SiteEvent(positions[1]));
 
-        //BeachlineDrawer.DrawBeachline(beachline);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+
+	    if (Input.GetKeyDown(KeyCode.N))
+	    {
+            _diagram.ProcessNextEvent();
+            _drawer.UpdateVoronoiDiagram();
+            Debug.Log(_diagram.Beachline);
+	    }
 	}
 }
