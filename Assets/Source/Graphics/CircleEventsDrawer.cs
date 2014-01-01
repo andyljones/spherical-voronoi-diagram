@@ -34,7 +34,7 @@ namespace Graphics
                 _gameObjects.Add(circleEvent, gameObject);
             }
 
-            var removedCircles = _gameObjects.Keys.Except(_circleEvents);
+            var removedCircles = _gameObjects.Keys.Except(_circleEvents).ToList();
 
             foreach (var circleEvent in removedCircles)
             {

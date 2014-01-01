@@ -54,7 +54,7 @@ public class CircleEventQueue : IEnumerable<CircleEvent>
 
     public IEnumerator<CircleEvent> GetEnumerator()
     {
-        return _circleEvents.GetEnumerator();
+        return _circleEvents.ToList().GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
