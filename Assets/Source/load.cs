@@ -5,22 +5,19 @@ using Graphics;
 using UnityEngine;
 using CyclicalSkipList;
 using System.Collections;
+using Random = System.Random;
 
 public class load : MonoBehaviour
 {
+    private Random _random = new Random();
+
     private VoronoiDiagramDrawer _drawer;
     private VoronoiDiagram _diagram;
 
 	// Use this for initialization
 	void Start ()
 	{
-	    var positions = new List<Vector3>
-	    {
-	        MathUtils.CreateVectorAt(45, 0),
-	        MathUtils.CreateVectorAt(95, 5),
-	        MathUtils.CreateVectorAt(90, 10),
-	        MathUtils.CreateVectorAt(100, 0)
-	    };
+	    var positions = Enumerable.Range(0, 100).Select(i => CreateSphericalVector());
 
         _diagram = new VoronoiDiagram(positions);
 
@@ -41,4 +38,15 @@ public class load : MonoBehaviour
             Debug.Log(_diagram.Beachline);
 	    }
 	}
+
+    private Vector3 CreateSphericalVector()
+    {
+        var z = (float)(-1 + 2*_random.NextDouble());
+        var azimuth = (float)(2 * Mathf.PI * _random.NextDouble());
+
+        var x = Mathf.Sqrt(1 - z*z) * Mathf.Cos(azimuth);
+        var y = -Mathf.Sqrt(1 - z*z) * Mathf.Sin(azimuth);
+
+        return new Vector3(x, y, z);
+    }
 }

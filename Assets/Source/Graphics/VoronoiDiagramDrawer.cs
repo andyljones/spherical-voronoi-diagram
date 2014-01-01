@@ -35,19 +35,20 @@ namespace Graphics
         {
             var siteObject = new GameObject("Sites");
             var siteMeshFilter = siteObject.AddComponent<MeshFilter>();
+            var mesh = siteMeshFilter.mesh;
             var siteRenderer = siteObject.AddComponent<MeshRenderer>();
-            siteRenderer.material = Resources.Load("WindArrows", typeof(Material)) as Material;
+            siteRenderer.material = Resources.Load("SiteMaterial", typeof(Material)) as Material;
 
-            var points = sites.Select(site => site.Position).ToArray();
+            var vertices = sites.SelectMany(site => new List<Vector3> {site.Position, 1.05f*site.Position}).ToArray();
 
-            siteMeshFilter.mesh.vertices = points;
-            siteMeshFilter.mesh.SetIndices(
-                Enumerable.Range(0, points.Count()).ToArray(),
-                MeshTopology.Points,
+            mesh.vertices = vertices;
+            mesh.SetIndices(
+                Enumerable.Range(0, mesh.vertexCount).ToArray(),
+                MeshTopology.Lines,
                 0);
 
-            siteMeshFilter.mesh.RecalculateNormals();
-            siteMeshFilter.mesh.uv = Enumerable.Repeat(new Vector2(0, 0), points.Count()).ToArray();
+            mesh.RecalculateNormals();
+            mesh.uv = Enumerable.Repeat(new Vector2(0, 0), mesh.vertexCount).ToArray();
         }
     }
 }

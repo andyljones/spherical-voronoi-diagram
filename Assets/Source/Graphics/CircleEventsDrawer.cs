@@ -23,7 +23,6 @@ namespace Graphics
         public void Update()
         {
             var newCircleEvents = _circleEvents.Except(_gameObjects.Keys);
-            //Debug.Log(_circleEvents.Count());
 
             foreach (var circleEvent in newCircleEvents)
             {
