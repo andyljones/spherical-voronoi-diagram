@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using CyclicalSkipList;
+using UnityEngine;
 
 public class Beachline : IEnumerable<Arc>
 {
@@ -66,7 +68,6 @@ public class Beachline : IEnumerable<Arc>
         var newCircleEvents = new List<CircleEvent>
         {
             new CircleEvent(arcBeingSplit),
-            //new CircleEvent(arcA),
             new CircleEvent(arcB)
         };
 
@@ -80,10 +81,14 @@ public class Beachline : IEnumerable<Arc>
         if (circleEvent.StillHasSameSites())
         {
             var node = _arcs.FetchNode(circleEvent.Arc);
-            node.Left.Key.RightNeighbour = node.Key.RightNeighbour;
-            node.Right.Key.LeftNeighbour = node.Key.LeftNeighbour;
+            node.Left.Key.RightNeighbour = circleEvent.Arc.RightNeighbour;
+            node.Right.Key.LeftNeighbour = circleEvent.Arc.LeftNeighbour;
 
-            return _arcs.Remove(circleEvent.Arc);
+            var removalSuccessful = _arcs.Remove(circleEvent.Arc);
+
+            UnityEngine.Debug.Log(_arcs.Find(circleEvent.Arc));
+
+            return removalSuccessful;
         }
         else
         {

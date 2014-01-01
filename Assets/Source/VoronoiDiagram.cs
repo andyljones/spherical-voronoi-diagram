@@ -26,18 +26,20 @@ public class VoronoiDiagram
 
     public void ProcessNextEvent()
     {
-        if (CircleEventQueue.IsEmpty || SiteEventQueue.FindMax().Priority > CircleEventQueue.FindMax().Priority)
+        if ((!SiteEventQueue.IsEmpty && CircleEventQueue.IsEmpty) || 
+            (!SiteEventQueue.IsEmpty && SiteEventQueue.FindMax().Priority > CircleEventQueue.FindMax().Priority))
         {
-            var site = SiteEventQueue.FindMax();
-            SiteEventQueue.DeleteMax();
+            var site = SiteEventQueue.DeleteMax();
             var circles = Beachline.Insert(site);
             CircleEventQueue.AddAll(circles);
         }
-        else
+        else if ((!CircleEventQueue.IsEmpty && SiteEventQueue.IsEmpty) || 
+            (!CircleEventQueue.IsEmpty && SiteEventQueue.FindMax().Priority < CircleEventQueue.FindMax().Priority))
         {
-            var circle = CircleEventQueue.FindMax();
-            CircleEventQueue.DeleteMax();
+            var circle = CircleEventQueue.DeleteMax();
             Beachline.Remove(circle);
         }
+
+        Debug.Log(String.Join(", ", CircleEventQueue.Select(circle => circle.ToString()).ToArray()));
     }
 }

@@ -17,15 +17,14 @@ public class load : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-	    var positions = Enumerable.Range(0, 100).Select(i => CreateSphericalVector());
+        var positions = Enumerable.Range(0, 10).Select(i => CreateSphericalVector());
+        //var positions = new List<Vector3> { MathUtils.CreateVectorAt(45, 0), MathUtils.CreateVectorAt(90, -90), MathUtils.CreateVectorAt(90, 90) };
 
         _diagram = new VoronoiDiagram(positions);
 
 	    _drawer = new VoronoiDiagramDrawer(_diagram);
 
         Debug.Log(_diagram.Beachline);
-
-
 	}
 	
 	// Update is called once per frame

@@ -56,6 +56,7 @@ namespace Graphics
 
         public static void UpdateLineMesh(Mesh mesh, Vector3[] vertices)
         {
+            mesh.SetIndices(Enumerable.Range(0, 0).ToArray(), MeshTopology.LineStrip, 0);
             mesh.vertices = vertices;
             mesh.SetIndices(Enumerable.Range(0, mesh.vertexCount).ToArray(), MeshTopology.LineStrip, 0);
             mesh.RecalculateNormals();

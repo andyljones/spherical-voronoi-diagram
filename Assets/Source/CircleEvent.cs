@@ -33,13 +33,27 @@ public class CircleEvent : IComparable<CircleEvent>
 
     private static float CalculatePriority(Vector3 a, Vector3 b, Vector3 c)
     {
-        var v = Vector3.Cross(a - b, c - b);
-        var r = Vector3.Dot(a, v);
-        var delta = v.sqrMagnitude;
+        //var v = Vector3.Cross(a - b, c - b);
+        //var r = Vector3.Dot(a, v);
+        //var delta = v.sqrMagnitude;
 
-        var numerator = delta + r*v.z - Mathf.Sqrt((delta - v.z*v.z)*(delta - r*r));
+        //var numerator = delta + r*v.z - Mathf.Sqrt((delta - v.z*v.z)*(delta - r*r));
 
-        return numerator != 0 ? numerator/delta : 0;
+        //return numerator != 0 ? numerator / delta : 0;
+
+        var n = Vector3.Cross(c - b, a - b).normalized;
+        var theta = Mathf.Acos(n.z) + Mathf.Acos(Vector3.Dot(a, n));
+        var z = Mathf.Cos(theta);
+
+        if (0 <= theta && theta < Mathf.PI)
+        {
+            return z + 1;
+        }
+        else
+        {
+            return -z - 1;
+        }
+
     }
 
     public int CompareTo(CircleEvent other)
@@ -50,9 +64,8 @@ public class CircleEvent : IComparable<CircleEvent>
     public override string ToString()
     {
         return String.Format(
-            "({0,3:N0},{1,3:N0},{2,3:N0})",
-            OriginalLeftNeighbour.ToString(),
-            OriginalSiteEvent.ToString(),
-            OriginalRightNeighbour.ToString());
+            "({0,3:N0},{1,3:N0})",
+            Arc.ToString(),
+            Priority.ToString());
     }
 }

@@ -19,7 +19,7 @@ public class SiteEvent : IComparable<SiteEvent>
 
     public int CompareTo(SiteEvent other)
     {
-        return Priority.CompareTo(other.Priority);
+        return Position.z.CompareTo(other.Position.z);
     }
 
     public override string ToString()
