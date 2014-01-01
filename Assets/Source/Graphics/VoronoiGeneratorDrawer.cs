@@ -8,6 +8,7 @@ namespace Graphics
     public static class VoronoiGeneratorDrawer
     {
         public static int NumberOfSweeplineVertices = 100;
+        public static int NumberOfVerticesPerCircle = 100;
 
         public static void DrawVoronoiGenerator(VoronoiGenerator generator)
         {
@@ -15,6 +16,13 @@ namespace Graphics
             DrawSites(generator.SiteEvents);
             DrawSweepline(generator.Beachline.Sweepline);
             BeachlineDrawer.DrawBeachline(generator.Beachline);
+
+            var circleObject = new GameObject("Circles");
+            foreach (var circleEvent in generator.CircleEvents)
+            {
+                var circle = DrawCircle(circleEvent);
+                circle.transform.parent = circleObject.transform;
+            }
         }
 
         private static void DrawSweepline(Sweepline sweepline)
@@ -63,5 +71,37 @@ namespace Graphics
             siteMeshFilter.mesh.uv = Enumerable.Repeat(new Vector2(0, 0), points.Count()).ToArray();
         }
 
+
+        private static GameObject DrawCircle(CircleEvent circle)
+        {
+            var circleObject = new GameObject("Circle" + circle);
+            var circleMeshFilter = circleObject.AddComponent<MeshFilter>();
+            var circleRenderer = circleObject.AddComponent<MeshRenderer>();
+            circleRenderer.material = Resources.Load("CircleEvents", typeof(Material)) as Material;
+
+            var a = circle.OriginalLeftNeighbour.Position;
+            var b = circle.OriginalSiteEvent.Position;
+            var c = circle.OriginalRightNeighbour.Position;
+
+            var n = Vector3.Cross(a - b, c - b).normalized;
+
+            var s = a - Vector3.Dot(a, n) * n;
+            var t = Vector3.Cross(s, n);
+
+            var angles = DrawingUtilities.AzimuthsInRange(0, 2 * Mathf.PI, NumberOfVerticesPerCircle);
+
+            var points = angles.Select(angle => Vector3.Dot(a,n)*n + Mathf.Cos(angle) * s + Mathf.Sin(angle) * t).ToArray();
+
+            circleMeshFilter.mesh.vertices = points;
+            circleMeshFilter.mesh.SetIndices(
+                Enumerable.Range(0, points.Count()).ToArray(),
+                MeshTopology.LineStrip,
+                0);
+
+            circleMeshFilter.mesh.RecalculateNormals();
+            circleMeshFilter.mesh.uv = Enumerable.Repeat(new Vector2(0, 0), points.Count()).ToArray();
+
+            return circleObject;
+        }
     }
 }

@@ -5,9 +5,9 @@ public class CircleEvent : IComparable<CircleEvent>
 {
     public Arc Arc;
 
-    private readonly SiteEvent _originalLeftNeighbour;
-    private readonly SiteEvent _originalSiteEvent;
-    private readonly SiteEvent _originalRightNeighbour;
+    public readonly SiteEvent OriginalLeftNeighbour;
+    public readonly SiteEvent OriginalSiteEvent;
+    public readonly SiteEvent OriginalRightNeighbour;
 
     public readonly float Priority;
 
@@ -15,18 +15,18 @@ public class CircleEvent : IComparable<CircleEvent>
     public CircleEvent(Arc arc)
     {
         Arc = arc;
-        _originalLeftNeighbour = arc.LeftNeighbour;
-        _originalSiteEvent = arc.SiteEvent;
-        _originalRightNeighbour = arc.RightNeighbour;
+        OriginalLeftNeighbour = arc.LeftNeighbour;
+        OriginalSiteEvent = arc.SiteEvent;
+        OriginalRightNeighbour = arc.RightNeighbour;
         Priority = CalculatePriority(arc.LeftNeighbour.Position, arc.SiteEvent.Position, arc.RightNeighbour.Position);
     }
 
     public bool StillHasSameSites()
     {
         var result = 
-            Arc.LeftNeighbour == _originalLeftNeighbour &&
-            Arc.SiteEvent == _originalSiteEvent &&
-            Arc.RightNeighbour == _originalRightNeighbour;
+            Arc.LeftNeighbour == OriginalLeftNeighbour &&
+            Arc.SiteEvent == OriginalSiteEvent &&
+            Arc.RightNeighbour == OriginalRightNeighbour;
 
         return result;
     }

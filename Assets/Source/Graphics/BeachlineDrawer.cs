@@ -11,13 +11,16 @@ namespace Graphics
 
         public static void DrawBeachline(Beachline beachline)
         {
+            var beachlineObject = new GameObject("Beachline");
+
             foreach (var arc in beachline)
             {
-                DrawArc(arc);
+                var arcObject = DrawArc(arc);
+                arcObject.transform.parent = beachlineObject.transform;
             }
         }
 
-        private static void DrawArc(Arc arc)
+        private static GameObject DrawArc(Arc arc)
         {
             var arcObject = new GameObject("Arc" + arc);
             var arcMeshFilter = arcObject.AddComponent<MeshFilter>();
@@ -47,6 +50,8 @@ namespace Graphics
 
             arcMeshFilter.mesh.RecalculateNormals();
             arcMeshFilter.mesh.uv = Enumerable.Repeat(new Vector2(0, 0), pointsOnArc.Count()).ToArray();
+
+            return arcObject;
         }
 
         private static IEnumerable<Vector3> PointsOnArc(Arc arc, IEnumerable<float> azimuths)
@@ -72,5 +77,6 @@ namespace Graphics
 
             return new Vector3(x, y, z).normalized;
         }
+
     }
 }
