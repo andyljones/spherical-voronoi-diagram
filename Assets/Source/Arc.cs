@@ -8,6 +8,9 @@ public class Arc
     public SiteEvent LeftNeighbour;
     public SiteEvent RightNeighbour;
 
+    public Edge LeftEdge;
+    public Edge RightEdge;
+
     public readonly Sweepline Sweepline;
 
     public Arc(SiteEvent siteEvent, Sweepline sweepline)

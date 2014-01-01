@@ -8,10 +8,13 @@ using C5;
 public class CircleEventQueue : IEnumerable<CircleEvent>
 {
     private IPriorityQueue<CircleEvent> _circleEvents;
-    private Dictionary<Arc, IPriorityQueueHandle<CircleEvent>> _arcToCircleDictionary; 
+    private Dictionary<Arc, IPriorityQueueHandle<CircleEvent>> _arcToCircleDictionary;
 
-    public CircleEventQueue()
+    private float _terminationPriority;
+
+    public CircleEventQueue(float terminationPriority)
     {
+        _terminationPriority = terminationPriority;
         _circleEvents = new IntervalHeap<CircleEvent>();
         _arcToCircleDictionary = new Dictionary<Arc, IPriorityQueueHandle<CircleEvent>>();
     }
@@ -46,9 +49,13 @@ public class CircleEventQueue : IEnumerable<CircleEvent>
             }
 
             var newCircleEvent = new CircleEvent(arc);
-            IPriorityQueueHandle<CircleEvent> newHandle = null;
-            _circleEvents.Add(ref newHandle, newCircleEvent);            
-            _arcToCircleDictionary.Add(arc, newHandle);
+
+            if (newCircleEvent.Priority >= _terminationPriority)
+            {
+                IPriorityQueueHandle<CircleEvent> newHandle = null;
+                _circleEvents.Add(ref newHandle, newCircleEvent);
+                _arcToCircleDictionary.Add(arc, newHandle);
+            }
         }
     }
 

@@ -17,10 +17,10 @@ public class VoronoiDiagram
     public VoronoiDiagram(IEnumerable<Vector3> positions)
     {
         SiteEventQueue = new IntervalHeap<SiteEvent>();
-        CircleEventQueue = new CircleEventQueue();
-
         SiteEventQueue.AddAll(positions.Select(position => new SiteEvent(position)));
         SiteEvents = SiteEventQueue.ToList();
+        var terminatingPriority = SiteEventQueue.FindMin().Priority;
+        CircleEventQueue = new CircleEventQueue(terminatingPriority);
         Beachline = new Beachline();
     }
 

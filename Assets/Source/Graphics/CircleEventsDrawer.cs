@@ -40,7 +40,7 @@ namespace Graphics
             {
                 var gameObject = _gameObjects[circleEvent];
                 _gameObjects.Remove(circleEvent);
-                gameObject.GetComponent<MeshFilter>().mesh = new Mesh();
+                Object.Destroy(gameObject);
             }
         }
 
