@@ -71,18 +71,16 @@ public class Beachline : IEnumerable<Arc>
     }
 
     //TODO: Test.
-    public bool Remove(Arc arc)
+    public IEnumerable<Arc> Remove(Arc arc)
     {
-        Sweepline.Z = arc.SiteEvent.Position.z;
         var node = _arcs.FetchNode(arc);
         node.Left.Key.RightNeighbour = arc.RightNeighbour;
         node.Right.Key.LeftNeighbour = arc.LeftNeighbour;
-
-        var removalSuccessful = _arcs.Remove(arc);
+        _arcs.Remove(arc);
 
         Count = Count - 1;
 
-        return removalSuccessful;
+        return new List<Arc> {node.Left.Key, node.Right.Key};
     }
 
     public IEnumerator<Arc> GetEnumerator()

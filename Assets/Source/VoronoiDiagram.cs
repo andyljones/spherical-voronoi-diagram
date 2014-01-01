@@ -10,14 +10,14 @@ public class VoronoiDiagram
     public readonly IEnumerable<SiteEvent> SiteEvents;
 
     public IPriorityQueue<SiteEvent> SiteEventQueue { get; private set; }
-    public IPriorityQueue<CircleEvent> CircleEventQueue { get; private set; }
+    public CircleEventQueue CircleEventQueue { get; private set; }
 
     public Beachline Beachline;
 
     public VoronoiDiagram(IEnumerable<Vector3> positions)
     {
         SiteEventQueue = new IntervalHeap<SiteEvent>();
-        CircleEventQueue = new IntervalHeap<CircleEvent>();
+        CircleEventQueue = new CircleEventQueue();
 
         SiteEventQueue.AddAll(positions.Select(position => new SiteEvent(position)));
         SiteEvents = SiteEventQueue.ToList();
@@ -26,20 +26,20 @@ public class VoronoiDiagram
 
     public void ProcessNextEvent()
     {
-        if ((!SiteEventQueue.IsEmpty && CircleEventQueue.IsEmpty) || 
+        if ((!SiteEventQueue.IsEmpty && CircleEventQueue.IsEmpty()) || 
             (!SiteEventQueue.IsEmpty && SiteEventQueue.FindMax().Priority > CircleEventQueue.FindMax().Priority))
         {
             var site = SiteEventQueue.DeleteMax();
             var arcs = Beachline.Insert(site);
-            CircleEventQueue.AddAll(arcs.Select(arc => new CircleEvent(arc)));
+            CircleEventQueue.UpdateArcs(arcs);
         }
-        else if ((!CircleEventQueue.IsEmpty && SiteEventQueue.IsEmpty) || 
-            (!CircleEventQueue.IsEmpty && SiteEventQueue.FindMax().Priority < CircleEventQueue.FindMax().Priority))
+        else if ((!CircleEventQueue.IsEmpty() && SiteEventQueue.IsEmpty) || 
+            (!CircleEventQueue.IsEmpty() && SiteEventQueue.FindMax().Priority < CircleEventQueue.FindMax().Priority))
         {
             var circle = CircleEventQueue.DeleteMax();
-            Beachline.Remove(circle.Arc);
+            Beachline.Sweepline.Z = circle.Priority - 1;
+            var arcs = Beachline.Remove(circle.Arc);
+            CircleEventQueue.UpdateArcs(arcs);
         }
-
-        Debug.Log(String.Join(", ", CircleEventQueue.Select(circle => circle.ToString()).ToArray()));
     }
 }

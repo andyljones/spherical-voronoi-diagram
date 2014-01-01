@@ -11,9 +11,9 @@ namespace Graphics
 
         private GameObject _parentObject;
         private Dictionary<CircleEvent, GameObject> _gameObjects;
-        private readonly IPriorityQueue<CircleEvent> _circleEvents;
+        private readonly CircleEventQueue _circleEvents;
 
-        public CircleEventsDrawer(IPriorityQueue<CircleEvent> circleEvents)
+        public CircleEventsDrawer(CircleEventQueue circleEvents)
         {
             _circleEvents = circleEvents;
             _parentObject = new GameObject("Circle Events");
@@ -32,6 +32,15 @@ namespace Graphics
                 gameObject.transform.parent = _parentObject.transform;
 
                 _gameObjects.Add(circleEvent, gameObject);
+            }
+
+            var removedCircles = _gameObjects.Keys.Except(_circleEvents);
+
+            foreach (var circleEvent in removedCircles)
+            {
+                var gameObject = _gameObjects[circleEvent];
+                _gameObjects.Remove(circleEvent);
+                gameObject.GetComponent<MeshFilter>().mesh = new Mesh();
             }
         }
 
