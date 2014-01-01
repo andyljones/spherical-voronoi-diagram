@@ -30,14 +30,14 @@ public class VoronoiDiagram
             (!SiteEventQueue.IsEmpty && SiteEventQueue.FindMax().Priority > CircleEventQueue.FindMax().Priority))
         {
             var site = SiteEventQueue.DeleteMax();
-            var circles = Beachline.Insert(site);
-            CircleEventQueue.AddAll(circles);
+            var arcs = Beachline.Insert(site);
+            CircleEventQueue.AddAll(arcs.Select(arc => new CircleEvent(arc)));
         }
         else if ((!CircleEventQueue.IsEmpty && SiteEventQueue.IsEmpty) || 
             (!CircleEventQueue.IsEmpty && SiteEventQueue.FindMax().Priority < CircleEventQueue.FindMax().Priority))
         {
             var circle = CircleEventQueue.DeleteMax();
-            Beachline.Remove(circle);
+            Beachline.Remove(circle.Arc);
         }
 
         Debug.Log(String.Join(", ", CircleEventQueue.Select(circle => circle.ToString()).ToArray()));

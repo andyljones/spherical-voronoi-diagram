@@ -6,7 +6,7 @@ using UnityEngine;
 
 public static class MathUtils
 {
-    public const float ComparisonTolerance = 0.00001f;
+    public const float ComparisonTolerance = 0.0001f;
 
     public static float AzimuthOf(Vector3 point)
     {

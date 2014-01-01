@@ -19,15 +19,21 @@ namespace SphericalVoronoiDiagramTests
             // Fixture setup
             var anonymousSite = anonymousSites.First();
 
-            var expectedResult = anonymousSite.Position.z;
 
             // Exercise system
             sut.Insert(anonymousSite);
 
             // Verify outcome
             var result = sut.Sweepline.Z;
+            var expectedResult = anonymousSite.Position.z;
 
-            Assert.Equal(expectedResult, result);
+            var failureString =
+                String.Format(
+                "Sites were:\n{0}\n\nBeachline was {1}",
+                String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()),
+                sut.ToString());
+
+            Assert.True(expectedResult == result, failureString);
 
             // Teardown
         }
@@ -44,9 +50,16 @@ namespace SphericalVoronoiDiagramTests
             sut.Insert(anonymousSite);
 
             // Verify outcome
-            var result = sut.First();
+            var result = sut.First().SiteEvent;
+            var expectedResult = anonymousSite;
 
-            Assert.Equal(anonymousSite, result.SiteEvent);
+            var failureString =
+                String.Format(
+                "Sites were:\n{0}\n\nBeachline was {1}",
+                String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()),
+                sut.ToString());
+
+            Assert.True(expectedResult == result, failureString);
 
             // Teardown
         }
@@ -63,10 +76,18 @@ namespace SphericalVoronoiDiagramTests
             sut.Insert(anonymousSite);
 
             // Verify outcome
-            var result = sut.First();
+            var result1 = sut.First().LeftNeighbour;
+            var result2 = sut.First().RightNeighbour;
+            var expectedResult = anonymousSite;
 
-            Assert.Equal(anonymousSite, result.LeftNeighbour);
-            Assert.Equal(anonymousSite, result.RightNeighbour);
+            var failureString =
+                String.Format(
+                "Sites were:\n{0}\n\nBeachline was {1}",
+                String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()),
+                sut.ToString());
+
+            Assert.True(expectedResult == result1, failureString);
+            Assert.True(expectedResult == result2, failureString);
 
             // Teardown
         }
@@ -89,13 +110,17 @@ namespace SphericalVoronoiDiagramTests
             var result1 = sut.First();
             var result2 = sut.Last();
 
-            Debug.WriteLine(sut);
+            var failureString =
+                String.Format(
+                "Sites were:\n{0}\n\nBeachline was {1}",
+                String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()),
+                sut.ToString());
 
-            Assert.Equal(result2.SiteEvent, result1.LeftNeighbour);
-            Assert.Equal(result2.SiteEvent, result1.RightNeighbour);
-
-            Assert.Equal(result1.SiteEvent, result2.LeftNeighbour);
-            Assert.Equal(result1.SiteEvent, result2.RightNeighbour);
+            Assert.True(result2.SiteEvent == result1.LeftNeighbour, failureString);
+            Assert.True(result2.SiteEvent == result1.RightNeighbour, failureString);
+                                          
+            Assert.True(result1.SiteEvent == result2.LeftNeighbour, failureString);
+            Assert.True(result1.SiteEvent == result2.RightNeighbour, failureString);
 
             // Teardown
         }
@@ -120,7 +145,13 @@ namespace SphericalVoronoiDiagramTests
             // Verify outcome
             var result = sut.Count();
 
-            Assert.Equal(expectedResult, result);
+            var failureString =
+                String.Format(
+                "Sites were:\n{0}\n\nBeachline was {1}",
+                String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()),
+                sut.ToString());
+
+            Assert.True(expectedResult == result, failureString);
 
             // Teardown
         }
@@ -146,6 +177,13 @@ namespace SphericalVoronoiDiagramTests
             var expectedResult = sites.Skip(1).Concat(sites.Take(1)).ToList();
             var result = sut.Select(arc => arc.RightNeighbour).ToList();
 
+            var failureString =
+                String.Format(
+                "Sites were:\n{0}\n\nBeachline was {1}",
+                String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()),
+                sut.ToString());
+
+            Debug.WriteLine(failureString);
             Assert.Equal(expectedResult, result);
 
             // Teardown
@@ -172,6 +210,13 @@ namespace SphericalVoronoiDiagramTests
             var expectedResult = sites.Skip(sites.Count - 1).Concat(sites.Take(sites.Count - 1)).ToList();
             var result = sut.Select(arc => arc.LeftNeighbour).ToList();
 
+            var failureString =
+                String.Format(
+                "Sites were:\n{0}\n\nBeachline was {1}",
+                String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()),
+                sut.ToString());
+
+            Debug.WriteLine(failureString);
             Assert.Equal(expectedResult, result);
 
             // Teardown
@@ -195,13 +240,19 @@ namespace SphericalVoronoiDiagramTests
             Debug.WriteLine(String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()));
 
             // Verify outcome
+            var failureString =
+                String.Format(
+                "Sites were:\n{0}\n\nBeachline was {1}",
+                String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()),
+                sut.ToString());
+
             var arcs = sut.ToList();
             for (int i = 1; i < arcs.Count - 1; i++)
             {
-                Assert.True(Arc.AreInOrder(arcs[i - 1], arcs[i], arcs[i + 1]));
+                Assert.True(Arc.AreInOrder(arcs[i - 1], arcs[i], arcs[i + 1]), failureString);
             }
-            Assert.True(Arc.AreInOrder(arcs[arcs.Count - 2], arcs[arcs.Count - 1], arcs[0]));
-            Assert.True(Arc.AreInOrder(arcs[arcs.Count - 1], arcs[0], arcs[1]));
+            Assert.True(Arc.AreInOrder(arcs[arcs.Count - 2], arcs[arcs.Count - 1], arcs[0]), failureString);
+            Assert.True(Arc.AreInOrder(arcs[arcs.Count - 1], arcs[0], arcs[1]), failureString);
 
             // Teardown
         }
@@ -223,7 +274,14 @@ namespace SphericalVoronoiDiagramTests
 
             // Verify outcome
             var expectedResult = 2;
-            Assert.Equal(expectedResult, result);
+
+            var failureString =
+                String.Format(
+                "Sites were:\n{0}\n\nBeachline was {1}",
+                String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()),
+                sut.ToString());
+
+            Assert.True(expectedResult == result, failureString);
 
             // Teardown
         }
@@ -242,7 +300,14 @@ namespace SphericalVoronoiDiagramTests
 
             // Verify outcome
             var expectedResult = 0;
-            Assert.Equal(expectedResult, result);
+
+            var failureString =
+                String.Format(
+                "Sites were:\n{0}\n\nBeachline was {1}",
+                String.Join(", ", anonymousSites.Select(site => site.ToString()).ToArray()),
+                sut.ToString());
+
+            Assert.True(expectedResult == result, failureString);
 
             // Teardown
         }

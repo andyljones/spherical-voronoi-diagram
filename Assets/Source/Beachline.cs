@@ -13,8 +13,9 @@ public class Beachline : IEnumerable<Arc>
     //TODO: Test.
     public int Count { get; private set; }
 
-    public IEnumerable<CircleEvent> Insert(SiteEvent siteEvent)
+    public IEnumerable<Arc> Insert(SiteEvent siteEvent)
     {
+        Sweepline.Z = siteEvent.Position.z;
         if (Count <= 1)
         {
             return InsertOneOfFirstTwoSites(siteEvent);
@@ -25,9 +26,8 @@ public class Beachline : IEnumerable<Arc>
         }
     }
 
-    private IEnumerable<CircleEvent> InsertOneOfFirstTwoSites(SiteEvent siteEvent)
+    private IEnumerable<Arc> InsertOneOfFirstTwoSites(SiteEvent siteEvent)
     {
-        Sweepline.Z = siteEvent.Position.z;
         var arc = new Arc(siteEvent, Sweepline);
         _arcs.Add(arc);
 
@@ -40,12 +40,11 @@ public class Beachline : IEnumerable<Arc>
 
         Count = Count + 1;
 
-        return new List<CircleEvent>();
+        return new List<Arc>();
     }
 
-    private IEnumerable<CircleEvent> InsertSiteOtherThanTheFirstTwo(SiteEvent siteEvent)
+    private IEnumerable<Arc> InsertSiteOtherThanTheFirstTwo(SiteEvent siteEvent)
     {
-        Sweepline.Z = siteEvent.Position.z;
         var arcA = new Arc(siteEvent, Sweepline);
 
         var arcBeingSplit = _arcs.FetchNode(arcA).Key;
@@ -66,35 +65,24 @@ public class Beachline : IEnumerable<Arc>
 
         Count = Count + 2;
 
-        var newCircleEvents = new List<CircleEvent>
-        {
-            new CircleEvent(arcBeingSplit),
-            new CircleEvent(arcB)
-        };
+        var newCircleEvents = new List<Arc> { arcBeingSplit, arcB };
 
         return newCircleEvents;
     }
 
     //TODO: Test.
-    public bool Remove(CircleEvent circleEvent)
+    public bool Remove(Arc arc)
     {
-        Sweepline.Z = circleEvent.Priority - 1;
-        if (circleEvent.StillHasSameSites())
-        {
-            var node = _arcs.FetchNode(circleEvent.Arc);
-            node.Left.Key.RightNeighbour = circleEvent.Arc.RightNeighbour;
-            node.Right.Key.LeftNeighbour = circleEvent.Arc.LeftNeighbour;
+        Sweepline.Z = arc.SiteEvent.Position.z;
+        var node = _arcs.FetchNode(arc);
+        node.Left.Key.RightNeighbour = arc.RightNeighbour;
+        node.Right.Key.LeftNeighbour = arc.LeftNeighbour;
 
-            var removalSuccessful = _arcs.Remove(circleEvent.Arc);
+        var removalSuccessful = _arcs.Remove(arc);
 
-            Count = Count - 1;
+        Count = Count - 1;
 
-            return removalSuccessful;
-        }
-        else
-        {
-            return false;
-        }
+        return removalSuccessful;
     }
 
     public IEnumerator<Arc> GetEnumerator()
