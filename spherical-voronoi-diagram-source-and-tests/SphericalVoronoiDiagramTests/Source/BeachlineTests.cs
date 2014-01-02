@@ -249,10 +249,10 @@ namespace SphericalVoronoiDiagramTests
             var arcs = sut.ToList();
             for (int i = 1; i < arcs.Count - 1; i++)
             {
-                Assert.True(Arc.AreInOrder(arcs[i - 1], arcs[i], arcs[i + 1]), failureString);
+                Assert.True(ArcOrderer.AreInOrder(arcs[i - 1], arcs[i], arcs[i + 1]), failureString);
             }
-            Assert.True(Arc.AreInOrder(arcs[arcs.Count - 2], arcs[arcs.Count - 1], arcs[0]), failureString);
-            Assert.True(Arc.AreInOrder(arcs[arcs.Count - 1], arcs[0], arcs[1]), failureString);
+            Assert.True(ArcOrderer.AreInOrder(arcs[arcs.Count - 2], arcs[arcs.Count - 1], arcs[0]), failureString);
+            Assert.True(ArcOrderer.AreInOrder(arcs[arcs.Count - 1], arcs[0], arcs[1]), failureString);
 
             // Teardown
         }

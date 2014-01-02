@@ -40,27 +40,33 @@ public static class MathUtils
         return new Vector3(x, y, z);
     }
 
-    //TODO: Rewrite this function to not use trig.
-    public static Vector3 AzimuthalMidpointBetween(Vector3 a, Vector3 b)
+    public static Vector3 EquatorialMidpointBetween(Vector3 a, Vector3 b)
     {
-        var azimuthOfA = AzimuthOf(a);
-        var azimuthOfB = AzimuthOf(b);
-
-        float azimuthalMidpoint;
-        if (azimuthOfA <= azimuthOfB)
+        if (a.z >= 1)
         {
-            azimuthalMidpoint = azimuthOfA + (azimuthOfB - azimuthOfA)/2;
+            return EquatorialVectorOf(b);
         }
-        else
+        if (b.z >= 1)
         {
-            azimuthalMidpoint = azimuthOfA + (2*Mathf.PI - (azimuthOfA - azimuthOfB))/2;
+            return EquatorialVectorOf(a);
+        }
+        if (a == b)
+        {
+            return EquatorialVectorOf(a);
         }
 
-        var x = Mathf.Cos(azimuthalMidpoint);
-        var y = -Mathf.Sin(azimuthalMidpoint);
-        var z = a.z + (b.z - a.z)/2;
+        var northPole = new Vector3(0, 0, 1);
+        var equatorialA = EquatorialVectorOf(a);
+        var equatorialB = EquatorialVectorOf(b);
 
-        return new Vector3(x, y, z).normalized;
+        var midpoint = Vector3.Cross(equatorialB - northPole, equatorialA - northPole);
+        return EquatorialVectorOf(midpoint);
+    }
+
+    public static Vector3 EquatorialVectorOf(Vector3 v)
+    {
+        v.z = 0;
+        return v.normalized;
     }
 
     public static int AreInCyclicOrder(Vector3 a, Vector3 b, Vector3 c)

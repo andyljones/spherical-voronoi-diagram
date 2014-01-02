@@ -1,4 +1,6 @@
-﻿using SphericalVoronoiDiagramTests.DataAttributes;
+﻿using Ploeh.AutoFixture.Xunit;
+using SphericalVoronoiDiagramTests.DataAttributes;
+using UnityEngine;
 using Xunit;
 using Xunit.Extensions;
 
@@ -6,6 +8,8 @@ namespace SphericalVoronoiDiagramTests
 {
     public class MathUtilsTests
     {
+        private const int Tolerance = 3; 
+
         [Fact]
         public void AreInCyclicOrder_OnVectorsOrderedEastToWest_ShouldReturnPositive1()
         {
@@ -78,6 +82,44 @@ namespace SphericalVoronoiDiagramTests
             var expectedResult = 0;
 
             Assert.Equal(expectedResult, result);
+
+            // Teardown
+        }
+
+        [Theory]
+        [SphericalVectorAndSweeplineData]
+        public void EquatorialMidpoint_OnTwoNonpolarVectors_ShouldLieHalfwayRoundFromTheLeftTowardsTheRight
+            (Vector3 left, Vector3 right)
+        {
+            // Fixture setup
+            
+            // Exercise system
+            var sut = MathUtils.EquatorialMidpointBetween(left, right);
+
+            // Verify outcome
+            var expectedResult = MathUtils.AzimuthOf(left) + (MathUtils.AzimuthOf(right) - MathUtils.AzimuthOf(left))/2;
+            var result = MathUtils.AzimuthOf(sut);
+
+            Assert.Equal(expectedResult, result, Tolerance);
+
+            // Teardown
+        }
+
+        [Theory]
+        [SphericalVectorAndSweeplineData]
+        public void EquatorialMidpoint_WithAPolarVector_ShouldReturnTheEquatorialVectorOfTheNonpolarVector
+            (Vector3 left)
+        {
+            // Fixture setup
+
+            // Exercise system
+            var sut = MathUtils.EquatorialMidpointBetween(left, new Vector3(0, 0, 1));
+
+            // Verify outcome
+            var expectedResult = MathUtils.AzimuthOf(left);
+            var result = MathUtils.AzimuthOf(sut);
+
+            Assert.Equal(expectedResult, result, Tolerance);
 
             // Teardown
         }

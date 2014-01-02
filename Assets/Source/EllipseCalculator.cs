@@ -14,17 +14,15 @@ public static class EllipseCalculator
 
         if (Mathf.Abs(a.z - Z) < MathUtils.ComparisonTolerance && Mathf.Abs(b.z - Z) < MathUtils.ComparisonTolerance)
         {
-            var northPole = new Vector3(0, 0, 1);
-            var midpointAtLimit = Vector3.Cross(b - northPole, a - northPole);
-            return EquatorialVectorOf(midpointAtLimit);
+            return MathUtils.EquatorialMidpointBetween(a, b);
         }
         if (Mathf.Abs(a.z - Z) < MathUtils.ComparisonTolerance)
         {
-            return EquatorialVectorOf(a);
+            return MathUtils.EquatorialVectorOf(a);
         }
         if (Mathf.Abs(b.z - Z) < MathUtils.ComparisonTolerance)
         {
-            return EquatorialVectorOf(b);
+            return MathUtils.EquatorialVectorOf(b);
         }
 
         var A = a.x * (Z - b.z) - b.x * (Z - a.z);
@@ -37,17 +35,11 @@ public static class EllipseCalculator
         return new Vector3(x, y, 0);
     }
 
-    private static Vector3 EquatorialVectorOf(Vector3 v)
-    {
-        v.z = 0;
-        return v.normalized;
-    }
-
     public static Vector3 PointOnEllipseAboveVector(Vector3 v, Vector3 focus, Sweepline sweepline)
     {
         var p = focus;
         var Z = sweepline.Z;
-        var t = EquatorialVectorOf(v);
+        var t = MathUtils.EquatorialVectorOf(v);
         
         var tanOfColat = (Z - p.z) / (p.x*t.x + p.y*t.y - Mathf.Sqrt(1 - Z * Z));
         var z = Mathf.Sign(tanOfColat) / Mathf.Sqrt(1 + tanOfColat*tanOfColat);

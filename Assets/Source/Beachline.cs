@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Beachline : IEnumerable<Arc>
 {
-    private readonly Skiplist<Arc> _arcs = new Skiplist<Arc> {InOrder = Arc.AreInOrder};
+    private readonly Skiplist<Arc> _arcs = new Skiplist<Arc> {InOrder = ArcOrderer.AreInOrder};
     public readonly Sweepline Sweepline = new Sweepline(2);
 
     //TODO: Test.

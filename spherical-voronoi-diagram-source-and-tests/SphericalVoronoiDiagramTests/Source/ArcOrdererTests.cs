@@ -9,7 +9,7 @@ using Xunit.Extensions;
 
 namespace SphericalVoronoiDiagramTests
 {
-    public class ArcTests
+    public class ArcOrdererTests
     {
         [Theory]
         [SphericalVectorAndSweeplineData]
@@ -19,7 +19,7 @@ namespace SphericalVoronoiDiagramTests
             // Fixture setup
 
             // Exercise system
-            var result = Arc.AreInOrder(arcA, arcB, arcA);
+            var result = ArcOrderer.AreInOrder(arcA, arcB, arcA);
 
             // Verify outcome
             Assert.True(result);
@@ -49,7 +49,7 @@ namespace SphericalVoronoiDiagramTests
             }
 
             // Exercise system
-            var result = Arc.AreInOrder(orderedArcA, orderedArcB, orderedArcC);
+            var result = ArcOrderer.AreInOrder(orderedArcA, orderedArcB, orderedArcC);
 
             // Verify outcome
             Assert.True(result);
@@ -79,7 +79,7 @@ namespace SphericalVoronoiDiagramTests
             }
 
             // Exercise system
-            var result = Arc.AreInOrder(orderedArcA, orderedArcC, orderedArcB);
+            var result = ArcOrderer.AreInOrder(orderedArcA, orderedArcC, orderedArcB);
 
             // Verify outcome
             Assert.False(result);
