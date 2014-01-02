@@ -7,8 +7,7 @@ namespace SphericalVoronoiDiagramTests
     public class MathUtilsTests
     {
         [Fact]
-        [SphericalVectorAndSweeplineData]
-        public void AreInCyclicOrder_OnVectors0N0EAnd0N90EAnd0N180E_ShouldReturnPositive1()
+        public void AreInCyclicOrder_OnVectorsOrderedEastToWest_ShouldReturnPositive1()
         {
             // Fixture setup
             var a = MathUtils.CreateVectorAt(90, 0);
@@ -27,8 +26,7 @@ namespace SphericalVoronoiDiagramTests
         }
 
         [Fact]
-        [SphericalVectorAndSweeplineData]
-        public void AreInCyclicOrder_OnVectors0N90EAnd0N0EAnd0N180E_ShouldReturnNegative1()
+        public void AreInCyclicOrder_OnVectorsOrderedWestToEast_ShouldReturnNegative1()
         {
             // Fixture setup
             var a = MathUtils.CreateVectorAt(90, 90);
@@ -47,8 +45,7 @@ namespace SphericalVoronoiDiagramTests
         }
 
         [Fact]
-        [SphericalVectorAndSweeplineData]
-        public void AreInCyclicOrder_OnVectors45N0EAnd0N0EAnd0N90E_ShouldReturn0()
+        public void AreInCyclicOrder_OnVectorsWhereTheFirstTwoHaveTheSameAzimuth_ShouldReturn0()
         {
             // Fixture setup
             var a = MathUtils.CreateVectorAt(45, 0);
@@ -67,8 +64,7 @@ namespace SphericalVoronoiDiagramTests
         }
 
         [Fact]
-        [SphericalVectorAndSweeplineData]
-        public void AreInCyclicOrder_OnVectors0N0EAnd0N90EAnd45N90E_ShouldReturn0()
+        public void AreInCyclicOrder_OnVectorsWhereTheLastTwoHaveTheSameAzimuth_ShouldReturn0()
         {
             // Fixture setup
             var a = MathUtils.CreateVectorAt(90, 0);

@@ -65,9 +65,9 @@ public class Beachline : IEnumerable<Arc>
 
         Count = Count + 2;
 
-        var newCircleEvents = new List<Arc> { arcBeingSplit, arcB };
+        var circleEventsToUpdate = new List<Arc> { arcBeingSplit, arcB };
 
-        return newCircleEvents;
+        return circleEventsToUpdate;
     }
 
     //TODO: Test.

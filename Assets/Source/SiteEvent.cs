@@ -25,8 +25,8 @@ public class SiteEvent : IComparable<SiteEvent>
     public override string ToString()
     {
         return String.Format("({0,3:N0},{1,3:N0})",
-            180 / Mathf.PI * Mathf.Acos(Position.z),
-            180 / Mathf.PI * Azimuth());
+            Mathf.Rad2Deg * Mathf.Acos(Position.z),
+            Mathf.Rad2Deg * Azimuth());
     }
 
     public float Azimuth()

@@ -10,6 +10,8 @@ namespace SphericalVoronoiDiagramTests.FixtureCustomizations
     {
         private readonly Random _random;
 
+        private const float MinimalSweeplineToVectorDistance = 0.01f;
+
         public VectorAboveSweeplineCustomization()
         {
             _random = new Random();
@@ -17,7 +19,8 @@ namespace SphericalVoronoiDiagramTests.FixtureCustomizations
 
         private Vector3 CreateSphericalVector(Sweepline sweepline)
         {
-            var z = (float)(sweepline.Z + (1-sweepline.Z)*_random.NextDouble());
+            var minimalZ = sweepline.Z + MinimalSweeplineToVectorDistance;
+            var z = (float)(minimalZ + (1 - minimalZ)*_random.NextDouble());
             var azimuth = (float) (2*Mathf.PI * _random.NextDouble());
 
             var x = Mathf.Sqrt(1 - z*z)*Mathf.Cos(azimuth);

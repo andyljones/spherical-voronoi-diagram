@@ -19,7 +19,7 @@ public class VoronoiDiagram
         SiteEventQueue = new IntervalHeap<SiteEvent>();
         SiteEventQueue.AddAll(positions.Select(position => new SiteEvent(position)));
         SiteEvents = SiteEventQueue.ToList();
-        var terminatingPriority = SiteEventQueue.FindMin().Priority;
+        var terminatingPriority = -SiteEventQueue.FindMin().Priority;
         CircleEventQueue = new CircleEventQueue(terminatingPriority);
         Beachline = new Beachline();
     }
