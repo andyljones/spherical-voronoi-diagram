@@ -318,10 +318,10 @@ namespace SphericalVoronoiDiagramTests
             // Fixture setup
             var positions = new List<Vector3>
         {
-            MathUtils.CreateVectorAt(0, 0),
-            MathUtils.CreateVectorAt(10, -45),
-            MathUtils.CreateVectorAt(10, 45),
-            MathUtils.CreateVectorAt(20, 5)
+            MathUtils.CreateVectorAtDegrees(0, 0),
+            MathUtils.CreateVectorAtDegrees(10, -45),
+            MathUtils.CreateVectorAtDegrees(10, 45),
+            MathUtils.CreateVectorAtDegrees(20, 5)
         };
             var _diagram = new VoronoiDiagram(positions);
             _diagram.ProcessNextEvent();

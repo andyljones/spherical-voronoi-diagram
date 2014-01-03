@@ -23,21 +23,26 @@ public static class MathUtils
         return ((x % m) + m) % m;
     }
 
-    public static SiteEvent CreateSiteAt(float colatitude, float azimuth)
+    public static SiteEvent CreateSiteAtDegrees(float colatitude, float azimuth)
     {
-        return new SiteEvent(CreateVectorAt(colatitude, azimuth));
+        return new SiteEvent(CreateVectorAtDegrees(colatitude, azimuth));
     }
 
     public static Vector3 CreateVectorAt(float colatitude, float azimuth)
     {
-        colatitude = colatitude * Mathf.PI / 180;
-        azimuth = azimuth * Mathf.PI / 180;
-
         var x = Mathf.Sin(colatitude) * Mathf.Cos(azimuth);
         var y = Mathf.Sin(colatitude) * -Mathf.Sin(azimuth);
         var z = Mathf.Cos(colatitude);
 
         return new Vector3(x, y, z);
+    }
+
+    public static Vector3 CreateVectorAtDegrees(float colatitude, float azimuth)
+    {
+        colatitude = colatitude * Mathf.PI / 180;
+        azimuth = azimuth * Mathf.PI / 180;
+
+        return CreateVectorAt(colatitude, azimuth);
     }
 
     public static Vector3 EquatorialMidpointBetween(Vector3 a, Vector3 b)

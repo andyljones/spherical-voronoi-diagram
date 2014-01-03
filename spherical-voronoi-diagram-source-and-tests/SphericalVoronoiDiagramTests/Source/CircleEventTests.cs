@@ -13,10 +13,10 @@ namespace SphericalVoronoiDiagramTests
             var anonymousSweepline = new Sweepline(-1f);
             var sut =
                 new CircleEvent(
-                    new Arc(MathUtils.CreateSiteAt(90, 0), anonymousSweepline)
+                    new Arc(MathUtils.CreateSiteAtDegrees(90, 0), anonymousSweepline)
                 {
-                    LeftNeighbour = MathUtils.CreateSiteAt(0, 90),
-                    RightNeighbour = MathUtils.CreateSiteAt(0, -90)
+                    LeftNeighbour = MathUtils.CreateSiteAtDegrees(0, 90),
+                    RightNeighbour = MathUtils.CreateSiteAtDegrees(0, -90)
                 });
 
             // Exercise system
@@ -37,10 +37,10 @@ namespace SphericalVoronoiDiagramTests
             var anonymousSweepline = new Sweepline(-1f);
             var sut =
                 new CircleEvent(
-                    new Arc(MathUtils.CreateSiteAt(45, 0), anonymousSweepline)
+                    new Arc(MathUtils.CreateSiteAtDegrees(45, 0), anonymousSweepline)
                 {
-                    LeftNeighbour = MathUtils.CreateSiteAt(90, -90),
-                    RightNeighbour = MathUtils.CreateSiteAt(90, 90)
+                    LeftNeighbour = MathUtils.CreateSiteAtDegrees(90, -90),
+                    RightNeighbour = MathUtils.CreateSiteAtDegrees(90, 90)
                 });
 
             // Exercise system
@@ -61,10 +61,10 @@ namespace SphericalVoronoiDiagramTests
             var anonymousSweepline = new Sweepline(-1f);
             var sut =
                 new CircleEvent(
-                    new Arc(MathUtils.CreateSiteAt(90, 0), anonymousSweepline)
+                    new Arc(MathUtils.CreateSiteAtDegrees(90, 0), anonymousSweepline)
                 {
-                    LeftNeighbour = MathUtils.CreateSiteAt(90, -90),
-                    RightNeighbour = MathUtils.CreateSiteAt(90, 90)
+                    LeftNeighbour = MathUtils.CreateSiteAtDegrees(90, -90),
+                    RightNeighbour = MathUtils.CreateSiteAtDegrees(90, 90)
                 });
 
             // Exercise system
@@ -86,10 +86,10 @@ namespace SphericalVoronoiDiagramTests
             var anonymousSweepline = new Sweepline(-1f);
             var sut =
                 new CircleEvent(
-                    new Arc(MathUtils.CreateSiteAt(90, 0), anonymousSweepline)
+                    new Arc(MathUtils.CreateSiteAtDegrees(90, 0), anonymousSweepline)
                     {
-                        LeftNeighbour = MathUtils.CreateSiteAt(90, 90),
-                        RightNeighbour = MathUtils.CreateSiteAt(90, -90)
+                        LeftNeighbour = MathUtils.CreateSiteAtDegrees(90, 90),
+                        RightNeighbour = MathUtils.CreateSiteAtDegrees(90, -90)
                     });
 
             // Exercise system

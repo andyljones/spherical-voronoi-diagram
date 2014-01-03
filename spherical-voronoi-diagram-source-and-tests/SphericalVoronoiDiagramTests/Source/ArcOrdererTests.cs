@@ -82,8 +82,8 @@ namespace SphericalVoronoiDiagramTests
 
         private IArc FakeArc(float leftColatitude, float leftAzimuth, float rightColatitude, float rightAzimuth)
         {
-            var leftIntersection = MathUtils.CreateVectorAt(leftColatitude, leftAzimuth);
-            var rightIntersection = MathUtils.CreateVectorAt(rightColatitude, rightAzimuth);
+            var leftIntersection = MathUtils.CreateVectorAtDegrees(leftColatitude, leftAzimuth);
+            var rightIntersection = MathUtils.CreateVectorAtDegrees(rightColatitude, rightAzimuth);
 
             var fakeArc = Substitute.For<IArc>();
             fakeArc.DirectionOfLeftIntersection.ReturnsForAnyArgs(leftIntersection);

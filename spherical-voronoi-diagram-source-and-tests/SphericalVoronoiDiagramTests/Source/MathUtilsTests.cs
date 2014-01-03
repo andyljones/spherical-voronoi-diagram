@@ -19,9 +19,9 @@ namespace SphericalVoronoiDiagramTests
         public void AreInCyclicOrder_OnVectorsOrderedEastToWest_ShouldReturnTrue()
         {
             // Fixture setup
-            var a = MathUtils.CreateVectorAt(90, 0);
-            var b = MathUtils.CreateVectorAt(90, 90);
-            var c = MathUtils.CreateVectorAt(90, 180);
+            var a = MathUtils.CreateVectorAtDegrees(90, 0);
+            var b = MathUtils.CreateVectorAtDegrees(90, 90);
+            var c = MathUtils.CreateVectorAtDegrees(90, 180);
 
             // Exercise system
             var result = MathUtils.AreInCyclicOrder(a, b, c);
@@ -38,9 +38,9 @@ namespace SphericalVoronoiDiagramTests
         public void AreInCyclicOrder_OnVectorsOrderedWestToEast_ShouldReturnFalse()
         {
             // Fixture setup
-            var a = MathUtils.CreateVectorAt(90, 90);
-            var b = MathUtils.CreateVectorAt(90, 0);
-            var c = MathUtils.CreateVectorAt(90, 180);
+            var a = MathUtils.CreateVectorAtDegrees(90, 90);
+            var b = MathUtils.CreateVectorAtDegrees(90, 0);
+            var c = MathUtils.CreateVectorAtDegrees(90, 180);
 
             // Exercise system
             var result = MathUtils.AreInCyclicOrder(a, b, c);
@@ -57,9 +57,9 @@ namespace SphericalVoronoiDiagramTests
         public void AreInCyclicOrder_OnVectorsWhereTheFirstTwoHaveTheSameAzimuth_ShouldReturnTrue()
         {
             // Fixture setup
-            var a = MathUtils.CreateVectorAt(45, 0);
-            var b = MathUtils.CreateVectorAt(90, 0);
-            var c = MathUtils.CreateVectorAt(90, 90);
+            var a = MathUtils.CreateVectorAtDegrees(45, 0);
+            var b = MathUtils.CreateVectorAtDegrees(90, 0);
+            var c = MathUtils.CreateVectorAtDegrees(90, 90);
 
             // Exercise system
             var result = MathUtils.AreInCyclicOrder(a, b, c);
@@ -76,9 +76,9 @@ namespace SphericalVoronoiDiagramTests
         public void AreInCyclicOrder_OnVectorsWhereTheLastTwoHaveTheSameAzimuth_ShouldReturnFalse()
         {
             // Fixture setup
-            var a = MathUtils.CreateVectorAt(90, 0);
-            var b = MathUtils.CreateVectorAt(90, 90);
-            var c = MathUtils.CreateVectorAt(45, 90);
+            var a = MathUtils.CreateVectorAtDegrees(90, 0);
+            var b = MathUtils.CreateVectorAtDegrees(90, 90);
+            var c = MathUtils.CreateVectorAtDegrees(45, 90);
 
             // Exercise system
             var result = MathUtils.AreInCyclicOrder(a, b, c);
@@ -95,9 +95,9 @@ namespace SphericalVoronoiDiagramTests
         public void AreInCyclicOrder_OnVectorsWhereFirstAndTheLastHaveTheSameAzimuth_ShouldReturnTrue()
         {
             // Fixture setup
-            var a = MathUtils.CreateVectorAt(90, 0);
-            var b = MathUtils.CreateVectorAt(90, 90);
-            var c = MathUtils.CreateVectorAt(90, 0);
+            var a = MathUtils.CreateVectorAtDegrees(90, 0);
+            var b = MathUtils.CreateVectorAtDegrees(90, 90);
+            var c = MathUtils.CreateVectorAtDegrees(90, 0);
 
             // Exercise system
             var result = MathUtils.AreInCyclicOrder(a, b, c);

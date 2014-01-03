@@ -34,7 +34,7 @@ namespace Graphics
 
             var vertices = 
                 azimuths.Select(
-                azimuth => MathUtils.CreateVectorAt(Mathf.Rad2Deg*colatitude, Mathf.Rad2Deg*azimuth))
+                azimuth => MathUtils.CreateVectorAt(colatitude, azimuth))
                 .ToArray();
 
             var latitudeObject = 
@@ -53,7 +53,7 @@ namespace Graphics
 
             var vertices = 
                 azimuths.Select(
-                colatitude => MathUtils.CreateVectorAt(Mathf.Rad2Deg*colatitude, Mathf.Rad2Deg*azimuth))
+                colatitude => MathUtils.CreateVectorAt(colatitude, azimuth))
                 .ToArray();
 
             var longitudeObject = 
@@ -64,5 +64,10 @@ namespace Graphics
 
             return longitudeObject;
         }
+
+        //private static GameObject DrawLabel(float colatitude, float azimuth)
+        //{
+            
+        //}
     }
 }

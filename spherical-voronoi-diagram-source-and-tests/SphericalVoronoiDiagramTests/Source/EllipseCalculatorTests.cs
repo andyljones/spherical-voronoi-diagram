@@ -17,8 +17,8 @@ namespace SphericalVoronoiDiagramTests
             ()
         {
             // Fixture setup
-            var leftSite = MathUtils.CreateSiteAt(90, -90);
-            var rightSite = MathUtils.CreateSiteAt(90, 90);
+            var leftSite = MathUtils.CreateSiteAtDegrees(90, -90);
+            var rightSite = MathUtils.CreateSiteAtDegrees(90, 90);
 
             var sweepline = new Sweepline(0.0f);
 
@@ -38,8 +38,8 @@ namespace SphericalVoronoiDiagramTests
             ()
         {
             // Fixture setup
-            var leftSite = MathUtils.CreateSiteAt(90, -90);
-            var rightSite = MathUtils.CreateSiteAt(45, 90);
+            var leftSite = MathUtils.CreateSiteAtDegrees(90, -90);
+            var rightSite = MathUtils.CreateSiteAtDegrees(45, 90);
 
             var sweepline = new Sweepline(0.0f);
 
@@ -60,8 +60,8 @@ namespace SphericalVoronoiDiagramTests
             ()
         {
             // Fixture setup
-            var leftSite = MathUtils.CreateSiteAt(45, -90);
-            var rightSite = MathUtils.CreateSiteAt(90, 90);
+            var leftSite = MathUtils.CreateSiteAtDegrees(45, -90);
+            var rightSite = MathUtils.CreateSiteAtDegrees(90, 90);
 
             var sweepline = new Sweepline(0.0f);
 
@@ -81,8 +81,8 @@ namespace SphericalVoronoiDiagramTests
             ()
         {
             // Fixture setup
-            var leftSite = MathUtils.CreateSiteAt(90, -90);
-            var rightSite = MathUtils.CreateSiteAt(90, 90);
+            var leftSite = MathUtils.CreateSiteAtDegrees(90, -90);
+            var rightSite = MathUtils.CreateSiteAtDegrees(90, 90);
 
             var sweepline = new Sweepline(-0.5f);
 
@@ -102,8 +102,8 @@ namespace SphericalVoronoiDiagramTests
             ()
         {
             // Fixture setup
-            var leftSite = MathUtils.CreateSiteAt(90, 0);
-            var rightSite = MathUtils.CreateSiteAt(90, 180);
+            var leftSite = MathUtils.CreateSiteAtDegrees(90, 0);
+            var rightSite = MathUtils.CreateSiteAtDegrees(90, 180);
 
             var sweepline = new Sweepline(-0.5f);
 
@@ -180,8 +180,8 @@ namespace SphericalVoronoiDiagramTests
             ()
         {
             // Fixture setup
-            var leftSite = MathUtils.CreateSiteAt(90, -90);
-            var rightSite = MathUtils.CreateSiteAt(90, 90);
+            var leftSite = MathUtils.CreateSiteAtDegrees(90, -90);
+            var rightSite = MathUtils.CreateSiteAtDegrees(90, 90);
 
             var sweepline = new Sweepline(0.0f);
 
