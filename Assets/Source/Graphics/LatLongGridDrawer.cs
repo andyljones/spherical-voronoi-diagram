@@ -26,6 +26,12 @@ namespace Graphics
                 var longitudeObject = DrawLongitude(azimuth);
                 longitudeObject.transform.parent = gridObject.transform;
             }
+
+            foreach (var colatitude in Enumerable.Range(1, 17).Select(i => i*Mathf.PI/18))
+            {
+                var labelObject = DrawLabelsAtColatitude(colatitude);
+                labelObject.transform.parent = gridObject.transform;
+            }
         }
 
         private static GameObject DrawLatitude(float colatitude)
@@ -65,9 +71,41 @@ namespace Graphics
             return longitudeObject;
         }
 
-        //private static GameObject DrawLabel(float colatitude, float azimuth)
-        //{
-            
-        //}
+        private static GameObject DrawLabelsAtColatitude(float colatitude)
+        {
+            var azimuths = DrawingUtilities.AzimuthsInRange(0, 2 * Mathf.PI, 36);
+
+            var labels = azimuths.Take(36).Select(azimuth => DrawLabel(colatitude, azimuth));
+
+            var parentObject = new GameObject("Latitude Labels " + Mathf.Rad2Deg * colatitude);
+            foreach (var label in labels)
+            {
+                label.transform.parent = parentObject.transform;
+            }
+
+            return parentObject;
+        }
+
+        private static GameObject DrawLabel(float colatitude, float azimuth)
+        {
+            var text = String.Format("{0,3:N0}  {1,3:N0}", Mathf.Rad2Deg*colatitude, Mathf.Rad2Deg*azimuth);
+
+            var labelObject = new GameObject("Label " + text);
+
+            var normal = MathUtils.CreateVectorAt(colatitude, azimuth);
+            var localEast = Vector3.Cross(normal, new Vector3(0, 0, 1));
+            var localNorth = Vector3.Cross(localEast, normal);
+            labelObject.transform.position = normal;
+            labelObject.transform.rotation = Quaternion.LookRotation(-normal, localNorth);
+
+            var textMesh = labelObject.AddComponent<TextMesh>();
+            textMesh.text = text;
+            textMesh.font = Resources.Load("ARIAL", typeof (Font)) as Font;
+            textMesh.renderer.material = Resources.Load("OneSidedMaterial", typeof(Material)) as Material;
+            textMesh.characterSize = 0.005f;
+            textMesh.anchor = TextAnchor.UpperCenter;
+
+            return labelObject;
+        }
     }
 }
