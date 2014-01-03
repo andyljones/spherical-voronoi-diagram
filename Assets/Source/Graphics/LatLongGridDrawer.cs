@@ -8,8 +8,6 @@ namespace Graphics
     {
         public static int NumberOfPointsPerLatitude = 100;
         public static int NumberOfPointsPerLongitude = 50;
-        
-            public static Material BoundaryMaterial = Resources.Load("Boundaries", typeof(Material)) as Material;
 
         public static float ScaleFactor = 0.99f;
 
@@ -28,34 +26,22 @@ namespace Graphics
                 var longitudeObject = DrawLongitude(azimuth);
                 longitudeObject.transform.parent = gridObject.transform;
             }
-            
         }
 
         private static GameObject DrawLatitude(float colatitude)
         {
-            var latitudeObject = new GameObject("Latitude " + colatitude * 180/Mathf.PI);
-            var latitudeMeshFilter = latitudeObject.AddComponent<MeshFilter>();
-            var latitudeRenderer = latitudeObject.AddComponent<MeshRenderer>();
-            latitudeRenderer.material = Resources.Load("Boundaries", typeof(Material)) as Material;
-
             var azimuths = DrawingUtilities.AzimuthsInRange(0, 2*Mathf.PI, NumberOfPointsPerLatitude);
 
-            var z = Mathf.Cos(colatitude);
+            var vertices = 
+                azimuths.Select(
+                azimuth => MathUtils.CreateVectorAt(Mathf.Rad2Deg*colatitude, Mathf.Rad2Deg*azimuth))
+                .ToArray();
 
-            var scaleFactor = Mathf.Sqrt(1 - z*z);
-            Func<float, Vector3> pointAtAzimuth =
-                azimuth => ScaleFactor * new Vector3(scaleFactor * Mathf.Cos(azimuth), -scaleFactor * Mathf.Sin(azimuth), z);
-
-            var points = azimuths.Select(azimuth => pointAtAzimuth(azimuth)).ToArray();
-
-            latitudeMeshFilter.mesh.vertices = points;
-            latitudeMeshFilter.mesh.SetIndices(
-                Enumerable.Range(0, points.Count()).ToArray(),
-                MeshTopology.LineStrip,
-                0);
-
-            latitudeMeshFilter.mesh.RecalculateNormals();
-            latitudeMeshFilter.mesh.uv = Enumerable.Repeat(new Vector2(0, 0), points.Count()).ToArray();
+            var latitudeObject = 
+                DrawingUtilities.CreateLineObject(
+                "Colatitude " + Mathf.Rad2Deg*colatitude, 
+                vertices, 
+                "Boundaries");
 
             return latitudeObject;
         }
@@ -63,29 +49,18 @@ namespace Graphics
 
         private static GameObject DrawLongitude(float azimuth)
         {
-            var longitudeObject = new GameObject("Longitude " + azimuth * 180 / Mathf.PI);
-            var longitudeMeshFilter = longitudeObject.AddComponent<MeshFilter>();
-            var longitudeRenderer = longitudeObject.AddComponent<MeshRenderer>();
-            longitudeRenderer.material = Resources.Load("Boundaries", typeof(Material)) as Material;
-
             var azimuths = DrawingUtilities.AzimuthsInRange(0, Mathf.PI, NumberOfPointsPerLongitude);
 
-            var x = Mathf.Cos(azimuth);
-            var y = -Mathf.Sin(azimuth);
+            var vertices = 
+                azimuths.Select(
+                colatitude => MathUtils.CreateVectorAt(Mathf.Rad2Deg*colatitude, Mathf.Rad2Deg*azimuth))
+                .ToArray();
 
-            Func<float, Vector3> pointAtAzimuth =
-                colatitude => ScaleFactor*new Vector3(x*Mathf.Sin(colatitude), y*Mathf.Sin(colatitude), Mathf.Cos(colatitude));
-
-            var points = azimuths.Select(colatitude => pointAtAzimuth(colatitude)).ToArray();
-
-            longitudeMeshFilter.mesh.vertices = points;
-            longitudeMeshFilter.mesh.SetIndices(
-                Enumerable.Range(0, points.Count()).ToArray(),
-                MeshTopology.LineStrip,
-                0);
-
-            longitudeMeshFilter.mesh.RecalculateNormals();
-            longitudeMeshFilter.mesh.uv = Enumerable.Repeat(new Vector2(0, 0), points.Count()).ToArray();
+            var longitudeObject = 
+                DrawingUtilities.CreateLineObject(
+                "Longitude " + Mathf.Rad2Deg*azimuth,
+                vertices, 
+                "Boundaries");
 
             return longitudeObject;
         }
