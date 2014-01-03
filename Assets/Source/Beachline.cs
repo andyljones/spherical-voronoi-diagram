@@ -41,6 +41,12 @@ public class Beachline : IEnumerable<Arc>
 
         Count = Count + 1;
 
+        if (Count == 2)
+        {
+            node.Left.Key.UpdateLeftEdge();
+            arc.UpdateLeftEdge();
+        }
+
         return new List<Arc>();
     }
 
@@ -65,17 +71,13 @@ public class Beachline : IEnumerable<Arc>
         leftArc.LeftNeighbour = arcBeingSplit.SiteEvent;
         leftArc.RightNeighbour = arcBeingSplit.SiteEvent;
         leftArc.UpdateLeftEdge();
-        leftArc.UpdateRightEdge();
 
         rightArc.LeftNeighbour = siteEvent;
         rightArc.SiteEvent = arcBeingSplit.SiteEvent;
         rightArc.RightNeighbour = arcBeingSplit.RightNeighbour;
         rightArc.UpdateLeftEdge();
-        rightArc.RightEdge = arcBeingSplit.RightEdge;
 
         arcBeingSplit.RightNeighbour = siteEvent;
-        arcBeingSplit.RightEdge = null;
-        arcBeingSplit.UpdateRightEdge();
 
         return new List<Arc> {arcBeingSplit, rightArc};
     }
@@ -103,9 +105,7 @@ public class Beachline : IEnumerable<Arc>
 
         node.Left.Key.RightNeighbour = arc.RightNeighbour;
         node.Right.Key.LeftNeighbour = arc.LeftNeighbour;
-        node.Left.Key.UpdateRightEdge();
         node.Right.Key.UpdateLeftEdge();
-
 
         UnityEngine.Debug.Log(successfulRemoval);
 

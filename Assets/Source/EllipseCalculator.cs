@@ -59,11 +59,6 @@ public static class EllipseCalculator
         var b = rightEvent.Position;
         var Z = sweepline.Z;
 
-        //if (Mathf.Abs(a.z - Z) < MathUtils.ComparisonTolerance && Mathf.Abs(b.z - Z) < MathUtils.ComparisonTolerance)
-        //{
-        //    return new Vector3(0, 0, 1);
-        //}
-
         var v = EquatorialVectorOfIntersection(leftEvent, rightEvent, sweepline);
 
         var focus = Mathf.Abs(a.z - Z) < MathUtils.ComparisonTolerance ? b : a;

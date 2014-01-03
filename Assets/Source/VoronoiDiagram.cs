@@ -48,10 +48,8 @@ public class VoronoiDiagram
             CircleEventQueue.UpdateArcs(arcs);
 
             circle.Arc.UpdateLeftEdge();
-            circle.Arc.UpdateRightEdge();
 
             FinishedEdges.Add(circle.Arc.LeftEdge);
-            FinishedEdges.Add(circle.Arc.RightEdge);
         }
     }
 }

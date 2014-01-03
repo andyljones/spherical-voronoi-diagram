@@ -34,19 +34,20 @@ public class Arc : IArc
     public void UpdateLeftEdge()
     {
         var oldEdge = LeftEdge;
-        var endpoint = EllipseCalculator.PointOnEllipseAboveVector(DirectionOfLeftIntersection, SiteEvent.Position, Sweepline);
 
+        Vector3 focus;
+        if (Mathf.Abs(SiteEvent.Position.z - Sweepline.Z) >= Mathf.Abs(LeftNeighbour.Position.z - Sweepline.Z))
+        {
+            focus = SiteEvent.Position;
+        }
+        else
+        {
+            focus = LeftNeighbour.Position;
+        }
+
+        var endpoint = EllipseCalculator.PointOnEllipseAboveVector(DirectionOfLeftIntersection, focus, Sweepline);
         var newEdge = new Edge(endpoint, oldEdge);
         LeftEdge = newEdge;
-    }
-
-    public void UpdateRightEdge()
-    {
-        var oldEdge = RightEdge;
-        var endpoint = EllipseCalculator.PointOnEllipseAboveVector(DirectionOfLeftIntersection, SiteEvent.Position, Sweepline);
-
-        var newEdge = new Edge(endpoint, oldEdge);
-        RightEdge = newEdge;
     }
 
     public override string ToString()

@@ -23,7 +23,7 @@ namespace Graphics
             _sweeplineDrawer = new SweeplineDrawer(diagram.Beachline.Sweepline);
             _beachlineDrawer = new BeachlineDrawer(diagram.Beachline);
             _circleEventDrawer = new CircleEventsDrawer(diagram.CircleEventQueue);
-            _edgeDrawer = new EdgeDrawer(diagram.FinishedEdges);
+            _edgeDrawer = new EdgeDrawer(diagram.FinishedEdges, diagram.Beachline);
         }
 
         public void UpdateVoronoiDiagram()
