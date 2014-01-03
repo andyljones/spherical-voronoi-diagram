@@ -28,10 +28,12 @@ namespace Graphics
 
         public void Update()
         {
-            _beachline.Sweepline.Z = _beachline.Sweepline.Z - 0.0001f;
+            _beachline.Sweepline.Z = _beachline.Sweepline.Z - 0.0000001f;
             var mesh = _gameObject.GetComponent<MeshFilter>().mesh;
             var vertices = BeachlineVertices(_beachline);
             DrawingUtilities.UpdateLineMesh(mesh, vertices);
+            _beachline.Sweepline.Z = _beachline.Sweepline.Z + 0.0000001f;
+
         }
 
         private static Vector3[] BeachlineVertices(Beachline beachline)
@@ -50,8 +52,8 @@ namespace Graphics
             }
             else
             {
-                var leftLimit = MathUtils.AzimuthOf(arc.LeftIntersection());
-                var rightLimit = MathUtils.AzimuthOf(arc.RightIntersection());
+                var leftLimit = MathUtils.AzimuthOf(arc.DirectionOfLeftIntersection);
+                var rightLimit = MathUtils.AzimuthOf(arc.DirectionOfRightIntersection);
                 azimuths =  DrawingUtilities.AzimuthsInRange(leftLimit, rightLimit, NumberOfVerticesPerArc);
             }
 

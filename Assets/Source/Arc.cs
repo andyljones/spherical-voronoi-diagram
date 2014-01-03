@@ -2,9 +2,9 @@
 using UnityEngine;
 using SDebug = System.Diagnostics.Debug;
 
-public class Arc
+public class Arc : IArc
 {
-    public readonly SiteEvent SiteEvent;
+    public SiteEvent SiteEvent;
     public SiteEvent LeftNeighbour;
     public SiteEvent RightNeighbour;
 
@@ -21,25 +21,22 @@ public class Arc
         Sweepline = sweepline;
     }
 
-    public Vector3 LeftIntersection()
+    public Vector3 DirectionOfLeftIntersection
     {
-        return EllipseCalculator.IntersectionBetween(LeftNeighbour, SiteEvent, Sweepline);
+        get { return EllipseCalculator.EquatorialVectorOfIntersection(LeftNeighbour, SiteEvent, Sweepline); }
     }
 
-    public Vector3 RightIntersection()
+    public Vector3 DirectionOfRightIntersection
     {
-        return EllipseCalculator.IntersectionBetween(SiteEvent, RightNeighbour, Sweepline);
+        get { return EllipseCalculator.EquatorialVectorOfIntersection(SiteEvent, RightNeighbour, Sweepline); }
     }
 
     public override string ToString()
     {
-        var leftIntersection = LeftIntersection();
-        var rightIntersection = RightIntersection();
-
         return String.Format(
             "({0,3:N0},{1,3:N0},{2,3:N0})",
-            Mathf.Rad2Deg * MathUtils.AzimuthOf(leftIntersection),
+            Mathf.Rad2Deg * MathUtils.AzimuthOf(DirectionOfLeftIntersection),
             Mathf.Rad2Deg * MathUtils.AzimuthOf(SiteEvent.Position),
-            Mathf.Rad2Deg * MathUtils.AzimuthOf(rightIntersection));
+            Mathf.Rad2Deg * MathUtils.AzimuthOf(DirectionOfRightIntersection));
     }
 }

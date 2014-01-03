@@ -26,7 +26,7 @@ public static class EllipseCalculator
         }
         if ((a - b).magnitude < MathUtils.ComparisonTolerance)
         {
-            return MathUtils.EquatorialVectorOf((a+b)/2);
+            return MathUtils.EquatorialVectorOf((a + b) / 2);
         }
 
         var A = a.x * (Z - b.z) - b.x * (Z - a.z);
@@ -59,10 +59,10 @@ public static class EllipseCalculator
         var b = rightEvent.Position;
         var Z = sweepline.Z;
 
-        if (Mathf.Abs(a.z - Z) < MathUtils.ComparisonTolerance && Mathf.Abs(b.z - Z) < MathUtils.ComparisonTolerance)
-        {
-            return new Vector3(0, 0, 1);
-        }
+        //if (Mathf.Abs(a.z - Z) < MathUtils.ComparisonTolerance && Mathf.Abs(b.z - Z) < MathUtils.ComparisonTolerance)
+        //{
+        //    return new Vector3(0, 0, 1);
+        //}
 
         var v = EquatorialVectorOfIntersection(leftEvent, rightEvent, sweepline);
 

@@ -321,9 +321,11 @@ namespace SphericalVoronoiDiagramTests
             MathUtils.CreateVectorAt(0, 0),
             MathUtils.CreateVectorAt(10, -45),
             MathUtils.CreateVectorAt(10, 45),
-            MathUtils.CreateVectorAt(20, 0)
+            MathUtils.CreateVectorAt(20, 5)
         };
             var _diagram = new VoronoiDiagram(positions);
+            _diagram.ProcessNextEvent();
+            _diagram.ProcessNextEvent();
             _diagram.ProcessNextEvent();
             _diagram.ProcessNextEvent();
             _diagram.ProcessNextEvent();

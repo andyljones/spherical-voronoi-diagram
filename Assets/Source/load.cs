@@ -17,14 +17,14 @@ public class load : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-        //var positions = Enumerable.Range(0, 100).Select(i => CreateSphericalVector());
         var positions = new List<Vector3>
         {
             MathUtils.CreateVectorAt(0, 0),
             MathUtils.CreateVectorAt(10, -45),
             MathUtils.CreateVectorAt(10, 45),
-            MathUtils.CreateVectorAt(20, 0)
+            MathUtils.CreateVectorAt(20, 5)
         };
+        positions = Enumerable.Range(0, 100).Select(i => CreateSphericalVector()).ToList();
 
         _diagram = new VoronoiDiagram(positions);
 

@@ -6,25 +6,23 @@ using UnityEngine;
 
 public static class ArcOrderer
 {
-    public static bool AreInOrder(Arc a, Arc b, Arc c)
+    public static bool AreInOrder(IArc a, IArc b, IArc c)
     {
-        var aLeft = EquatorialVectorOfLeftIntersection(a);
-        var bLeft = EquatorialVectorOfLeftIntersection(b);
-        var cLeft = EquatorialVectorOfLeftIntersection(c);
+        var aLeft = a.DirectionOfLeftIntersection;
+        var bLeft = b.DirectionOfLeftIntersection;
+        var cLeft = c.DirectionOfLeftIntersection;
 
-        var orderingOnLeftIntersections = MathUtils.AreInCyclicOrder(aLeft, bLeft, cLeft);
+        var orderedOnLeftIntersections = MathUtils.AreInCyclicOrder(aLeft, bLeft, cLeft);
 
-        return orderingOnLeftIntersections;
-    }
+        var aRight = a.DirectionOfRightIntersection;
+        var bRight = b.DirectionOfRightIntersection;
+        var cRight = c.DirectionOfRightIntersection;
 
-    private static Vector3 EquatorialVectorOfLeftIntersection(Arc a)
-    {
-        return EllipseCalculator.EquatorialVectorOfIntersection(a.LeftNeighbour, a.SiteEvent, a.Sweepline);
-    }
+        var orderedOnRightIntersections = MathUtils.AreInCyclicOrder(aRight, bRight, cRight);
 
-    private static Vector3 EquatorialVectorOfRightIntersection(Arc a)
-    {
-        return EllipseCalculator.EquatorialVectorOfIntersection(a.SiteEvent, a.RightNeighbour, a.Sweepline);
+        //If a has zero width, make sure it can't return true unless b is zero width too
+        // Distinguish a within b from a before b?
+        return MathUtils.AreInCyclicOrder(aLeft, bLeft, cLeft);
     }
 
 }

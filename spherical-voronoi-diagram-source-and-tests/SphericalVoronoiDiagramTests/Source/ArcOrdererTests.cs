@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Policy;
+using NSubstitute;
 using Ploeh.AutoFixture.Xunit;
 using SphericalVoronoiDiagramTests.DataAttributes;
 using UnityEngine;
@@ -11,15 +12,16 @@ namespace SphericalVoronoiDiagramTests
 {
     public class ArcOrdererTests
     {
-        [Theory]
-        [SphericalVectorAndSweeplineData]
-        public void AreInOrder_WhenFirstAndLastArgumentsAreTheSame_ShouldAlwaysBeTrue
-            (Arc arcA, Arc arcB)
+        [Fact]
+        public void AreInOrder_OnThreeCyclicallyOrderedNondegenerateArcs_ShouldReturnTrue()
         {
             // Fixture setup
+            var left =   FakeArc(90,-90,   90,-45);
+            var middle = FakeArc(90,-45,   90, 45);
+            var right =  FakeArc(90, 45,   90, 90);
 
             // Exercise system
-            var result = ArcOrderer.AreInOrder(arcA, arcB, arcA);
+            var result = ArcOrderer.AreInOrder(left, middle, right);
 
             // Verify outcome
             Assert.True(result);
@@ -27,64 +29,67 @@ namespace SphericalVoronoiDiagramTests
             // Teardown
         }
 
-        [Theory]
-        [SphericalVectorAndSweeplineData]
-        public void AreInOrder_OnThreeArcsWhoseLeftIntersectionsAreInCyclicOrder_ShouldBeTrue
-            (Arc arcA, Arc arcB, Arc arcC)
+        [Fact]
+        public void AreInOrder_OnThreeCyclicallyMisorderedNondegenerateArcs_ShouldReturnTrue()
         {
             // Fixture setup
-            var orderedArcA = arcA;
-            Arc orderedArcB;
-            Arc orderedArcC;
-
-            if (MathUtils.AreInCyclicOrder(arcA.LeftIntersection(), arcB.LeftIntersection(), arcC.LeftIntersection()))
-            {
-                orderedArcB = arcB;
-                orderedArcC = arcC;
-            }
-            else
-            {
-                orderedArcB = arcC;
-                orderedArcC = arcB;
-            }
+            var left =   FakeArc(90,-90,   90,-45);
+            var middle = FakeArc(90,-45,   90, 45);
+            var right =  FakeArc(90, 45,   90, 90);
 
             // Exercise system
-            var result = ArcOrderer.AreInOrder(orderedArcA, orderedArcB, orderedArcC);
-
-            // Verify outcome
-            Assert.True(result);
-
-            // Teardown
-        }
-
-        [Theory]
-        [SphericalVectorAndSweeplineData]
-        public void AreInOrder_OnThreeArcsWhoseLeftIntersectionsAreNotCyclicOrder_ShouldBeFalse
-            (Arc arcA, Arc arcB, Arc arcC)
-        {
-            // Fixture setup
-            var orderedArcA = arcA;
-            Arc orderedArcB;
-            Arc orderedArcC;
-
-            if (MathUtils.AreInCyclicOrder(arcA.LeftIntersection(), arcB.LeftIntersection(), arcC.LeftIntersection()))
-            {
-                orderedArcB = arcB;
-                orderedArcC = arcC;
-            }
-            else
-            {
-                orderedArcB = arcC;
-                orderedArcC = arcB;
-            }
-
-            // Exercise system
-            var result = ArcOrderer.AreInOrder(orderedArcA, orderedArcC, orderedArcB);
+            var result = ArcOrderer.AreInOrder(middle, left, right);
 
             // Verify outcome
             Assert.False(result);
 
             // Teardown
+        }
+
+        [Fact]
+        public void AreInOrder_OnThreeCyclicallyOrderedArcsWithADegenerateFirstArc_ShouldReturnTrue()
+        {
+            // Fixture setup
+            var left =   FakeArc(90,-45,   90,-45);
+            var middle = FakeArc(90,-45,   90, 45);
+            var right =  FakeArc(90, 45,   90, 90);
+
+            // Exercise system
+            var result = ArcOrderer.AreInOrder(left, middle, right);
+
+            // Verify outcome
+            Assert.True(result);
+
+            // Teardown
+        }
+
+        [Fact]
+        public void AreInOrder_OnThreeCyclicallyMisorderedArcsWithADegenerateSecondArc_ShouldReturnTrue()
+        {
+            // Fixture setup
+            var left = FakeArc(90, -45, 90, -45);
+            var middle = FakeArc(90, -45, 90, 45);
+            var right = FakeArc(90, 45, 90, 90);
+
+            // Exercise system
+            var result = ArcOrderer.AreInOrder(middle, left, right);
+
+            // Verify outcome
+            Assert.False(result);
+
+            // Teardown
+        }
+
+        private IArc FakeArc(float leftColatitude, float leftAzimuth, float rightColatitude, float rightAzimuth)
+        {
+            var leftIntersection = MathUtils.CreateVectorAt(leftColatitude, leftAzimuth);
+            var rightIntersection = MathUtils.CreateVectorAt(rightColatitude, rightAzimuth);
+
+            var fakeArc = Substitute.For<IArc>();
+            fakeArc.DirectionOfLeftIntersection.ReturnsForAnyArgs(leftIntersection);
+            fakeArc.DirectionOfRightIntersection.ReturnsForAnyArgs(rightIntersection);
+
+            return fakeArc;
         }
     }
 }
