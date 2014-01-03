@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class Edge
 {
-    public Vector3 Origin;
-    public Vector3 Destination;
+    public Vector3 Endpoint;
+    public Edge PreviousEdge;
+
+    public Edge(Vector3 endpoint, Edge previousEdge)
+    {
+        Endpoint = endpoint;
+        PreviousEdge = previousEdge;
+    }
 }

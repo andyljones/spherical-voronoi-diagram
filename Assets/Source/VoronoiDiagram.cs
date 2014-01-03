@@ -12,6 +12,8 @@ public class VoronoiDiagram
     public IPriorityQueue<SiteEvent> SiteEventQueue { get; private set; }
     public CircleEventQueue CircleEventQueue { get; private set; }
 
+    public List<Edge> FinishedEdges { get; private set; } 
+
     public Beachline Beachline;
 
     public VoronoiDiagram(IEnumerable<Vector3> positions)
@@ -19,8 +21,12 @@ public class VoronoiDiagram
         SiteEventQueue = new IntervalHeap<SiteEvent>();
         SiteEventQueue.AddAll(positions.Select(position => new SiteEvent(position)));
         SiteEvents = SiteEventQueue.ToList();
+
         var terminatingPriority = -SiteEventQueue.FindMin().Priority;
         CircleEventQueue = new CircleEventQueue(terminatingPriority);
+        
+        FinishedEdges = new List<Edge>();
+
         Beachline = new Beachline();
     }
 
@@ -40,6 +46,12 @@ public class VoronoiDiagram
             Beachline.Sweepline.Z = circle.Priority - 1;
             var arcs = Beachline.Remove(circle.Arc);
             CircleEventQueue.UpdateArcs(arcs);
+
+            circle.Arc.UpdateLeftEdge();
+            circle.Arc.UpdateRightEdge();
+
+            FinishedEdges.Add(circle.Arc.LeftEdge);
+            FinishedEdges.Add(circle.Arc.RightEdge);
         }
     }
 }

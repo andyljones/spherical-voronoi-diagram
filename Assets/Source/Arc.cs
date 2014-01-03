@@ -31,6 +31,24 @@ public class Arc : IArc
         get { return EllipseCalculator.EquatorialVectorOfIntersection(SiteEvent, RightNeighbour, Sweepline); }
     }
 
+    public void UpdateLeftEdge()
+    {
+        var oldEdge = LeftEdge;
+        var endpoint = EllipseCalculator.PointOnEllipseAboveVector(DirectionOfLeftIntersection, SiteEvent.Position, Sweepline);
+
+        var newEdge = new Edge(endpoint, oldEdge);
+        LeftEdge = newEdge;
+    }
+
+    public void UpdateRightEdge()
+    {
+        var oldEdge = RightEdge;
+        var endpoint = EllipseCalculator.PointOnEllipseAboveVector(DirectionOfLeftIntersection, SiteEvent.Position, Sweepline);
+
+        var newEdge = new Edge(endpoint, oldEdge);
+        RightEdge = newEdge;
+    }
+
     public override string ToString()
     {
         return String.Format(

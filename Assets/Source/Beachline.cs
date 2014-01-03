@@ -30,7 +30,6 @@ public class Beachline : IEnumerable<Arc>
     private IEnumerable<Arc> InsertOneOfFirstTwoSites(SiteEvent siteEvent)
     {
         var arc = new Arc(siteEvent, Sweepline);
-        Sweepline.Z = Sweepline.Z - 0.0000001f;
         _arcs.Add(arc);
 
         var node = _arcs.FetchNode(arc);
@@ -50,10 +49,8 @@ public class Beachline : IEnumerable<Arc>
         var arcA = new Arc(siteEvent, Sweepline);
         var arcB = new Arc(siteEvent, Sweepline);
 
-        Sweepline.Z = Sweepline.Z - 0.00001f;
         _arcs.Insert(arcA);
         _arcs.Insert(arcB);
-        Sweepline.Z = Sweepline.Z + 0.00001f;
         Count = Count + 2;
 
         var nodeA = _arcs.FetchNode(arcA);
@@ -64,16 +61,21 @@ public class Beachline : IEnumerable<Arc>
         var rightArc = orderedNodes[1].Key;
 
         var arcBeingSplit = orderedNodes[0].Left.Key;
-        //UnityEngine.Debug.Log(arcBeingSplit);
 
         leftArc.LeftNeighbour = arcBeingSplit.SiteEvent;
         leftArc.RightNeighbour = arcBeingSplit.SiteEvent;
+        leftArc.UpdateLeftEdge();
+        leftArc.UpdateRightEdge();
 
         rightArc.LeftNeighbour = siteEvent;
         rightArc.SiteEvent = arcBeingSplit.SiteEvent;
         rightArc.RightNeighbour = arcBeingSplit.RightNeighbour;
+        rightArc.UpdateLeftEdge();
+        rightArc.RightEdge = arcBeingSplit.RightEdge;
 
         arcBeingSplit.RightNeighbour = siteEvent;
+        arcBeingSplit.RightEdge = null;
+        arcBeingSplit.UpdateRightEdge();
 
         return new List<Arc> {arcBeingSplit, rightArc};
     }
@@ -94,12 +96,18 @@ public class Beachline : IEnumerable<Arc>
     //TODO: Test.
     public IEnumerable<Arc> Remove(Arc arc)
     {
-        Sweepline.Z = Sweepline.Z + 0.00001f;
+        Sweepline.Z = Sweepline.Z + 0.0001f;
         var node = _arcs.FetchNode(arc);
+        var successfulRemoval = _arcs.Remove(arc);
+        Sweepline.Z = Sweepline.Z - 0.0001f;
+
         node.Left.Key.RightNeighbour = arc.RightNeighbour;
         node.Right.Key.LeftNeighbour = arc.LeftNeighbour;
-        _arcs.Remove(arc);
-        Sweepline.Z = Sweepline.Z - 0.00001f;
+        node.Left.Key.UpdateRightEdge();
+        node.Right.Key.UpdateLeftEdge();
+
+
+        UnityEngine.Debug.Log(successfulRemoval);
 
         Count = Count - 1;
 
