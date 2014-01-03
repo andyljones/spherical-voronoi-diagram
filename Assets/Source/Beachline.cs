@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using CyclicalSkipList;
 using UnityEngine;
 
@@ -46,28 +47,46 @@ public class Beachline : IEnumerable<Arc>
     private IEnumerable<Arc> InsertSiteOtherThanTheFirstTwo(SiteEvent siteEvent)
     {
         var arcA = new Arc(siteEvent, Sweepline);
+        var arcB = new Arc(siteEvent, Sweepline);
 
-        var arcBeingSplit = _arcs.FetchNode(arcA).Key;
+        System.Diagnostics.Debug.WriteLine("Preinsertion: " + _arcs);
+        _arcs.Insert(arcA);
+        _arcs.Insert(arcB);
+        Count = Count + 2;
+        System.Diagnostics.Debug.WriteLine("Postinsertion: " + _arcs);
 
-        arcA.LeftNeighbour = arcBeingSplit.SiteEvent;
-        arcA.RightNeighbour = arcBeingSplit.SiteEvent;
-        _arcs.Add(arcA);
+        var nodeA = _arcs.FetchNode(arcA);
+        var nodeB = _arcs.FetchNode(arcB);
 
-        var arcB = new Arc(arcBeingSplit.SiteEvent, Sweepline)
-        {
-            LeftNeighbour = siteEvent,
-            RightNeighbour = arcBeingSplit.RightNeighbour
-        };
+
+        var orderedNodes = OrderNodes(nodeA, nodeB);
+        var leftArc = orderedNodes[0].Key;
+        var rightArc = orderedNodes[1].Key;
+
+        var arcBeingSplit = orderedNodes[0].Left.Key;
+
+        leftArc.LeftNeighbour = arcBeingSplit.SiteEvent;
+        leftArc.RightNeighbour = arcBeingSplit.SiteEvent;
+
+        rightArc.LeftNeighbour = siteEvent;
+        rightArc.RightNeighbour = arcBeingSplit.RightNeighbour;
 
         arcBeingSplit.RightNeighbour = siteEvent;
 
-        _arcs.Add(arcB);
+        return new List<Arc> {arcBeingSplit, rightArc};
+    }
 
-        Count = Count + 2;
-
-        var circleEventsToUpdate = new List<Arc> { arcBeingSplit, arcB };
-
-        return circleEventsToUpdate;
+    private List<INode<Arc>> OrderNodes(INode<Arc> nodeA, INode<Arc> nodeB)
+    {
+        if (nodeA.Right == nodeB)
+        {
+            return new List<INode<Arc>> {nodeA, nodeB};
+        }
+        if (nodeA.Left == nodeB)
+        {
+            return new List<INode<Arc>> {nodeB, nodeA};
+        }
+        else throw new ArgumentException("Nodes are not neighbours!");
     }
 
     //TODO: Test.

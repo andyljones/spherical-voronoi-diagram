@@ -24,6 +24,10 @@ public static class EllipseCalculator
         {
             return MathUtils.EquatorialVectorOf(b);
         }
+        if ((a - b).magnitude < MathUtils.ComparisonTolerance)
+        {
+            return MathUtils.EquatorialVectorOf((a+b)/2);
+        }
 
         var A = a.x * (Z - b.z) - b.x * (Z - a.z);
         var B = -(a.y * (Z - b.z) - b.y * (Z - a.z));

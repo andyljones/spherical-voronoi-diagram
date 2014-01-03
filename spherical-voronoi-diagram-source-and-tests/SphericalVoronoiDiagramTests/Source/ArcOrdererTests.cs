@@ -37,7 +37,7 @@ namespace SphericalVoronoiDiagramTests
             Arc orderedArcB;
             Arc orderedArcC;
 
-            if (MathUtils.AreInCyclicOrder(arcA.LeftIntersection(), arcB.LeftIntersection(), arcC.LeftIntersection()) >= 0)
+            if (MathUtils.AreInCyclicOrder(arcA.LeftIntersection(), arcB.LeftIntersection(), arcC.LeftIntersection()))
             {
                 orderedArcB = arcB;
                 orderedArcC = arcC;
@@ -67,7 +67,7 @@ namespace SphericalVoronoiDiagramTests
             Arc orderedArcB;
             Arc orderedArcC;
 
-            if (MathUtils.AreInCyclicOrder(arcA.LeftIntersection(), arcB.LeftIntersection(), arcC.LeftIntersection()) >= 0)
+            if (MathUtils.AreInCyclicOrder(arcA.LeftIntersection(), arcB.LeftIntersection(), arcC.LeftIntersection()))
             {
                 orderedArcB = arcB;
                 orderedArcC = arcC;

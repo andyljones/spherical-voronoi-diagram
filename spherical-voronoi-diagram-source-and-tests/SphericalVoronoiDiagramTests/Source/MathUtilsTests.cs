@@ -1,8 +1,13 @@
-﻿using Ploeh.AutoFixture.Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Ploeh.AutoFixture.Xunit;
 using SphericalVoronoiDiagramTests.DataAttributes;
 using UnityEngine;
 using Xunit;
 using Xunit.Extensions;
+using SDebug = System.Diagnostics.Debug;
 
 namespace SphericalVoronoiDiagramTests
 {
@@ -11,7 +16,7 @@ namespace SphericalVoronoiDiagramTests
         private const int Tolerance = 3; 
 
         [Fact]
-        public void AreInCyclicOrder_OnVectorsOrderedEastToWest_ShouldReturnPositive1()
+        public void AreInCyclicOrder_OnVectorsOrderedEastToWest_ShouldReturnTrue()
         {
             // Fixture setup
             var a = MathUtils.CreateVectorAt(90, 0);
@@ -22,7 +27,7 @@ namespace SphericalVoronoiDiagramTests
             var result = MathUtils.AreInCyclicOrder(a, b, c);
 
             // Verify outcome
-            var expectedResult = 1;
+            var expectedResult = true;
 
             Assert.Equal(expectedResult, result);
 
@@ -30,7 +35,7 @@ namespace SphericalVoronoiDiagramTests
         }
 
         [Fact]
-        public void AreInCyclicOrder_OnVectorsOrderedWestToEast_ShouldReturnNegative1()
+        public void AreInCyclicOrder_OnVectorsOrderedWestToEast_ShouldReturnFalse()
         {
             // Fixture setup
             var a = MathUtils.CreateVectorAt(90, 90);
@@ -41,7 +46,7 @@ namespace SphericalVoronoiDiagramTests
             var result = MathUtils.AreInCyclicOrder(a, b, c);
 
             // Verify outcome
-            var expectedResult = -1;
+            var expectedResult = false;
 
             Assert.Equal(expectedResult, result);
 
@@ -49,7 +54,7 @@ namespace SphericalVoronoiDiagramTests
         }
 
         [Fact]
-        public void AreInCyclicOrder_OnVectorsWhereTheFirstTwoHaveTheSameAzimuth_ShouldReturn0()
+        public void AreInCyclicOrder_OnVectorsWhereTheFirstTwoHaveTheSameAzimuth_ShouldReturnTrue()
         {
             // Fixture setup
             var a = MathUtils.CreateVectorAt(45, 0);
@@ -60,7 +65,7 @@ namespace SphericalVoronoiDiagramTests
             var result = MathUtils.AreInCyclicOrder(a, b, c);
 
             // Verify outcome
-            var expectedResult = 0;
+            var expectedResult = true;
 
             Assert.Equal(expectedResult, result);
 
@@ -68,7 +73,7 @@ namespace SphericalVoronoiDiagramTests
         }
 
         [Fact]
-        public void AreInCyclicOrder_OnVectorsWhereTheLastTwoHaveTheSameAzimuth_ShouldReturn0()
+        public void AreInCyclicOrder_OnVectorsWhereTheLastTwoHaveTheSameAzimuth_ShouldReturnFalse()
         {
             // Fixture setup
             var a = MathUtils.CreateVectorAt(90, 0);
@@ -79,7 +84,26 @@ namespace SphericalVoronoiDiagramTests
             var result = MathUtils.AreInCyclicOrder(a, b, c);
 
             // Verify outcome
-            var expectedResult = 0;
+            var expectedResult = false;
+
+            Assert.Equal(expectedResult, result);
+
+            // Teardown
+        }
+
+        [Fact]
+        public void AreInCyclicOrder_OnVectorsWhereFirstAndTheLastHaveTheSameAzimuth_ShouldReturnTrue()
+        {
+            // Fixture setup
+            var a = MathUtils.CreateVectorAt(90, 0);
+            var b = MathUtils.CreateVectorAt(90, 90);
+            var c = MathUtils.CreateVectorAt(90, 0);
+
+            // Exercise system
+            var result = MathUtils.AreInCyclicOrder(a, b, c);
+
+            // Verify outcome
+            var expectedResult = true;
 
             Assert.Equal(expectedResult, result);
 
@@ -88,7 +112,7 @@ namespace SphericalVoronoiDiagramTests
 
         [Theory]
         [SphericalVectorAndSweeplineData]
-        public void EquatorialMidpoint_OnTwoNonpolarVectors_ShouldLieHalfwayRoundFromTheLeftTowardsTheRight
+        public void EquatorialMidpoint_OnTwoNonpolarVectors_ShouldBeEquidistantFromBothVectorsWhenProjectedToEquator
             (Vector3 left, Vector3 right)
         {
             // Fixture setup
@@ -97,8 +121,8 @@ namespace SphericalVoronoiDiagramTests
             var sut = MathUtils.EquatorialMidpointBetween(left, right);
 
             // Verify outcome
-            var expectedResult = MathUtils.AzimuthOf(left) + (MathUtils.AzimuthOf(right) - MathUtils.AzimuthOf(left))/2;
-            var result = MathUtils.AzimuthOf(sut);
+            var expectedResult = (MathUtils.EquatorialVectorOf(left) - sut).magnitude;
+            var result = (MathUtils.EquatorialVectorOf(right) - sut).magnitude;
 
             Assert.Equal(expectedResult, result, Tolerance);
 

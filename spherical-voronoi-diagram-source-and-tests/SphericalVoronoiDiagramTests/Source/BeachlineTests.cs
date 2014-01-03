@@ -311,5 +311,29 @@ namespace SphericalVoronoiDiagramTests
 
             // Teardown
         }
+
+        [Fact]
+        public void Test()
+        {
+            // Fixture setup
+            var positions = new List<Vector3>
+        {
+            MathUtils.CreateVectorAt(0, 0),
+            MathUtils.CreateVectorAt(10, -45),
+            MathUtils.CreateVectorAt(10, 45),
+            MathUtils.CreateVectorAt(20, 0)
+        };
+            var _diagram = new VoronoiDiagram(positions);
+            _diagram.ProcessNextEvent();
+            _diagram.ProcessNextEvent();
+            _diagram.ProcessNextEvent();
+
+            // Exercise system
+
+            // Verify outcome
+            Assert.True(false, "Test not implemented");
+
+            // Teardown
+        }
     }
 }

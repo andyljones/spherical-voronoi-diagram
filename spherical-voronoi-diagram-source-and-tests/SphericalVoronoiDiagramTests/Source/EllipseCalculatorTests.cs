@@ -131,7 +131,7 @@ namespace SphericalVoronoiDiagramTests
             // Verify outcome
             var inOrder = MathUtils.AreInCyclicOrder(leftSite.Position, sut, rightSite.Position);
             
-            Assert.True(inOrder >= 0);
+            Assert.True(inOrder);
 
             // Teardown
         }
@@ -231,7 +231,7 @@ namespace SphericalVoronoiDiagramTests
             // Verify outcome
             var result = MathUtils.AreInCyclicOrder(siteEventA.Position, intersection, siteEventB.Position);
 
-            Assert.True(result >= 0);
+            Assert.True(result);
 
             // Teardown
         }

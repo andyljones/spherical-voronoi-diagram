@@ -69,26 +69,28 @@ public static class MathUtils
         return v.normalized;
     }
 
-    public static int AreInCyclicOrder(Vector3 a, Vector3 b, Vector3 c)
+    public static bool AreInCyclicOrder(Vector3 a, Vector3 b, Vector3 c)
     {
-        var planarA = new Vector3(a.x, a.y, 0).normalized;
-        var planarB = new Vector3(b.x, b.y, 0).normalized;
-        var planarC = new Vector3(c.x, c.y, 0).normalized;
+        var equatorialA = EquatorialVectorOf(a);
+        var equatorialB = EquatorialVectorOf(b);
+        var equatorialC = EquatorialVectorOf(c);
 
-        var normalToPlane = Vector3.Cross(planarA - planarB, planarC - planarB);
+        if (equatorialA == equatorialC)
+        {
+            return true;
+        }
+        if (equatorialA == equatorialB)
+        {
+            return true;
+        }
+        if (equatorialB == equatorialC)
+        {
+            return false;
+        }
+
+        var normalToPlane = Vector3.Cross(equatorialA - equatorialB, equatorialC - equatorialB);
         var northwardsComponent = normalToPlane.z;
 
-        if (Mathf.Abs(northwardsComponent) < ComparisonTolerance)
-        {
-            return 0;
-        }
-        else if (northwardsComponent >= ComparisonTolerance)
-        {
-            return 1;
-        }
-        else //if (northwardsComponent <= -ComparisonTolerance)
-        {
-            return -1;
-        }
+        return northwardsComponent >= 0;
     }
 }
