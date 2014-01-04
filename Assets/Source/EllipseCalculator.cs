@@ -12,25 +12,21 @@ public static class EllipseCalculator
         var b = rightEvent.Position;
         var Z = sweepline.Z;
 
-        if (Mathf.Abs(a.z - Z) < MathUtils.ComparisonTolerance && Mathf.Abs(b.z - Z) < MathUtils.ComparisonTolerance)
+        if (a.z <= Z && b.z <= Z)
         {
             return MathUtils.EquatorialMidpointBetween(a, b);
         }
-        if (Mathf.Abs(a.z - Z) < MathUtils.ComparisonTolerance)
+        if (a.z <= Z)
         {
             return MathUtils.EquatorialVectorOf(a);
         }
-        if (Mathf.Abs(b.z - Z) < MathUtils.ComparisonTolerance)
+        if (b.z <= Z)
         {
             return MathUtils.EquatorialVectorOf(b);
         }
-        if ((a - b).magnitude < MathUtils.ComparisonTolerance)
-        {
-            return MathUtils.EquatorialVectorOf((a + b) / 2);
-        }
 
-        var A = a.x * (Z - b.z) - b.x * (Z - a.z);
-        var B = -(a.y * (Z - b.z) - b.y * (Z - a.z));
+        var A = a.x * -Mathf.Abs(Z - b.z) - b.x * -Mathf.Abs(Z - a.z);
+        var B = -(a.y * -Mathf.Abs(Z - b.z) - b.y * -Mathf.Abs(Z - a.z));
         var C = (a.z - b.z) * Mathf.Sqrt(1 - Z * Z); //TODO: Does this need a Sign(z), since it represents Sin(zeta)?
 
         var x = (A * C + B * Mathf.Sqrt(A * A + B * B - C * C)) / (A * A + B * B);
