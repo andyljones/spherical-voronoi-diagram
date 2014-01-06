@@ -64,7 +64,7 @@ namespace SphericalVoronoiDiagramTests
         }
 
         [Fact]
-        public void AreInOrder_OnThreeCyclicallyMisorderedArcsWithADegenerateSecondArc_ShouldReturnTrue()
+        public void AreInOrder_OnThreeCyclicallyMisorderedArcsWithADegenerateSecondArc_ShouldReturnFalse()
         {
             // Fixture setup
             var left = FakeArc(90, -45, 90, -45);
