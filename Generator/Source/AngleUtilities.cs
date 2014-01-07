@@ -14,9 +14,14 @@ namespace Generator
 
         public static Vector3 CartesianCoordinates(this SphericalCoords coords)
         {
-            var x = Trig.Sine(coords.Theta)*Trig.Cosine(coords.Phi);
-            var y = Trig.Sine(coords.Theta)*Trig.Sine(coords.Phi);
-            var z = Trig.Cosine(coords.Theta);
+            return CartesianCoordinates(coords.Colatitude, coords.Azimuth);
+        }
+
+        public static Vector3 CartesianCoordinates(double colatitude, double azimuth)
+        {
+            var x = Trig.Sine(colatitude) * Trig.Cosine(azimuth);
+            var y = Trig.Sine(colatitude) * Trig.Sine(azimuth);
+            var z = Trig.Cosine(colatitude);
 
             return new Vector3(x, y, z);
         }
