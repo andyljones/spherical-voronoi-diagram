@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MathNet.Numerics.LinearAlgebra;
-
-namespace Generator
+﻿namespace Generator
 {
     public class SiteEvent
     {
-        public Vector Position;
+        public Vector3 Position;
+
+        public SiteEvent() {}
 
         public SiteEvent(double x, double y, double z)
         {
-            Position = new Vector(new[] {x, y, z});
+            Position = new Vector3(x, y, z);
+        }
+
+        public override string ToString()
+        {
+            return Position.ToString();
         }
     }
 }

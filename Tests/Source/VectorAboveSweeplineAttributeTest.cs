@@ -13,7 +13,7 @@ namespace SphericalVoronoiTests
     {
         [Theory]
         [VectorsAboveSweepline]
-        public void Vectors_ShouldAllBeOfUnitLength(Vector vector)
+        public void Vectors_ShouldAllBeOfUnitLength(Vector3 vector)
         {
             // Fixture setup
 
@@ -23,8 +23,7 @@ namespace SphericalVoronoiTests
             var result = vector.Norm();
             var expectedResult = 1.0;
 
-            var failureString = String.Format("Vector was {0}, had length {1}", vector, result);
-
+            var failureString = String.Format("Had length {0}, expected 1.0", vector);
             Assert.True(Number.AlmostEqual(result, expectedResult), failureString);
 
             // Teardown
@@ -32,7 +31,7 @@ namespace SphericalVoronoiTests
 
         [Theory]
         [VectorsAboveSweepline]
-        public void Vectors_ShouldAllBeAboveSweepline(List<Vector> vectors, Sweepline anonymousSweepline)
+        public void Vectors_ShouldAllBeAboveSweepline(List<Vector3> vectors, Sweepline anonymousSweepline)
         {
             // Fixture setup
 
@@ -44,8 +43,8 @@ namespace SphericalVoronoiTests
             foreach (var vector in vectors)
             {
                 var result = vector[2];
-                var failureString = String.Format("Vector was {0}, sweepline Z was {1}", vector, expectedResult);
 
+                var failureString = String.Format("Had Z {0}, expected Z was {1}", result, expectedResult);
                 Assert.True(result >= expectedResult, failureString);
             }
             // Teardown

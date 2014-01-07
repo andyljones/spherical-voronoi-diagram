@@ -6,16 +6,16 @@ using Ploeh.AutoFixture;
 
 namespace SphericalVoronoiTests.FixtureCustomizations
 {
-    public class VectorAboveSweeplineCustomization : ICustomization
+    public class Vector3AboveSweeplineCustomization : ICustomization
     {
-        Random _random = new Random();
+        private readonly Random _random = new Random();
 
         public void Customize(IFixture fixture)
         {
             fixture.Register(() => CreateVectorAboveSweepline(fixture));
         }
 
-        public Vector CreateVectorAboveSweepline(IFixture fixture)
+        public Vector3 CreateVectorAboveSweepline(IFixture fixture)
         {
             var sweepline = fixture.Create<Sweepline>();
             var sweeplineZ = Trig.Cosine(sweepline.Colatitude);
@@ -27,7 +27,7 @@ namespace SphericalVoronoiTests.FixtureCustomizations
             var y = Math.Sqrt(1.0 - randomZ*randomZ)*Trig.Sine(randomAzimuth);
             var z = randomZ;
 
-            return new Vector(new[] {x, y, z});
+            return new Vector3(x, y, z);
         }
     }
 }
