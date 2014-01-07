@@ -53,9 +53,18 @@ namespace Generator
             var R = Fn.Hypot(a, b);
             var gamma = Trig.InverseTangentFromRational(a, b);
 
-            var phi = Constants.Pi - Trig.InverseSine(c / R) - gamma;
+            var phiPlusGamma = Math.Abs(c/R) < 1 ? Trig.InverseSine(c/R) : Math.Sign(c/R)*Constants.Pi_2;
 
-            return new SphericalCoords(Trig.DegreeToRadian(90), phi).CartesianCoordinates();
+            var phiA = phiPlusGamma - gamma;
+            var intersectionA = new SphericalCoords(Trig.DegreeToRadian(90), phiA).CartesianCoordinates();
+            var phiB = Constants.Pi - phiPlusGamma - gamma;
+            var intersectionB = new SphericalCoords(Trig.DegreeToRadian(90), phiB).CartesianCoordinates();
+
+            var focusDirection = new SphericalCoords(Trig.DegreeToRadian(90), focus1.Azimuth).CartesianCoordinates();
+
+            var aIsOnTheLeft = (intersectionB - focusDirection).CrossMultiply(intersectionA - focusDirection)[2] >= 0;
+
+            return aIsOnTheLeft ? intersectionA : intersectionB;
         }
     }
 }

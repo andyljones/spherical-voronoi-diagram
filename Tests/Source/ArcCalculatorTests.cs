@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Generator;
 using MathNet.Numerics;
@@ -183,9 +184,11 @@ namespace SphericalVoronoiTests
         public void LeftIntersection_WhenSweeplinePassesThroughLowerOfTheTwoFocii_ShouldReturnDirectionOfThatFocus
             (Arc arc, Sweepline sweepline)
         {
+            //TODO: Randomly throws NaN, can't work out why.
+
             // Fixture setup
             var focus = arc.Site.Position;
-            var leftFocus = arc.Site.Position;
+            var leftFocus = arc.LeftNeighbour.Position;
             var lowerFocus = focus.Z < leftFocus.Z ? focus : leftFocus;
 
             var directionOfLowerFocus = new Vector3(lowerFocus.X, lowerFocus.Y, 0).Normalize();
