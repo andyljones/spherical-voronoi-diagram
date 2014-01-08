@@ -126,37 +126,32 @@ namespace SphericalVoronoiTests
         }
 
         //TODO: The ordering described in this test doesn't hold. Find a new test.
-        //[Theory]
-        //[VectorsAboveSweepline]
-        //public void LeftIntersection_WhenFociiAreAboveSweepline_ShouldBeInOrderLeftIntersectionThenSiteThenRightIntersection
-        //    (Arc arc, Sweepline sweepline)
-        //{
-        //    arc.LeftNeighbour = new SiteEvent {Position = new SphericalCoords(Trig.DegreeToRadian(35), Trig.DegreeToRadian(166)).CartesianCoordinates()};
-        //    arc.Site = new SiteEvent {Position = new SphericalCoords(Trig.DegreeToRadian(29), Trig.DegreeToRadian(160)).CartesianCoordinates()};
-        //    sweepline.Colatitude = Trig.DegreeToRadian(55);
+        [Theory]
+        [VectorsAboveSweepline]
+        public void LeftIntersection_OfLowerFocusWhenSweeplineIsBelowIt_ShouldBeInOrderLeftIntersectionThenSiteThenRightIntersection
+            (Arc arc, Sweepline sweepline)
+        {
+            // Fixture setup
+            var dualArc = new Arc { LeftNeighbour = arc.Site, Site = arc.LeftNeighbour };
 
-        //    // Fixture setup
-        //    var focus = arc.Site.Position;
-        //    var directionOfFocus = new Vector3(focus.X, focus.Y, 0).Normalize();
+            var lowerArc =  arc.Site.Position.Z <  dualArc.Site.Position.Z ? arc : dualArc;
+            var higherArc = arc.Site.Position.Z >= dualArc.Site.Position.Z ? arc : dualArc;
+            var directionOfLowerFocus = AngleUtilities.DirectionOf(lowerArc.Site.Position);
 
-        //    var dualArc = new Arc {LeftNeighbour = arc.Site, Site = arc.LeftNeighbour};
+            // Exercise system
+            var directionOfLeftIntersection = lowerArc.LeftIntersection(sweepline);
+            var directionOfRightIntersection = higherArc.LeftIntersection(sweepline);
 
-        //    // Exercise system
-        //    var directionOfLeftIntersection = arc.LeftIntersection(sweepline);
-        //    var directionOfRightIntersection = dualArc.LeftIntersection(sweepline);
+            // Verify outcome
+            var areInOrder = ArcOrderer.AreInOrder(directionOfLeftIntersection, directionOfLowerFocus, directionOfRightIntersection);
 
-        //    // Verify outcome
-        //    var toLeftIntersection = directionOfLeftIntersection - directionOfFocus;
-        //    var toRightIntersection = directionOfRightIntersection - directionOfFocus;
-        //    var areInOrder = toRightIntersection.CrossMultiply(toLeftIntersection)[2] > 0;
+            var failureString = String.Format("Direction of left intersection: {0},\n" +
+                                              "Direction of right intersection: {1},\n",
+                                              directionOfLeftIntersection, directionOfRightIntersection);
+            Assert.True(areInOrder, failureString);
 
-        //    var failureString = String.Format("Direction of left intersection: {0},\n" +
-        //                                      "Direction of right intersection: {1},\n",
-        //                                      directionOfLeftIntersection, directionOfRightIntersection);
-        //    Assert.True(areInOrder, failureString);
-
-        //    // Teardown
-        //}
+            // Teardown
+        }
 
         [Theory]
         [VectorsAboveSweepline]

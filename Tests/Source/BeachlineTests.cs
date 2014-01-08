@@ -51,5 +51,19 @@ namespace SphericalVoronoiTests
 
             // Teardown
         }
+
+        [Theory]
+        [ZOrderedVectorData]
+        public void Test( )
+        {
+            // Fixture setup
+
+            // Exercise system
+
+            // Verify outcome
+            Assert.True(false, "Test not implemented");
+
+            // Teardown
+        }
     }
 }

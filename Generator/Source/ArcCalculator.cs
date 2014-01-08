@@ -31,7 +31,6 @@ namespace Generator
             return new Vector3(x, y, z);
         }
 
-
         public static Vector3 LeftIntersection(this IArc arc, Sweepline sweepline)
         {
             var p = arc.LeftNeighbour.Position;
@@ -43,9 +42,9 @@ namespace Generator
                 return AngleUtilities.DirectionOf(p);
             }
 
-            var A =   p.X*(Z - q.Z) - q.X*(Z - p.Z);
-            var B =  (p.Y*(Z - q.Z) - q.Y*(Z - p.Z));
-            var C =  (p.Z - q.Z)*Math.Sqrt(1 - Z*Z);
+            var A =  p.X*(Z - q.Z) - q.X*(Z - p.Z);
+            var B = (p.Y*(Z - q.Z) - q.Y*(Z - p.Z));
+            var C = (p.Z - q.Z)*Math.Sqrt(1 - Z*Z);
 
             var A2PlusB2MinusC2 = Math.Max(A*A + B*B - C*C, 0);
             var x =  (A*C + B*Math.Sqrt(A2PlusB2MinusC2)) / (A*A + B*B);
@@ -56,34 +55,6 @@ namespace Generator
             Debug.WriteLine(y);
 
             return new Vector3(x, y, 0);
-        }
-
-        private static double StablizedInverseSine(double ratio)
-        {
-            var needsClamping = Math.Abs(ratio) >= 1;
-
-            if (needsClamping)
-            {
-                return Math.Sign(ratio)*Constants.Pi_2;
-            }
-            else
-            {
-                return Trig.InverseSine(ratio);
-            }
-        }
-
-        private static Vector3 SelectLeftIntersection(double inverseSineOfCOverR, double gamma, double focusAzimuth)
-        {
-            var phiA = inverseSineOfCOverR - gamma;
-            var intersectionA = new SphericalCoords(Trig.DegreeToRadian(90), phiA).CartesianCoordinates();
-            var phiB = Constants.Pi - inverseSineOfCOverR - gamma;
-            var intersectionB = new SphericalCoords(Trig.DegreeToRadian(90), phiB).CartesianCoordinates();
-
-            var focusDirection = new SphericalCoords(Trig.DegreeToRadian(90), focusAzimuth).CartesianCoordinates();
-
-            var intersectionAIsOnTheLeft = (intersectionB - focusDirection).CrossMultiply(intersectionA - focusDirection)[2] >= 0;
-
-            return intersectionAIsOnTheLeft ? intersectionA : intersectionB;
         }
     }
 }
