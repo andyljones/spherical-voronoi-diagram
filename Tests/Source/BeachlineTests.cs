@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Generator;
 using SphericalVoronoiTests.DataAttributes;
@@ -39,6 +40,9 @@ namespace SphericalVoronoiTests
             // Exercise system
             beachline.Insert(site1);
             beachline.Insert(site2);
+
+            Debug.WriteLine(beachline);
+
 
             // Verify outcome
             var arc1 = beachline.First();

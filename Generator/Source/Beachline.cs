@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CyclicalSkipList;
@@ -9,11 +10,12 @@ namespace Generator
     {
         private readonly Skiplist<IArc> _arcs;
         private int _count;
+        private Sweepline _sweepline;
 
         public Beachline()
         {
-            var sweepline = new Sweepline {Z = 1};
-            var orderer = new ArcOrderer(sweepline);
+            _sweepline = new Sweepline {Z = 1};
+            var orderer = new ArcOrderer(_sweepline);
             _arcs = new Skiplist<IArc> {InOrder = orderer.AreInOrder};
             _count = 0;
         }
@@ -65,6 +67,22 @@ namespace Generator
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public override string ToString()
+        {
+            var arcStrings =_arcs.Select(arc => StringOfArc(arc)).ToArray();
+
+            return String.Join("", arcStrings);
+        }
+
+        private string StringOfArc(IArc arc)
+        {
+            var azimuthOfIntersection = arc.LeftIntersection(_sweepline).SphericalCoordinates().Azimuth;
+            var leftIntersectionString = String.Format("{0,3:N0}", azimuthOfIntersection);
+            var arcString = arc.ToString();
+
+            return leftIntersectionString + arcString;
         }
     }
 }

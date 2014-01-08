@@ -50,10 +50,6 @@ namespace Generator
             var x =  (A*C + B*Math.Sqrt(A2PlusB2MinusC2)) / (A*A + B*B);
             var y =  (B*C - A*Math.Sqrt(A2PlusB2MinusC2)) / (A*A + B*B);
 
-            Debug.WriteLine(x*x + y*y);
-            Debug.WriteLine(x);
-            Debug.WriteLine(y);
-
             return new Vector3(x, y, 0);
         }
     }
