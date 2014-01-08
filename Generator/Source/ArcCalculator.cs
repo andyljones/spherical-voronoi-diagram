@@ -43,6 +43,11 @@ namespace Generator
             var theta2 = focus2.Colatitude;
             var phi2 = focus2.Azimuth;
 
+            if (Vector.AlmostEqual(focus1, focus2))
+            {
+                return new SphericalCoords(Trig.DegreeToRadian(90), focus1.Azimuth).CartesianCoordinates();
+            }
+
             var a = (Trig.Cosine(xi) - Trig.Cosine(theta2))*Trig.Sine(theta1)*Trig.Cosine(phi1) -
                     (Trig.Cosine(xi) - Trig.Cosine(theta1))*Trig.Sine(theta2)*Trig.Cosine(phi2);
 
@@ -53,18 +58,39 @@ namespace Generator
             var R = Fn.Hypot(a, b);
             var gamma = Trig.InverseTangentFromRational(a, b);
 
-            var phiPlusGamma = Math.Abs(c/R) < 1 ? Trig.InverseSine(c/R) : Math.Sign(c/R)*Constants.Pi_2;
+            var inverseSineOfCOverR = StablizedInverseSine(c/R);
 
-            var phiA = phiPlusGamma - gamma;
+            var leftIntersection = SelectLeftIntersection(inverseSineOfCOverR, gamma, focus1.Azimuth);
+
+            return leftIntersection;
+        }
+
+        private static double StablizedInverseSine(double ratio)
+        {
+            var needsClamping = Math.Abs(ratio) < 1;
+
+            if (needsClamping)
+            {
+                return Math.Sign(ratio)*Constants.Pi_2;
+            }
+            else
+            {
+                return Trig.InverseSine(ratio);
+            }
+        }
+
+        private static Vector3 SelectLeftIntersection(double inverseSineOfCOverR, double gamma, double focusAzimuth)
+        {
+            var phiA = inverseSineOfCOverR - gamma;
             var intersectionA = new SphericalCoords(Trig.DegreeToRadian(90), phiA).CartesianCoordinates();
-            var phiB = Constants.Pi - phiPlusGamma - gamma;
+            var phiB = Constants.Pi - inverseSineOfCOverR - gamma;
             var intersectionB = new SphericalCoords(Trig.DegreeToRadian(90), phiB).CartesianCoordinates();
 
-            var focusDirection = new SphericalCoords(Trig.DegreeToRadian(90), focus1.Azimuth).CartesianCoordinates();
+            var focusDirection = new SphericalCoords(Trig.DegreeToRadian(90), focusAzimuth).CartesianCoordinates();
 
-            var aIsOnTheLeft = (intersectionB - focusDirection).CrossMultiply(intersectionA - focusDirection)[2] >= 0;
+            var intersectionAIsOnTheLeft = (intersectionB - focusDirection).CrossMultiply(intersectionA - focusDirection)[2] >= 0;
 
-            return aIsOnTheLeft ? intersectionA : intersectionB;
+            return intersectionAIsOnTheLeft ? intersectionA : intersectionB;
         }
     }
 }

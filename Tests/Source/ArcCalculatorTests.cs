@@ -184,8 +184,6 @@ namespace SphericalVoronoiTests
         public void LeftIntersection_WhenSweeplinePassesThroughLowerOfTheTwoFocii_ShouldReturnDirectionOfThatFocus
             (Arc arc, Sweepline sweepline)
         {
-            //TODO: Randomly throws NaN, can't work out why.
-
             // Fixture setup
             var focus = arc.Site.Position;
             var leftFocus = arc.LeftNeighbour.Position;
@@ -201,6 +199,27 @@ namespace SphericalVoronoiTests
             var failureString = String.Format("Direction of left intersection: {0},\n",
                                               directionOfLeftIntersection);
             Assert.True(Vector.AlmostEqual(directionOfLowerFocus, directionOfLeftIntersection, Tolerance), failureString);
+
+            // Teardown
+        }
+
+        [Theory]
+        [VectorsAboveSweepline]
+        public void LeftIntersection_WhenLeftNeigbourIsSameAsArcSite_ShouldReturnDirectionOfFocus
+            (Arc arc, Sweepline sweepline)
+        {
+            // Fixture setup
+            arc.LeftNeighbour = arc.Site;
+            var focus = arc.Site.Position;
+            var directionOfFocus = new Vector3(focus.X, focus.Y, 0).Normalize();
+
+            // Exercise system
+            var directionOfLeftIntersection = arc.LeftIntersection(sweepline);
+
+            // Verify outcome
+            var failureString = String.Format("Direction of left intersection: {0},\n",
+                                              directionOfLeftIntersection);
+            Assert.True(Vector.AlmostEqual(directionOfFocus, directionOfLeftIntersection, Tolerance), failureString);
 
             // Teardown
         }
