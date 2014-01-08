@@ -25,5 +25,12 @@ namespace Generator
 
             return new Vector3(x, y, z);
         }
+
+        public static Vector3 DirectionOf(Vector3 v)
+        {
+            var length = Fn.Hypot(v.X, v.Y);
+
+            return new Vector3(v.X/length, v.Y/length, 0);
+        }
     }
 }

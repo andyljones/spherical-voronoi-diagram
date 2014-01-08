@@ -34,40 +34,33 @@ namespace Generator
 
         public static Vector3 LeftIntersection(this IArc arc, Sweepline sweepline)
         {
-            var focus1 = arc.Site.Position.SphericalCoordinates();
-            var focus2 = arc.LeftNeighbour.Position.SphericalCoordinates();
+            var p = arc.LeftNeighbour.Position;
+            var q = arc.Site.Position;
+            var Z = Trig.Cosine(sweepline.Colatitude);
 
-            var xi = sweepline.Colatitude;
-            var theta1 = focus1.Colatitude;
-            var phi1 = focus1.Azimuth;
-            var theta2 = focus2.Colatitude;
-            var phi2 = focus2.Azimuth;
-
-            if (Vector.AlmostEqual(focus1, focus2))
+            if (Vector.AlmostEqual(p, q))
             {
-                return new SphericalCoords(Trig.DegreeToRadian(90), focus1.Azimuth).CartesianCoordinates();
+                return AngleUtilities.DirectionOf(p);
             }
 
-            var a = (Trig.Cosine(xi) - Trig.Cosine(theta2))*Trig.Sine(theta1)*Trig.Cosine(phi1) -
-                    (Trig.Cosine(xi) - Trig.Cosine(theta1))*Trig.Sine(theta2)*Trig.Cosine(phi2);
+            var A =   p.X*(Z - q.Z) - q.X*(Z - p.Z);
+            var B =  (p.Y*(Z - q.Z) - q.Y*(Z - p.Z));
+            var C =  (p.Z - q.Z)*Math.Sqrt(1 - Z*Z);
 
-            var b = (Trig.Cosine(xi) - Trig.Cosine(theta2))*Trig.Sine(theta1)*Trig.Sine(phi1) -
-                    (Trig.Cosine(xi) - Trig.Cosine(theta1))*Trig.Sine(theta2)*Trig.Sine(phi2);
-            var c = (Trig.Cosine(theta1) - Trig.Cosine(theta2))*Trig.Sine(xi);
+            var A2PlusB2MinusC2 = Math.Max(A*A + B*B - C*C, 0);
+            var x =  (A*C + B*Math.Sqrt(A2PlusB2MinusC2)) / (A*A + B*B);
+            var y =  (B*C - A*Math.Sqrt(A2PlusB2MinusC2)) / (A*A + B*B);
 
-            var R = Fn.Hypot(a, b);
-            var gamma = Trig.InverseTangentFromRational(a, b);
+            Debug.WriteLine(x*x + y*y);
+            Debug.WriteLine(x);
+            Debug.WriteLine(y);
 
-            var inverseSineOfCOverR = StablizedInverseSine(c/R);
-
-            var leftIntersection = SelectLeftIntersection(inverseSineOfCOverR, gamma, focus1.Azimuth);
-
-            return leftIntersection;
+            return new Vector3(x, y, 0);
         }
 
         private static double StablizedInverseSine(double ratio)
         {
-            var needsClamping = Math.Abs(ratio) < 1;
+            var needsClamping = Math.Abs(ratio) >= 1;
 
             if (needsClamping)
             {
