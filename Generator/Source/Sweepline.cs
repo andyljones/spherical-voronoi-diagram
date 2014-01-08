@@ -5,7 +5,19 @@ namespace Generator
 {
     public class Sweepline
     {
-        public double Colatitude;
+        public double Colatitude
+        {
+            get
+            {
+                return Trig.InverseCosine(Z);
+            }
+            set
+            {
+                Z = Trig.Cosine(value);
+            }
+        }
+
+        public double Z;
 
         public override string ToString()
         {

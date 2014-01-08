@@ -12,7 +12,7 @@ namespace Generator
 
         public Beachline()
         {
-            var sweepline = new Sweepline {Colatitude = 0};
+            var sweepline = new Sweepline {Z = 1};
             var orderer = new ArcOrderer(sweepline);
             _arcs = new Skiplist<IArc> {InOrder = orderer.AreInOrder};
         }

@@ -64,7 +64,7 @@ namespace SphericalVoronoiTests
         {
             // Fixture setup
             var vector = arc.Site.Position;
-            var sweepline = new Sweepline {Colatitude = Trig.InverseCosine(arc.Site.Position.Z)};
+            var sweepline = new Sweepline {Z = arc.Site.Position.Z};
 
             // Exercise system
             var point = arc.PointAt(vector, sweepline);
@@ -84,7 +84,7 @@ namespace SphericalVoronoiTests
             (Arc arc, Vector3 vector)
         {
             // Fixture setup
-            var sweepline = new Sweepline { Colatitude = Trig.InverseCosine(arc.Site.Position.Z) };
+            var sweepline = new Sweepline {Z = arc.Site.Position.Z};
             var northPole = new Vector3(0, 0, 1);
 
             // Exercise system
@@ -173,7 +173,7 @@ namespace SphericalVoronoiTests
             var lowerFocus = focus.Z < leftFocus.Z ? focus : leftFocus;
 
             var directionOfLowerFocus = new Vector3(lowerFocus.X, lowerFocus.Y, 0).Normalize();
-            sweepline.Colatitude = lowerFocus.SphericalCoordinates().Colatitude;
+            sweepline.Z = lowerFocus.Z;
 
             // Exercise system
             var directionOfLeftIntersection = arc.LeftIntersection(sweepline);

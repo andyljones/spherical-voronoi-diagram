@@ -9,26 +9,26 @@ namespace Generator
     {
         public static Vector3 PointAt(this IArc arc, Vector3 vector, Sweepline sweepline)
         {
-            var focus = arc.Site.Position;
-            var focusColatitude = focus.SphericalCoordinates().Colatitude;
-            var focusAzimuth = focus.SphericalCoordinates().Azimuth;
-            var vectorAzimuth = vector.SphericalCoordinates().Azimuth;
-            var sweeplineColatitude = sweepline.Colatitude;
-            
-            if (Number.AlmostEqual(focusColatitude, sweeplineColatitude) && 
-                Number.AlmostEqual(focusAzimuth, vectorAzimuth))
+            var p = arc.Site.Position;
+            var n = AngleUtilities.DirectionOf(vector);
+            var Z = sweepline.Z;
+
+            if (Number.AlmostEqual(p.Z, Z) && Vector.AlmostEqual(AngleUtilities.DirectionOf(p), n))
             {
-                return focus;
+                return p;
+            }
+            if (Number.AlmostEqual(p.Z, Z))
+            {
+                return new Vector3(0, 0, 1);
             }
 
-            var tanOfResultColatitude = (Trig.Cosine(sweeplineColatitude) - Trig.Cosine(focusColatitude)) /
-                                        (Trig.Sine(focusColatitude)*Trig.Cosine(vectorAzimuth - focusAzimuth) - Trig.Sine(sweeplineColatitude));
+            var tanOfColatitude = (Z - p.Z)/(p.ScalarMultiply(n) - Math.Sqrt(1 - Z*Z));
 
-            var resultColatitude = Trig.InverseTangent(tanOfResultColatitude);
+            var x = n.X * tanOfColatitude/Math.Sqrt(1 + tanOfColatitude*tanOfColatitude);
+            var y = n.Y * tanOfColatitude/Math.Sqrt(1 + tanOfColatitude * tanOfColatitude);
+            var z = Math.Sign(tanOfColatitude) / Math.Sqrt(1 + tanOfColatitude * tanOfColatitude);
 
-            var result = AngleUtilities.CartesianCoordinates(resultColatitude, vectorAzimuth);
-
-            return result;
+            return new Vector3(x, y, z);
         }
 
 
@@ -36,7 +36,7 @@ namespace Generator
         {
             var p = arc.LeftNeighbour.Position;
             var q = arc.Site.Position;
-            var Z = Trig.Cosine(sweepline.Colatitude);
+            var Z = sweepline.Z;
 
             if (Vector.AlmostEqual(p, q))
             {
