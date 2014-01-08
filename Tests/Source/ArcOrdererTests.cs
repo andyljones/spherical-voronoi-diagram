@@ -1,29 +1,20 @@
 ﻿using Generator;
-using NSubstitute;
-using Ploeh.AutoFixture.AutoNSubstitute;
-using SphericalVoronoiTests.DataAttributes;
 using Xunit;
-using Xunit.Extensions;
 
 namespace SphericalVoronoiTests
 {
     public class ArcOrdererTests
     {
-        [Theory]
-        [NSubstituteData]
-        public void AreInOrder_OnThreeCyclicallyOrderedArcs_ShouldReturnTrue
-            (IOrderableArc arcA, IOrderableArc arcB, IOrderableArc arcC)
+        [Fact]
+        public void AreInOrder_OnThreeCyclicallyOrderedEquatorialVectors_ShouldReturnTrue()
         {
             // Fixture setup
-            arcA.LeftIntersection(null).ReturnsForAnyArgs(new SphericalCoords(90, -90).CartesianCoordinates());
-            arcB.LeftIntersection(null).ReturnsForAnyArgs(new SphericalCoords(90, 0).CartesianCoordinates());
-            arcC.LeftIntersection(null).ReturnsForAnyArgs(new SphericalCoords(90, 90).CartesianCoordinates());
-
-            var anonymousSweepline = new Sweepline();
-            var arcOrderer = new ArcOrderer(anonymousSweepline);
+            var a = new SphericalCoords(90, -90).CartesianCoordinates();
+            var b = new SphericalCoords(90, 0).CartesianCoordinates();
+            var c = new SphericalCoords(90, 90).CartesianCoordinates();
 
             // Exercise system
-            var areInOrder = arcOrderer.AreInOrder(arcA, arcB, arcC);
+            var areInOrder = ArcOrderer.AreInOrder(a, b, c);
 
             // Verify outcome
             Assert.True(areInOrder);
@@ -31,21 +22,16 @@ namespace SphericalVoronoiTests
             // Teardown
         }
 
-        [Theory]
-        [NSubstituteData]
-        public void AreInOrder_OnThreeCyclicallyUnorderedArcs_ShouldReturnFalse
-            (IOrderableArc arcA, IOrderableArc arcB, IOrderableArc arcC)
+        [Fact]
+        public void AreInOrder_OnThreeCyclicallyUnorderedEquatorialVectors_ShouldReturnFalse()
         {
             // Fixture setup
-            arcA.LeftIntersection(null).ReturnsForAnyArgs(new SphericalCoords(90, -90).CartesianCoordinates());
-            arcB.LeftIntersection(null).ReturnsForAnyArgs(new SphericalCoords(90, 0).CartesianCoordinates());
-            arcC.LeftIntersection(null).ReturnsForAnyArgs(new SphericalCoords(90, 90).CartesianCoordinates());
-
-            var anonymousSweepline = new Sweepline();
-            var arcOrderer = new ArcOrderer(anonymousSweepline);
+            var a = new SphericalCoords(90,-90).CartesianCoordinates();
+            var b = new SphericalCoords(90,  0).CartesianCoordinates();
+            var c = new SphericalCoords(90, 90).CartesianCoordinates();
 
             // Exercise system
-            var areInOrder = arcOrderer.AreInOrder(arcA, arcC, arcB);
+            var areInOrder = ArcOrderer.AreInOrder(a, c, b);
 
             // Verify outcome
             Assert.False(areInOrder);

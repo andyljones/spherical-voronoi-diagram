@@ -7,7 +7,7 @@ namespace Generator
 {
     public static class ArcCalculator
     {
-        public static Vector3 PointAt(this Arc arc, Vector3 vector, Sweepline sweepline)
+        public static Vector3 PointAt(this IArc arc, Vector3 vector, Sweepline sweepline)
         {
             var focus = arc.Site.Position;
             var focusColatitude = focus.SphericalCoordinates().Colatitude;
@@ -32,7 +32,7 @@ namespace Generator
         }
 
 
-        public static Vector3 LeftIntersection(this Arc arc, Sweepline sweepline)
+        public static Vector3 LeftIntersection(this IArc arc, Sweepline sweepline)
         {
             var focus1 = arc.Site.Position.SphericalCoordinates();
             var focus2 = arc.LeftNeighbour.Position.SphericalCoordinates();

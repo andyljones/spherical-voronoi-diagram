@@ -2,10 +2,10 @@
 
 namespace Generator
 {
-    public class Arc
+    public class Arc : IArc
     {
-        public SiteEvent Site;
-        public SiteEvent LeftNeighbour;
+        public SiteEvent Site { get; set; }
+        public SiteEvent LeftNeighbour { get; set; }
 
         public override string ToString()
         {
