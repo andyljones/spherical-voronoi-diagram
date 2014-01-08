@@ -41,9 +41,6 @@ namespace SphericalVoronoiTests
             beachline.Insert(site1);
             beachline.Insert(site2);
 
-            Debug.WriteLine(beachline);
-
-
             // Verify outcome
             var arc1 = beachline.First();
             var arc2 = beachline.Last();
@@ -58,14 +55,23 @@ namespace SphericalVoronoiTests
 
         [Theory]
         [ZOrderedVectorData]
-        public void Test( )
+        public void Insert_ingThreeSitesIntoTheBeachline_ShouldCreateThreeArcsEachWithTheOthersSiteOnTheLeft
+            (Beachline beachline, SiteEvent site1, SiteEvent site2, SiteEvent site3)
         {
             // Fixture setup
 
             // Exercise system
+            beachline.Insert(site1);
+            beachline.Insert(site2);
+            beachline.Insert(site3);
 
             // Verify outcome
-            Assert.True(false, "Test not implemented");
+            var sites = beachline.Select(arc => arc.Site).ToList();
+            var leftNeighbours = beachline.Select(arc => arc.LeftNeighbour).ToList();
+            leftNeighbours = leftNeighbours.Skip(1).Concat(leftNeighbours.Take(1)).ToList();
+
+            var failureString = String.Format("Beachline was {0}", beachline);
+            Assert.True(sites.SequenceEqual(leftNeighbours), failureString);
 
             // Teardown
         }

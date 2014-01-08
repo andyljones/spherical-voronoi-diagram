@@ -9,8 +9,8 @@ namespace Generator
     public class Beachline : IEnumerable<IArc>
     {
         private readonly Skiplist<IArc> _arcs;
+        private readonly Sweepline _sweepline;
         private int _count;
-        private Sweepline _sweepline;
 
         public Beachline()
         {
@@ -56,7 +56,12 @@ namespace Generator
 
         private void InsertSite(SiteEvent site)
         {
-            throw new System.NotImplementedException();
+            var newArcA = new Arc {Site = site, LeftNeighbour = site};
+            var newArcB = new Arc {Site = site, LeftNeighbour = site};
+
+            _arcs.Insert(newArcA);
+            _arcs.Insert(newArcB);
+
         }
 
         public IEnumerator<IArc> GetEnumerator()

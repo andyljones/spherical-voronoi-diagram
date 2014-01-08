@@ -1,4 +1,6 @@
-﻿namespace Generator
+﻿using MathNet.Numerics.LinearAlgebra;
+
+namespace Generator
 {
     public class ArcOrderer
     {
@@ -22,7 +24,14 @@
 
         public static bool AreInOrder(Vector3 a, Vector3 b, Vector3 c)
         {
-            return (c - b).CrossMultiply(a - b)[2] >= 0;
+            if (Vector.AlmostEqual(b, c) || Vector.AlmostEqual(a, c))
+            {
+                return false;
+            }
+            else
+            {
+                return (c - b).CrossMultiply(a - b)[2] >= 0;                       
+            }
         }
     }
 }
