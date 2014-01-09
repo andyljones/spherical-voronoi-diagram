@@ -10,6 +10,8 @@ namespace SphericalVoronoiTests
 {
     public class AngleUtilitiesTests
     {
+        private const double Tolerance = 0.000001f;
+
         [Theory]
         [ZOrderedVectorData]
         public void EquatorialMidpoint_OfTwoNonpolarVectors_ShouldBeEquidistantFromThoseVectorsEquatorialDirections
@@ -29,7 +31,7 @@ namespace SphericalVoronoiTests
             Debug.WriteLine(distanceToU + "," + distanceToV);
 
             var failureString = String.Format("Midpoint was {0}", midpoint);
-            Assert.True(Number.AlmostEqual(distanceToU, distanceToV), failureString);
+            Assert.True(Number.AlmostEqual(distanceToU, distanceToV, Tolerance), failureString);
 
             // Teardown
         }
