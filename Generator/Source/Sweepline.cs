@@ -18,7 +18,19 @@ namespace Generator
         }
 
         public double Z;
+        //{
+        //    get
+        //    {
+        //        return Math.Abs(Priority) - 1;
+        //    }
+        //    set
+        //    {
+        //        Priority = Z + 1;
+        //    }
+        //}
 
+        public double Priority;
+        
         public override string ToString()
         {
             return String.Format("{0,3:N0}", Trig.RadianToDegree(Colatitude));

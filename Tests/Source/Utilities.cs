@@ -15,7 +15,7 @@ namespace SphericalVoronoiTests
 
         public static SiteEvent SiteAt(double colatitude, double azimuth)
         {
-            return new SiteEvent {Position = VectorAt(colatitude, azimuth)};
+            return new SiteEvent(VectorAt(colatitude, azimuth));
         }
 
         public static Sweepline SweeplineAt(double colatitude)

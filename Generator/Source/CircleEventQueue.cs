@@ -18,6 +18,11 @@ namespace Generator
         }
 
         #region Insert methods
+        public void TryInsertAll(List<CircleEvent> circleEvents)
+        {
+            circleEvents.ForEach(circleEvent => TryInsert(circleEvent));
+        }
+
         public void TryInsert(CircleEvent circleEvent)
         {
             if (HasThreeDistinctSites(circleEvent) &&
@@ -57,6 +62,11 @@ namespace Generator
         public double HighestPriority()
         {
             return _queue.FindMax().Priority;
+        }
+
+        public bool IsEmpty()
+        {
+            return _queue.IsEmpty;
         }
 
         public IArc PopHighestPriorityArc()

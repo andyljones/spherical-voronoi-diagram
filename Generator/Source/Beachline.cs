@@ -104,6 +104,12 @@ namespace Generator
         #endregion
 
         #region Remove methods
+        public void Remove(CircleEvent circleEvent)
+        {
+            Sweepline.Priority = circleEvent.Priority;
+            Remove(circleEvent.MiddleArc);
+        }
+
         public void Remove(IArc arc)
         {
             var node = _arcs.FetchNode(arc);
@@ -111,6 +117,9 @@ namespace Generator
 
             _arcs.Remove(arc);
             _count--;
+
+            PotentialCircleEvents.Add(new CircleEvent(node.Right.Right.Key, node.Right.Key, node.Left.Key));
+            PotentialCircleEvents.Add(new CircleEvent(node.Right.Key, node.Left.Key, node.Left.Left.Key));
         }
         #endregion
 

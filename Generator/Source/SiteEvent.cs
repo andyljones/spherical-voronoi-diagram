@@ -1,14 +1,15 @@
-﻿namespace Generator
+﻿using MathNet.Numerics.LinearAlgebra;
+
+namespace Generator
 {
     public class SiteEvent
     {
+        public double Priority { get { return 1 + Position.Z; } }
         public Vector3 Position;
 
-        public SiteEvent() {}
-
-        public SiteEvent(double x, double y, double z)
+        public SiteEvent(Vector position)
         {
-            Position = new Vector3(x, y, z);
+            Position = position.ToVector3();
         }
 
         public override string ToString()

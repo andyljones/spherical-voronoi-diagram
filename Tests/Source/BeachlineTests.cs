@@ -87,7 +87,7 @@ namespace SphericalVoronoiTests
             var upperColatitude = leftSite.Position.SphericalCoordinates().Colatitude;
             var leftAzimuth = leftSite.Position.SphericalCoordinates().Azimuth;
             var centralAzimuth = centralSite.Position.SphericalCoordinates().Azimuth;
-            var rightSite = new SiteEvent {Position = new SphericalCoords(upperColatitude, centralAzimuth + (centralAzimuth - leftAzimuth)).CartesianCoordinates()};
+            var rightSite = new SiteEvent(new SphericalCoords(upperColatitude, centralAzimuth + (centralAzimuth - leftAzimuth)).CartesianCoordinates());
 
             // Exercise system
             beachline.Insert(leftSite);
@@ -140,7 +140,7 @@ namespace SphericalVoronoiTests
             var upperColatitude = leftSite.Position.SphericalCoordinates().Colatitude;
             var leftAzimuth = leftSite.Position.SphericalCoordinates().Azimuth;
             var centralAzimuth = centralSite.Position.SphericalCoordinates().Azimuth;
-            var rightSite = new SiteEvent { Position = new SphericalCoords(upperColatitude, centralAzimuth + (centralAzimuth - leftAzimuth)).CartesianCoordinates() };
+            var rightSite = new SiteEvent(new SphericalCoords(upperColatitude, centralAzimuth + (centralAzimuth - leftAzimuth)).CartesianCoordinates());
 
             beachline.Insert(leftSite);
             beachline.Insert(rightSite);

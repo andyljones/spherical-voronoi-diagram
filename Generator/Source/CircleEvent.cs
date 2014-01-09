@@ -22,7 +22,6 @@ namespace Generator
         private static double CalculatePriority(Vector3 a, Vector3 b, Vector3 c)
         {
             var v = (a - b).CrossMultiply(c - b);
-            var n = new Vector3(0, 0, 1);
 
             var vz = v[2];
             var va = v.ScalarMultiply(a);
