@@ -8,16 +8,21 @@ namespace Generator
 {
     public class Beachline : IEnumerable<IArc>
     {
+        public readonly Sweepline Sweepline;        
+        public List<List<IArc>> PotentialCircleEvents { get; private set; }
+
         private readonly Skiplist<IArc> _arcs;
-        private readonly Sweepline _sweepline;
         private int _count;
 
         public Beachline()
         {
-            _sweepline = new Sweepline {Z = 1};
-            var orderer = new ArcOrderer(_sweepline);
+            Sweepline = new Sweepline {Z = 1};
+            
+            var orderer = new ArcOrderer(Sweepline);
             _arcs = new Skiplist<IArc> {InOrder = orderer.AreInOrder};
             _count = 0;
+
+            PotentialCircleEvents = new List<List<IArc>>();
         }
 
         #region Insert methods
@@ -41,7 +46,7 @@ namespace Generator
         {
             var newArc = new Arc { Site = site, LeftNeighbour = site };
 
-            InsertArc(newArc);
+            InsertIntoSkiplist(newArc);
         }
 
         private void InsertSecondSite(SiteEvent site)
@@ -50,7 +55,7 @@ namespace Generator
             var newArc = new Arc { Site = site, LeftNeighbour = oldArc.Site };
             oldArc.LeftNeighbour = site;
 
-            InsertArc(newArc);
+            InsertIntoSkiplist(newArc);
         }
 
         private void InsertSite(SiteEvent site)
@@ -58,8 +63,8 @@ namespace Generator
             var newArcA = new Arc {Site = site, LeftNeighbour = site};
             var newArcB = new Arc {Site = site, LeftNeighbour = site};
 
-            InsertArc(newArcA);
-            InsertArc(newArcB);
+            InsertIntoSkiplist(newArcA);
+            InsertIntoSkiplist(newArcB);
             var neighbourhood = FindNeighbourhoodOf(newArcA);
 
             neighbourhood[2].Site = neighbourhood[0].Site;
@@ -67,6 +72,9 @@ namespace Generator
             neighbourhood[1].LeftNeighbour = neighbourhood[0].Site;
             neighbourhood[2].LeftNeighbour = neighbourhood[1].Site;
             neighbourhood[3].LeftNeighbour = neighbourhood[2].Site;
+
+            PotentialCircleEvents.Add(new List<IArc> {neighbourhood[0], neighbourhood[1], neighbourhood[2]});
+            PotentialCircleEvents.Add(new List<IArc> {neighbourhood[1], neighbourhood[2], neighbourhood[3]});
         }
 
         private List<IArc> FindNeighbourhoodOf(IArc arc)
@@ -87,16 +95,16 @@ namespace Generator
             }
         }
 
-        private void InsertArc(IArc arc)
+        private void InsertIntoSkiplist(IArc arc)
         {
-            _sweepline.Z = arc.Site.Position.Z;
+            Sweepline.Z = arc.Site.Position.Z;
             _arcs.Insert(arc);
             _count++;
         }
         #endregion
 
         #region Remove methods
-        public void Remove(Arc arc)
+        public void Remove(IArc arc)
         {
             var node = _arcs.FetchNode(arc);
             node.Right.Key.LeftNeighbour = node.Left.Key.Site;
@@ -105,6 +113,11 @@ namespace Generator
             _count--;
         }
         #endregion
+
+        public void ClearModifiedArcsQueue()
+        {
+            PotentialCircleEvents = new List<List<IArc>>();
+        }
 
         #region IEnumerator<IArc> methods
         public IEnumerator<IArc> GetEnumerator()
@@ -128,7 +141,7 @@ namespace Generator
 
         private string StringOfArc(IArc arc)
         {
-            var azimuthOfIntersection = arc.LeftIntersection(_sweepline).SphericalCoordinates().Azimuth;
+            var azimuthOfIntersection = arc.LeftIntersection(Sweepline).SphericalCoordinates().Azimuth;
             var leftIntersectionString = String.Format("{0,3:N0}", azimuthOfIntersection);
             var arcString = arc.ToString();
 
