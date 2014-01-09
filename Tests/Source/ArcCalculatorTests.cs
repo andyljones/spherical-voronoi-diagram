@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Generator;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
@@ -198,70 +195,6 @@ namespace SphericalVoronoiTests
             var failureString = String.Format("Direction of left intersection: {0},\n",
                                               directionOfLeftIntersection);
             Assert.True(Vector.AlmostEqual(directionOfFocus, directionOfLeftIntersection, Tolerance), failureString);
-
-            // Teardown
-        }
-
-        [Fact]
-        public void LeftIntersection_ShouldReturnAVectorWhichWhenMappedToAPointOnTheArcIsEquidistantFromBothSites_Test1()
-        {
-            var arc = new Arc
-            {
-                Site = new SiteEvent {Position = Utilities.VectorAt(90, 25)},
-                LeftNeighbour = new SiteEvent {Position = Utilities.VectorAt(45, 0)},
-            };
-            var sweepline = Utilities.SweeplineAt(179);
-
-            // Fixture setup
-            var focus = arc.Site.Position;
-            var leftFocus = arc.LeftNeighbour.Position;
-
-            // Exercise system
-            var directionOfIntersection = arc.LeftIntersection(sweepline);
-            var intersection = arc.PointAt(directionOfIntersection, sweepline);
-
-            // Verify outcome
-            var distanceFromSite = Trig.InverseCosine(focus.ScalarMultiply(intersection));
-            var distanceFromLeftSite = Trig.InverseCosine(leftFocus.ScalarMultiply(intersection));
-
-            var failureString = String.Format("Direction of intersection: {0},\n" +
-                                              "Intersection: {1},\n" +
-                                              "Distance from site: {2},\n" +
-                                              "Distance from left site: {3}",
-                                              directionOfIntersection, intersection, distanceFromSite, distanceFromLeftSite);
-            Assert.True(Number.AlmostEqual(distanceFromSite, distanceFromLeftSite, Tolerance), failureString);
-
-            // Teardown
-        }
-
-        [Fact]
-        public void LeftIntersection_ShouldReturnAVectorWhichWhenMappedToAPointOnTheArcIsEquidistantFromBothSites_Test2()
-        {
-            var arc = new Arc
-            {
-                Site = new SiteEvent { Position = Utilities.VectorAt(72, 0) },
-                LeftNeighbour = new SiteEvent { Position = Utilities.VectorAt(54, 45) },
-            };
-            var sweepline = Utilities.SweeplineAt(129);
-
-            // Fixture setup
-            var focus = arc.Site.Position;
-            var leftFocus = arc.LeftNeighbour.Position;
-
-            // Exercise system
-            var directionOfIntersection = arc.LeftIntersection(sweepline);
-            var intersection = arc.PointAt(directionOfIntersection, sweepline);
-
-            // Verify outcome
-            var distanceFromSite = Trig.InverseCosine(focus.ScalarMultiply(intersection));
-            var distanceFromLeftSite = Trig.InverseCosine(leftFocus.ScalarMultiply(intersection));
-
-            var failureString = String.Format("Direction of intersection: {0},\n" +
-                                              "Intersection: {1},\n" +
-                                              "Distance from site: {2},\n" +
-                                              "Distance from left site: {3}",
-                                              directionOfIntersection, intersection, distanceFromSite, distanceFromLeftSite);
-            Assert.True(Number.AlmostEqual(distanceFromSite, distanceFromLeftSite, Tolerance), failureString);
 
             // Teardown
         }
