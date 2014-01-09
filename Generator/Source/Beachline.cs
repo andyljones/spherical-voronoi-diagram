@@ -9,7 +9,7 @@ namespace Generator
     public class Beachline : IEnumerable<IArc>
     {
         public readonly Sweepline Sweepline;        
-        public List<List<IArc>> PotentialCircleEvents { get; private set; }
+        public List<CircleEvent> PotentialCircleEvents { get; private set; }
 
         private readonly Skiplist<IArc> _arcs;
         private int _count;
@@ -22,7 +22,7 @@ namespace Generator
             _arcs = new Skiplist<IArc> {InOrder = orderer.AreInOrder};
             _count = 0;
 
-            PotentialCircleEvents = new List<List<IArc>>();
+            PotentialCircleEvents = new List<CircleEvent>();
         }
 
         #region Insert methods
@@ -73,8 +73,8 @@ namespace Generator
             neighbourhood[2].LeftNeighbour = neighbourhood[1].Site;
             neighbourhood[3].LeftNeighbour = neighbourhood[2].Site;
 
-            PotentialCircleEvents.Add(new List<IArc> {neighbourhood[0], neighbourhood[1], neighbourhood[2]});
-            PotentialCircleEvents.Add(new List<IArc> {neighbourhood[1], neighbourhood[2], neighbourhood[3]});
+            PotentialCircleEvents.Add(new CircleEvent(neighbourhood[0], neighbourhood[1], neighbourhood[2]));
+            PotentialCircleEvents.Add(new CircleEvent(neighbourhood[1], neighbourhood[2], neighbourhood[3]));
         }
 
         private List<IArc> FindNeighbourhoodOf(IArc arc)
@@ -114,9 +114,9 @@ namespace Generator
         }
         #endregion
 
-        public void ClearModifiedArcsQueue()
+        public void ClearPotentialCircleEventList()
         {
-            PotentialCircleEvents = new List<List<IArc>>();
+            PotentialCircleEvents = new List<CircleEvent>();
         }
 
         #region IEnumerator<IArc> methods

@@ -1,7 +1,9 @@
 ﻿using System;
 using Generator;
+using SphericalVoronoiTests.DataAttributes;
 using Xunit;
 using MathNet.Numerics;
+using Xunit.Extensions;
 
 namespace SphericalVoronoiTests
 {

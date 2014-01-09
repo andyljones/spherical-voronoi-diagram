@@ -2,19 +2,19 @@
 
 namespace Generator
 {
-    public class CircleEvent
+    public class CircleEvent : IComparable<CircleEvent>
     {
-        private readonly Arc _leftArc;
-        private readonly Arc _middleArc;
-        private readonly Arc _rightArc;
+        public readonly IArc LeftArc;
+        public readonly IArc MiddleArc;
+        public readonly IArc RightArc;
 
         public double Priority { get; private set; }
 
-        public CircleEvent(Arc leftArc, Arc middleArc, Arc rightArc)
+        public CircleEvent(IArc leftArc, IArc middleArc, IArc rightArc)
         {
-            _leftArc = leftArc;
-            _middleArc = middleArc;
-            _rightArc = rightArc;
+            LeftArc = leftArc;
+            MiddleArc = middleArc;
+            RightArc = rightArc;
 
             Priority = CalculatePriority(leftArc.Site.Position, middleArc.Site.Position, rightArc.Site.Position);
         }
@@ -31,6 +31,11 @@ namespace Generator
             var sign = va > -vz ? 1 : -1;
 
             return sign*(1 + z);
+        }
+
+        public int CompareTo(CircleEvent other)
+        {
+            return this.Priority.CompareTo(other.Priority);
         }
     }
 }
