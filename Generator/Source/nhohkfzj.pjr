@@ -40,7 +40,8 @@ namespace Generator
         {
             var newArc = new Arc { Site = site, LeftNeighbour = site };
 
-            InsertArc(newArc);
+            _arcs.Insert(newArc);
+            _count++;
         }
 
         private void InsertSecondSite(SiteEvent site)
@@ -49,7 +50,8 @@ namespace Generator
             var newArc = new Arc { Site = site, LeftNeighbour = oldArc.Site };
             oldArc.LeftNeighbour = site;
 
-            InsertArc(newArc);
+            _arcs.Insert(newArc);
+            _count++;
         }
 
         private void InsertSite(SiteEvent site)
@@ -57,8 +59,10 @@ namespace Generator
             var newArcA = new Arc {Site = site, LeftNeighbour = site};
             var newArcB = new Arc {Site = site, LeftNeighbour = site};
 
-            InsertArc(newArcA);
-            InsertArc(newArcB);
+            _arcs.Insert(newArcA);
+            _count++;
+            _arcs.Insert(newArcB);
+            _count++;
             var neighbourhood = FindNeighbourhoodOf(newArcA);
 
             neighbourhood[2].Site = neighbourhood[0].Site;
@@ -68,11 +72,10 @@ namespace Generator
             neighbourhood[3].LeftNeighbour = neighbourhood[2].Site;
         }
 
-        private void InsertArc(IArc arc)
+        private void InsertArc(Arc arc)
         {
             _sweepline.Z = arc.Site.Position.Z;
             _arcs.Insert(arc);
-            _count++;
         }
 
         private List<IArc> FindNeighbourhoodOf(IArc arc)

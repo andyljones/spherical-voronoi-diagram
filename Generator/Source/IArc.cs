@@ -2,7 +2,7 @@
 {
     public interface IArc
     {
-        SiteEvent Site { get; }
+        SiteEvent Site { get; set; }
         SiteEvent LeftNeighbour { get; set; }
     }
 }

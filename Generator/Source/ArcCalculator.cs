@@ -42,13 +42,13 @@ namespace Generator
                 return AngleUtilities.DirectionOf(p);
             }
 
-            var A =  p.X*(Z - q.Z) - q.X*(Z - p.Z);
-            var B = (p.Y*(Z - q.Z) - q.Y*(Z - p.Z));
+            var A = p.X*(Z - q.Z) - q.X*(Z - p.Z);
+            var B = p.Y*(Z - q.Z) - q.Y*(Z - p.Z);
             var C = (p.Z - q.Z)*Math.Sqrt(1 - Z*Z);
 
             var A2PlusB2MinusC2 = Math.Max(A*A + B*B - C*C, 0);
-            var x =  (A*C + B*Math.Sqrt(A2PlusB2MinusC2)) / (A*A + B*B);
-            var y =  (B*C - A*Math.Sqrt(A2PlusB2MinusC2)) / (A*A + B*B);
+            var x =  (A*C - B*Math.Sqrt(A2PlusB2MinusC2)) / (A*A + B*B);
+            var y =  (B*C + A*Math.Sqrt(A2PlusB2MinusC2)) / (A*A + B*B);
 
             return new Vector3(x, y, 0);
         }
