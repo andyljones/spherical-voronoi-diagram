@@ -73,11 +73,11 @@ namespace Generator
         {
             var node = _arcs.FetchNode(arc);
 
-            if (node.Left.Key.Site != arc.Site)
+            if (node.Right.Key.Site == arc.Site)
             {
                 return new List<IArc> {node.Left.Key, node.Key, node.Right.Key, node.Right.Right.Key};
             }
-            else if (node.Right.Key.Site != arc.Site)
+            else if (node.Left.Key.Site == arc.Site)
             {
                 return new List<IArc> {node.Left.Left.Key, node.Left.Key, node.Key, node.Right.Key};
             }

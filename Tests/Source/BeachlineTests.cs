@@ -75,5 +75,33 @@ namespace SphericalVoronoiTests
 
             // Teardown
         }
+
+        [Theory]
+        [ZOrderedVectorData]
+        public void Insert_ingASiteIntoTheIntersectionBetweenTwoSites_ShouldCreateThreeArcsEachWithTheOthersSiteOnTheLeft
+            (Beachline beachline, SiteEvent leftSite, SiteEvent centralSite)
+        {
+            // Fixture setup
+            var upperColatitude = leftSite.Position.SphericalCoordinates().Colatitude;
+            var leftAzimuth = leftSite.Position.SphericalCoordinates().Azimuth;
+            var centralAzimuth = centralSite.Position.SphericalCoordinates().Azimuth;
+            var rightSite = new SiteEvent {Position = new SphericalCoords(upperColatitude, centralAzimuth + (centralAzimuth - leftAzimuth)).CartesianCoordinates()};
+
+            // Exercise system
+            beachline.Insert(leftSite);
+            beachline.Insert(rightSite);
+            beachline.Insert(centralSite);
+
+            Debug.WriteLine(beachline);
+            // Verify outcome
+            var sites = beachline.Select(arc => arc.Site).ToList();
+            var leftNeighbours = beachline.Select(arc => arc.LeftNeighbour).ToList();
+            leftNeighbours = leftNeighbours.Skip(1).Concat(leftNeighbours.Take(1)).ToList();
+
+            var failureString = String.Format("Beachline was {0}", beachline);
+            Assert.True(sites.SequenceEqual(leftNeighbours), failureString);
+
+            // Teardown
+        }
     }
 }
