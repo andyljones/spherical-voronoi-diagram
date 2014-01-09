@@ -20,6 +20,7 @@ namespace Generator
             _count = 0;
         }
 
+        #region Insert methods
         public void Insert(SiteEvent site)
         {
             if (_count == 0)
@@ -68,13 +69,6 @@ namespace Generator
             neighbourhood[3].LeftNeighbour = neighbourhood[2].Site;
         }
 
-        private void InsertArc(IArc arc)
-        {
-            _sweepline.Z = arc.Site.Position.Z;
-            _arcs.Insert(arc);
-            _count++;
-        }
-
         private List<IArc> FindNeighbourhoodOf(IArc arc)
         {
             var node = _arcs.FetchNode(arc);
@@ -93,6 +87,26 @@ namespace Generator
             }
         }
 
+        private void InsertArc(IArc arc)
+        {
+            _sweepline.Z = arc.Site.Position.Z;
+            _arcs.Insert(arc);
+            _count++;
+        }
+        #endregion
+
+        #region Remove methods
+        public void Remove(Arc arc)
+        {
+            var node = _arcs.FetchNode(arc);
+            node.Right.Key.LeftNeighbour = node.Left.Key.Site;
+
+            _arcs.Remove(arc);
+            _count--;
+        }
+        #endregion
+
+        #region IEnumerator<IArc> methods
         public IEnumerator<IArc> GetEnumerator()
         {
             return _arcs.GetEnumerator();
@@ -102,7 +116,9 @@ namespace Generator
         {
             return GetEnumerator();
         }
+        #endregion
 
+        #region ToString methods
         public override string ToString()
         {
             var arcStrings =_arcs.Select(arc => StringOfArc(arc)).ToArray();
@@ -118,5 +134,6 @@ namespace Generator
 
             return leftIntersectionString + arcString;
         }
+        #endregion
     }
 }

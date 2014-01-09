@@ -133,7 +133,7 @@ namespace SphericalVoronoiTests
 
             var lowerArc =  arc.Site.Position.Z <  dualArc.Site.Position.Z ? arc : dualArc;
             var higherArc = arc.Site.Position.Z >= dualArc.Site.Position.Z ? arc : dualArc;
-            var directionOfLowerFocus = AngleUtilities.DirectionOf(lowerArc.Site.Position);
+            var directionOfLowerFocus = AngleUtilities.EquatorialDirection(lowerArc.Site.Position);
 
             // Exercise system
             var directionOfLeftIntersection = lowerArc.LeftIntersection(sweepline);
@@ -164,7 +164,7 @@ namespace SphericalVoronoiTests
             var leftFocus = arc.LeftNeighbour.Position;
             var lowerFocus = focus.Z < leftFocus.Z ? focus : leftFocus;
 
-            var directionOfLowerFocus = new Vector3(lowerFocus.X, lowerFocus.Y, 0).Normalize();
+            var directionOfLowerFocus = AngleUtilities.EquatorialDirection(lowerFocus);
             sweepline.Z = lowerFocus.Z;
 
             // Exercise system
@@ -185,8 +185,7 @@ namespace SphericalVoronoiTests
         {
             // Fixture setup
             arc.LeftNeighbour = arc.Site;
-            var focus = arc.Site.Position;
-            var directionOfFocus = new Vector3(focus.X, focus.Y, 0).Normalize();
+            var directionOfFocus = AngleUtilities.EquatorialDirection(arc.Site.Position);
 
             // Exercise system
             var directionOfLeftIntersection = arc.LeftIntersection(sweepline);
@@ -195,6 +194,31 @@ namespace SphericalVoronoiTests
             var failureString = String.Format("Direction of left intersection: {0},\n",
                                               directionOfLeftIntersection);
             Assert.True(Vector.AlmostEqual(directionOfFocus, directionOfLeftIntersection, Tolerance), failureString);
+
+            // Teardown
+        }
+
+        [Theory]
+        [VectorsAboveSweepline]
+        public void LeftIntersection_WhenSweeplinePassesThroughBothFocuses_ShouldReturnEquatorialMidpointOfFocii
+            (Arc arc, Sweepline sweepline)
+        {
+            // Fixture setup
+            var colatitudeOfFocus = arc.Site.Position.SphericalCoordinates().Colatitude;
+            var azimuthOfFocus = arc.Site.Position.SphericalCoordinates().Azimuth;      
+            var azimuthOfLeftFocus = arc.LeftNeighbour.Position.SphericalCoordinates().Azimuth;
+
+            arc.Site.Position = new SphericalCoords(colatitudeOfFocus, azimuthOfFocus).CartesianCoordinates();
+            arc.LeftNeighbour.Position = new SphericalCoords(colatitudeOfFocus, azimuthOfLeftFocus).CartesianCoordinates();
+
+            // Exercise system
+            var directionOfLeftIntersection = arc.LeftIntersection(sweepline);
+
+            // Verify outcome
+            var equatorialMidpoint = AngleUtilities.EquatorialMidpoint(arc.LeftNeighbour.Position, arc.Site.Position);
+            var failureString = String.Format("Direction of left intersection: {0},\n",
+                                              directionOfLeftIntersection);
+            Assert.True(Vector.AlmostEqual(equatorialMidpoint, directionOfLeftIntersection, Tolerance), failureString);
 
             // Teardown
         }

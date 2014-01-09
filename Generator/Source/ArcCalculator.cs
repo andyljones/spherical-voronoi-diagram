@@ -10,10 +10,10 @@ namespace Generator
         public static Vector3 PointAt(this IArc arc, Vector3 vector, Sweepline sweepline)
         {
             var p = arc.Site.Position;
-            var n = AngleUtilities.DirectionOf(vector);
+            var n = AngleUtilities.EquatorialDirection(vector);
             var Z = sweepline.Z;
 
-            if (Number.AlmostEqual(p.Z, Z) && Vector.AlmostEqual(AngleUtilities.DirectionOf(p), n))
+            if (Number.AlmostEqual(p.Z, Z) && Vector.AlmostEqual(AngleUtilities.EquatorialDirection(p), n))
             {
                 return p;
             }
@@ -39,7 +39,11 @@ namespace Generator
 
             if (Vector.AlmostEqual(p, q))
             {
-                return AngleUtilities.DirectionOf(p);
+                return AngleUtilities.EquatorialDirection(p);
+            }
+            if (Number.AlmostEqual(Z, p.Z) && Number.AlmostEqual(Z, q.Z))
+            {
+                return AngleUtilities.EquatorialMidpoint(p, q);
             }
 
             var A = p.X*(Z - q.Z) - q.X*(Z - p.Z);
