@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using C5;
 
 namespace Generator
@@ -69,7 +71,7 @@ namespace Generator
             return _queue.IsEmpty;
         }
 
-        public IArc PopHighestPriorityArc()
+        public CircleEvent PopHighestPriorityArc()
         {
             var maxCircleEvent = _queue.FindMax();
 
@@ -77,8 +79,17 @@ namespace Generator
             TryRemoveEventCorrespondingTo(maxCircleEvent.MiddleArc);
             TryRemoveEventCorrespondingTo(maxCircleEvent.RightArc);
 
-            return maxCircleEvent.MiddleArc;
+            return maxCircleEvent;
         }
 
+        public override string ToString()
+        {
+            return String.Join(", ", _queue.ToList().Select(circle => circle.ToString()).ToArray());
+        }
+
+        public CircleEvent[] ToArray()
+        {
+            return _queue.ToArray();
+        }
     }
 }

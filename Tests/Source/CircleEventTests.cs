@@ -114,5 +114,46 @@ namespace SphericalVoronoiTests
 
             // Teardown
         }
+
+        [Fact]
+        public void Test()
+        {
+            // Fixture setup
+            var arcA = new Arc { Site = Utilities.SiteAt(45, 45) };
+            var arcB = new Arc { Site = Utilities.SiteAt(0, 0) };
+            var arcC = new Arc { Site = Utilities.SiteAt(45, -45) };
+
+            var circle = new CircleEvent(arcA, arcB, arcC);
+
+            var a = arcA.Site.Position;
+            var b = arcB.Site.Position;
+            var c = arcC.Site.Position;
+
+            var center = (a - b).CrossMultiply(c - b);
+
+            var colatitudeOfCenter = Trig.InverseCosine(center[2]);
+            var radius = Trig.InverseCosine(a.ScalarMultiply(center));
+
+            var isOnOutsideOfSphere = colatitudeOfCenter + radius <= Constants.Pi;
+            var sign = isOnOutsideOfSphere ? 1 : -1;
+            var expectedPriority = sign * (1 + Trig.Cosine(colatitudeOfCenter + radius));
+
+            // Exercise system
+            var priority = circle.Priority;
+            Debug.WriteLine(priority);
+            Debug.WriteLine(colatitudeOfCenter);
+            Debug.WriteLine(radius);
+
+
+            // Verify outcome
+            var failureString =
+                String.Format(
+                "Expected priority was {0}\nActual priority was {1}",
+                expectedPriority,
+                priority);
+            Assert.True(Number.AlmostEqual(expectedPriority, priority, Tolerance), failureString);
+
+            // Teardown
+        }
     }
 }

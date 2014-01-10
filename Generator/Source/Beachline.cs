@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using CyclicalSkipList;
 using MathNet.Numerics;
@@ -68,14 +69,15 @@ namespace Generator
             InsertIntoSkiplist(newArcB);
             var neighbourhood = FindNeighbourhoodOf(newArcA);
 
-            neighbourhood[2].Site = neighbourhood[0].Site;
+            neighbourhood[3].Site = neighbourhood[1].Site;
 
             neighbourhood[1].LeftNeighbour = neighbourhood[0].Site;
             neighbourhood[2].LeftNeighbour = neighbourhood[1].Site;
             neighbourhood[3].LeftNeighbour = neighbourhood[2].Site;
+            neighbourhood[4].LeftNeighbour = neighbourhood[3].Site;
 
             PotentialCircleEvents.Add(new CircleEvent(neighbourhood[0], neighbourhood[1], neighbourhood[2]));
-            PotentialCircleEvents.Add(new CircleEvent(neighbourhood[1], neighbourhood[2], neighbourhood[3]));
+            PotentialCircleEvents.Add(new CircleEvent(neighbourhood[2], neighbourhood[3], neighbourhood[4]));
         }
 
         private List<IArc> FindNeighbourhoodOf(IArc arc)
@@ -84,11 +86,11 @@ namespace Generator
 
             if (node.Right.Key.Site == arc.Site)
             {
-                return new List<IArc> {node.Left.Key, node.Key, node.Right.Key, node.Right.Right.Key};
+                return new List<IArc> {node.Left.Left.Key, node.Left.Key, node.Key, node.Right.Key, node.Right.Right.Key};
             }
             else if (node.Left.Key.Site == arc.Site)
             {
-                return new List<IArc> {node.Left.Left.Key, node.Left.Key, node.Key, node.Right.Key};
+                return new List<IArc> {node.Left.Left.Left.Key, node.Left.Left.Key, node.Left.Key, node.Key, node.Right.Key};
             }
             else
             {
@@ -107,16 +109,19 @@ namespace Generator
         #region Remove methods
         public void Remove(CircleEvent circleEvent)
         {
-            Sweepline.Priority = circleEvent.Priority;
+            Sweepline.Z = circleEvent.Priority - 1;
             Remove(circleEvent.MiddleArc);
         }
 
         public void Remove(IArc arc)
         {
             var node = _arcs.FetchNode(arc);
+            var successfullyRemoved = _arcs.Remove(arc);
+            if (!successfullyRemoved)
+            {
+                throw new DataException("Failed to remove arc!");
+            }
             node.Right.Key.LeftNeighbour = node.Left.Key.Site;
-
-            _arcs.Remove(arc);
             _count--;
 
             PotentialCircleEvents.Add(new CircleEvent(node.Right.Right.Key, node.Right.Key, node.Left.Key));

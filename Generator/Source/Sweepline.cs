@@ -17,6 +17,7 @@ namespace Generator
             }
         }
 
+        //TODO: Move from Z to priority.
         public double Z;
         //{
         //    get

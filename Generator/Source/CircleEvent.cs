@@ -1,4 +1,5 @@
 ﻿using System;
+using MathNet.Numerics;
 
 namespace Generator
 {
@@ -35,6 +36,11 @@ namespace Generator
         public int CompareTo(CircleEvent other)
         {
             return this.Priority.CompareTo(other.Priority);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("({0}, {1,3:N0})", MiddleArc, Priority);
         }
     }
 }
