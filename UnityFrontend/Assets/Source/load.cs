@@ -47,7 +47,7 @@ public class load : MonoBehaviour
         var azimuth = (float)(2 * Mathf.PI * _random.NextDouble());
 
         var x = Mathf.Sqrt(1 - z*z) * Mathf.Cos(azimuth);
-        var y = -Mathf.Sqrt(1 - z*z) * Mathf.Sin(azimuth);
+        var y = Mathf.Sqrt(1 - z*z) * Mathf.Sin(azimuth);
 
         return new double[] {x, y, z};
     }

@@ -70,9 +70,9 @@ namespace Graphics
         }
 
 
-        public static float AzimuthOf(IridiumVector3 iridiumVector)
+        public static float AzimuthOf(Vector3 v)
         {
-            return Mathf.Atan2((float) iridiumVector.Y, (float) iridiumVector.X);
+            return Mathf.Atan2(-v.y, v.x);
         }
 
         public static Vector3 CreateVectorAt(float colatitude, float azimuth)

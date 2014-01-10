@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CyclicalSkipList;
+using MathNet.Numerics;
 
 namespace Generator
 {
@@ -151,7 +152,7 @@ namespace Generator
         private string StringOfArc(IArc arc)
         {
             var azimuthOfIntersection = arc.LeftIntersection(Sweepline).SphericalCoordinates().Azimuth;
-            var leftIntersectionString = String.Format("{0,3:N0}", azimuthOfIntersection);
+            var leftIntersectionString = String.Format("{0,3:N0}", Trig.RadianToDegree(azimuthOfIntersection));
             var arcString = arc.ToString();
 
             return leftIntersectionString + arcString;

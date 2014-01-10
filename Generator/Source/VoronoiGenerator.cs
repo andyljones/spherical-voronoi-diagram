@@ -35,9 +35,9 @@ namespace Generator
             }
             else if (ACircleEventIsNext())
             {
-                var circle = CircleEventQueue.PopHighestPriorityArc();
-                Beachline.Remove(circle);
+                Beachline.Remove(CircleEventQueue.PopHighestPriorityArc());
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
+                Beachline.ClearPotentialCircleEventList();
             }
         }
 
@@ -50,7 +50,7 @@ namespace Generator
         private bool ACircleEventIsNext()
         {
             return (!CircleEventQueue.IsEmpty() && SiteEventQueue.IsEmpty) ||
-                   (!CircleEventQueue.IsEmpty() && SiteEventQueue.FindMax().Priority < CircleEventQueue.HighestPriority());
+                   (!CircleEventQueue.IsEmpty() && SiteEventQueue.FindMax().Priority <= CircleEventQueue.HighestPriority());
         }
     }
 }

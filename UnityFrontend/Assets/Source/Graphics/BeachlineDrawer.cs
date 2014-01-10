@@ -66,8 +66,8 @@ namespace Graphics
             }
             else
             {
-                var leftLimit = DrawingUtilities.AzimuthOf(arc.LeftIntersection(sweepline));
-                var rightLimit = DrawingUtilities.AzimuthOf(nextArc.LeftIntersection(sweepline));
+                var leftLimit = DrawingUtilities.AzimuthOf(arc.LeftIntersection(sweepline).ToUnityVector3());
+                var rightLimit = DrawingUtilities.AzimuthOf(nextArc.LeftIntersection(sweepline).ToUnityVector3());
                 azimuths =  DrawingUtilities.AzimuthsInRange(leftLimit, rightLimit, NumberOfVerticesPerArc);
             }
 
