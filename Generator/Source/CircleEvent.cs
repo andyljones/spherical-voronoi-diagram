@@ -22,7 +22,7 @@ namespace Generator
 
         private static double CalculatePriority(Vector3 a, Vector3 b, Vector3 c)
         {
-            var v = (a - b).CrossMultiply(c - b);
+            var v = (a - b).CrossMultiply(c - b).Normalize();
 
             var vz = v[2];
             var va = v.ScalarMultiply(a);
@@ -40,7 +40,7 @@ namespace Generator
 
         public override string ToString()
         {
-            return String.Format("({0}, {1,3:N0})", MiddleArc, Priority);
+            return String.Format("({0}, {1,3:N2})", MiddleArc, Priority);
         }
     }
 }

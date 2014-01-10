@@ -6,7 +6,6 @@ using Graphics;
 using MathNet.Numerics;
 using UnityEngine;
 using Random = System.Random;
-using Vector3 = UnityEngine.Vector3;
 
 public class load : MonoBehaviour
 {
@@ -23,7 +22,7 @@ public class load : MonoBehaviour
 	        VectorAt(0, 0),
 	        VectorAt(45, -45),
 	        VectorAt(45, 45),
-            //VectorAt(90, 0)
+            VectorAt(90, 0)
 	    };
         //positions = Enumerable.Range(0, 100).Select(i => CreateSphericalVector()).ToList();
 
@@ -40,9 +39,9 @@ public class load : MonoBehaviour
 	    if (Input.GetKey(KeyCode.N) || Input.GetKeyDown(KeyCode.F))
 	    {
             _diagram.ProcessNextEvent();
-            _drawer.UpdateVoronoiDiagram();
             Debug.Log(_diagram.Beachline);
             Debug.Log(_diagram.CircleEventQueue);
+            _drawer.UpdateVoronoiDiagram();
 	    }
 	}
 

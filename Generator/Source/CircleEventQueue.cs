@@ -75,10 +75,8 @@ namespace Generator
         {
             var maxCircleEvent = _queue.FindMax();
 
-            TryRemoveEventCorrespondingTo(maxCircleEvent.LeftArc);
             TryRemoveEventCorrespondingTo(maxCircleEvent.MiddleArc);
-            TryRemoveEventCorrespondingTo(maxCircleEvent.RightArc);
-
+            
             return maxCircleEvent;
         }
 

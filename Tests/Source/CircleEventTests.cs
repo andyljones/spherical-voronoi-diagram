@@ -92,7 +92,7 @@ namespace SphericalVoronoiTests
             var b = circle.MiddleArc.Site.Position;
             var c = circle.RightArc.Site.Position;
 
-            var center = (a - b).CrossMultiply(c - b);
+            var center = (a - b).CrossMultiply(c - b).Normalize();
 
             var colatitudeOfCenter = Trig.InverseCosine(center[2]);
             var radius = Trig.InverseCosine(a.ScalarMultiply(center));
@@ -119,9 +119,9 @@ namespace SphericalVoronoiTests
         public void Test()
         {
             // Fixture setup
-            var arcA = new Arc { Site = Utilities.SiteAt(45, 45) };
+            var arcA = new Arc { Site = Utilities.SiteAt(45, -45) };
             var arcB = new Arc { Site = Utilities.SiteAt(0, 0) };
-            var arcC = new Arc { Site = Utilities.SiteAt(45, -45) };
+            var arcC = new Arc { Site = Utilities.SiteAt(45, 45) };
 
             var circle = new CircleEvent(arcA, arcB, arcC);
 
@@ -129,7 +129,7 @@ namespace SphericalVoronoiTests
             var b = arcB.Site.Position;
             var c = arcC.Site.Position;
 
-            var center = (a - b).CrossMultiply(c - b);
+            var center = (a - b).CrossMultiply(c - b).Normalize();
 
             var colatitudeOfCenter = Trig.InverseCosine(center[2]);
             var radius = Trig.InverseCosine(a.ScalarMultiply(center));
@@ -140,9 +140,9 @@ namespace SphericalVoronoiTests
 
             // Exercise system
             var priority = circle.Priority;
-            Debug.WriteLine(priority);
-            Debug.WriteLine(colatitudeOfCenter);
-            Debug.WriteLine(radius);
+            Debug.WriteLine(expectedPriority);
+            Debug.WriteLine(Trig.RadianToDegree(colatitudeOfCenter));
+            Debug.WriteLine(Trig.RadianToDegree(radius));
 
 
             // Verify outcome
