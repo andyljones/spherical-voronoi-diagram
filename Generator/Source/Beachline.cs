@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using CyclicalSkipList;
 using MathNet.Numerics;
@@ -13,7 +14,7 @@ namespace Generator
         public readonly Sweepline Sweepline;        
         public List<CircleEvent> PotentialCircleEvents { get; private set; }
 
-        private readonly Skiplist<IArc> _arcs;
+        private readonly FakeSkiplist<IArc> _arcs;
         private int _count;
 
         public Beachline()
@@ -21,7 +22,7 @@ namespace Generator
             Sweepline = new Sweepline {Z = 1};
             
             var orderer = new ArcOrderer(Sweepline);
-            _arcs = new Skiplist<IArc> {InOrder = orderer.AreInOrder};
+            _arcs = new FakeSkiplist<IArc> {InOrder = orderer.AreInOrder};
             _count = 0;
 
             PotentialCircleEvents = new List<CircleEvent>();
@@ -65,9 +66,9 @@ namespace Generator
             var newArcA = new Arc {Site = site, LeftNeighbour = site};
             var newArcB = new Arc {Site = site, LeftNeighbour = site};
 
-            InsertIntoSkiplist(newArcA);
-            InsertIntoSkiplist(newArcB);
-            var neighbourhood = FindNeighbourhoodOf(newArcA);
+            var newNodeA = InsertIntoSkiplist(newArcA);
+            var newNodeB = InsertIntoSkiplist(newArcB);
+            var neighbourhood = FindNeighbourhoodOf(newNodeA);
 
             neighbourhood[3].Site = neighbourhood[1].Site;
 
@@ -80,15 +81,14 @@ namespace Generator
             PotentialCircleEvents.Add(new CircleEvent(neighbourhood[2], neighbourhood[3], neighbourhood[4]));
         }
 
-        private List<IArc> FindNeighbourhoodOf(IArc arc)
+        private List<IArc> FindNeighbourhoodOf(INode<IArc> node)
         {
-            var node = _arcs.FetchNode(arc);
 
-            if (node.Right.Key.Site == arc.Site)
+            if (node.Right.Key.Site == node.Key.Site)
             {
                 return new List<IArc> {node.Left.Left.Key, node.Left.Key, node.Key, node.Right.Key, node.Right.Right.Key};
             }
-            else if (node.Left.Key.Site == arc.Site)
+            else if (node.Left.Key.Site == node.Key.Site)
             {
                 return new List<IArc> {node.Left.Left.Left.Key, node.Left.Left.Key, node.Left.Key, node.Key, node.Right.Key};
             }
@@ -98,11 +98,11 @@ namespace Generator
             }
         }
 
-        private void InsertIntoSkiplist(IArc arc)
+        private INode<IArc> InsertIntoSkiplist(IArc arc)
         {
             Sweepline.Z = arc.Site.Position.Z;
-            _arcs.Insert(arc);
             _count++;
+            return _arcs.Insert(arc);
         }
         #endregion
 
@@ -115,9 +115,8 @@ namespace Generator
 
         public void Remove(IArc arc)
         {
-            var node = _arcs.FetchNode(arc);
-            var successfullyRemoved = _arcs.Remove(arc);
-            if (!successfullyRemoved)
+            var node = _arcs.Remove(arc);
+            if (node == null)
             {
                 throw new DataException("Failed to remove arc " + arc);
             }

@@ -28,7 +28,7 @@ public class load : MonoBehaviour
             VectorAt(90, 0),
             VectorAt(90, 90)
 	    };
-        positions = Enumerable.Range(0, 10000).Select(i => CreateSphericalVector()).ToList();
+        positions = Enumerable.Range(0, 1000).Select(i => CreateSphericalVector()).ToList();
 
         _diagram = new VoronoiDiagram(positions);
 
@@ -51,6 +51,7 @@ public class load : MonoBehaviour
 	        catch (Exception exception)
 	        {
 	            _hasFailed = true;
+                Debug.Log(exception);
 	        }
             _drawer.UpdateVoronoiDiagram();
 	    }

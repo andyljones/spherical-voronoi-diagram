@@ -66,6 +66,8 @@ namespace SphericalVoronoiTests
             beachline.Insert(site2);
             beachline.Insert(site3);
 
+            Debug.WriteLine(beachline);
+
             // Verify outcome
             var sites = beachline.Select(arc => arc.Site).ToList();
             var leftNeighbours = beachline.Select(arc => arc.LeftNeighbour).ToList();
@@ -151,6 +153,7 @@ namespace SphericalVoronoiTests
 
             // Exercise system
             Debug.WriteLine(beachline);
+            Debug.WriteLine(arcToBeRemoved);
             beachline.Remove(arcToBeRemoved);
 
             Debug.WriteLine(beachline);
