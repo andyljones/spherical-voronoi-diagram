@@ -14,9 +14,10 @@ namespace Graphics
         private GameObject _parentObject;
 
         //private HashSet<Edge> _edgesAlreadyDrawn;
-        private readonly Dictionary<IArc, GameObject> _edgeObjects;
+        private readonly Dictionary<IArc, Mesh> _edgeMeshes;
 
         private readonly Dictionary<IArc, List<IridiumVector3>> _arcToEdges;
+        private readonly Dictionary<IArc, int> _edgeListCounts; 
         private Beachline _beachline;
 
         public EdgeDrawer(EdgeSet edgeSet, Beachline beachline)
@@ -24,13 +25,13 @@ namespace Graphics
             _arcToEdges = edgeSet.CurrentEdgeDict();
 
             _beachline = beachline;
-            _edgeObjects = new Dictionary<IArc, GameObject>();
+            _edgeMeshes = new Dictionary<IArc, Mesh>();
+            _edgeListCounts = new Dictionary<IArc, int>();
 
             _parentObject = new GameObject("Edges");
 
         }
 
-        //TODO: Refactor.
         public void Update()
         {
             foreach (var arcAndEdgeList in _arcToEdges)
@@ -38,19 +39,19 @@ namespace Graphics
                 var arc = arcAndEdgeList.Key;
                 var edgeList = arcAndEdgeList.Value;
 
-                if (!_edgeObjects.ContainsKey(arc))
+                if (!_edgeMeshes.ContainsKey(arc))
                 {
                     var edgeListObject = DrawEdgeList(edgeList);
                     edgeListObject.transform.parent = _parentObject.transform;
-                    _edgeObjects.Add(arc, edgeListObject);
-
+                    _edgeMeshes.Add(arc, edgeListObject.GetComponent<MeshFilter>().mesh);
+                    _edgeListCounts.Add(arc, edgeList.Count);
                 }
-                else
+                else if (_edgeListCounts[arc] != edgeList.Count)
                 {
-                    var edgeListObject = _edgeObjects[arc];
-                    var edgeListMesh = edgeListObject.GetComponent<MeshFilter>().mesh;
+                    var edgeMesh = _edgeMeshes[arc];
                     var newVertices = VerticesInEdgeList(edgeList);
-                    DrawingUtilities.UpdateLineMesh(edgeListMesh, newVertices);
+                    DrawingUtilities.UpdateLineMesh(edgeMesh, newVertices);
+                    _edgeListCounts[arc] = edgeList.Count;
                 }
             }
         }
@@ -58,7 +59,7 @@ namespace Graphics
         private static GameObject DrawEdgeList(List<IridiumVector3> edgeList)
         {
             var vertices = VerticesInEdgeList(edgeList);
-            var gameObject = DrawingUtilities.CreateLineObject("Edge list", vertices, "");
+            var gameObject = DrawingUtilities.CreateLineObject("Edge list", vertices, "EdgeMaterial");
 
             return gameObject;
         }
