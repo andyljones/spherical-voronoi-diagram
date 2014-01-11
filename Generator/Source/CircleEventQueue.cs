@@ -27,11 +27,11 @@ namespace Generator
 
         public void TryInsert(CircleEvent circleEvent)
         {
+            TryRemoveEventCorrespondingTo(circleEvent.MiddleArc);
+
             if (HasThreeDistinctSites(circleEvent) &&
                 WillOccurBeforeTermination(circleEvent))
             {
-                TryRemoveEventCorrespondingTo(circleEvent.MiddleArc);
-
                 IPriorityQueueHandle<CircleEvent> eventHandle = null;
                 _queue.Add(ref eventHandle, circleEvent);
                 

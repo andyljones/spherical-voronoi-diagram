@@ -37,8 +37,7 @@ public class load : MonoBehaviour
 	// Update is called once per frame
 	void Update () {
 
-        //if (!_hasFailed && (Input.GetKey(KeyCode.N) || Input.GetKeyDown(KeyCode.F)))
-        if (!_hasFailed)
+        if (!_hasFailed && (Input.GetKey(KeyCode.N) || Input.GetKeyDown(KeyCode.F)))
 	    {
 	        try
 	        {

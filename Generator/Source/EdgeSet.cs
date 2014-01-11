@@ -19,7 +19,7 @@ namespace Generator
             arcs.ForEach(arc => UpdateArc(arc));
         }
 
-        private void UpdateArc(IArc arc)
+        public void UpdateArc(IArc arc)
         {
             if (!_edges.ContainsKey(arc))
             {

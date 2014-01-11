@@ -31,12 +31,9 @@ namespace Graphics
 
         public void Update()
         {
-            _beachline.Sweepline.Z = _beachline.Sweepline.Z - 0.0000001f;
             var mesh = _gameObject.GetComponent<MeshFilter>().mesh;
             var vertices = BeachlineVertices(_beachline);
             DrawingUtilities.UpdateLineMesh(mesh, vertices);
-            _beachline.Sweepline.Z = _beachline.Sweepline.Z + 0.0000001f;
-
         }
 
         private static Vector3[] BeachlineVertices(Beachline beachline)
@@ -69,9 +66,6 @@ namespace Graphics
                 var leftLimit = DrawingUtilities.AzimuthOf(arc.LeftIntersection(sweepline).ToUnityVector3());
                 var rightLimit = DrawingUtilities.AzimuthOf(nextArc.LeftIntersection(sweepline).ToUnityVector3());
                 azimuths =  DrawingUtilities.AzimuthsInRange(leftLimit, rightLimit, NumberOfVerticesPerArc);
-                //Debug.Log(String.Format("{0,3:N0}", Mathf.Rad2Deg * leftLimit));
-                //Debug.Log(String.Format("{0,3:N0}", Mathf.Rad2Deg * rightLimit));
-                //Debug.Log(String.Join(",", azimuths.Select(azimuth => String.Format("{0,3:N0}", Mathf.Rad2Deg*azimuth)).ToArray()));
             }
 
             var vertices = azimuths.Select(azimuth => PointOnEllipse(arc, azimuth, sweepline)).ToList();

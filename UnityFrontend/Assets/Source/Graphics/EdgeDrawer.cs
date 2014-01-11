@@ -9,17 +9,16 @@ namespace Graphics
 {
     public class EdgeDrawer
     {
-        public const int NumberOfVerticesPerEdge = 25;
+        public const int NumberOfVerticesPerEdge = 50;
 
-        private GameObject _parentObject;
+        private readonly GameObject _parentObject;
 
-        //private HashSet<Edge> _edgesAlreadyDrawn;
         private readonly Dictionary<IArc, Mesh> _edgeMeshes;
         private readonly Mesh _activeEdges;
 
         private readonly Dictionary<IArc, List<IridiumVector3>> _arcToEdges;
         private readonly Dictionary<IArc, int> _edgeListCounts; 
-        private Beachline _beachline;
+        private readonly Beachline _beachline;
 
         public EdgeDrawer(EdgeSet edgeSet, Beachline beachline)
         {
@@ -72,6 +71,7 @@ namespace Graphics
 
         private void UpdateActiveEdges()
         {
+            //TODO: Replace straight edges with arcs of great circle.
             if (_beachline.Count() < 2)
             {
                 return;

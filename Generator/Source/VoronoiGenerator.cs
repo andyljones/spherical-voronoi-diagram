@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using C5;
 
@@ -30,18 +31,18 @@ namespace Generator
 
         public void ProcessNextEvent()
         {
-            if (ASiteEventIsNext())
+            if (ACircleEventIsNext())
             {
-                Beachline.Insert(SiteEventQueue.DeleteMax());
+                var circleEvent = CircleEventQueue.PopHighestPriorityEvent();
+                Beachline.Remove(circleEvent);
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
                 Edges.UpdateArcs(Beachline.EdgeUpdates);
                 Beachline.ClearPotentialCircleEventList();
                 Beachline.ClearEdgeUpdates();
             }
-            else if (ACircleEventIsNext())
+            else if (ASiteEventIsNext())
             {
-                var circleEvent = CircleEventQueue.PopHighestPriorityEvent();
-                Beachline.Remove(circleEvent);
+                Beachline.Insert(SiteEventQueue.DeleteMax());
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
                 Edges.UpdateArcs(Beachline.EdgeUpdates);
                 Beachline.ClearPotentialCircleEventList();

@@ -136,6 +136,14 @@ namespace Generator
             EdgeUpdates.Add(arc);
             EdgeUpdates.Add(node.Right.Key);
         }
+
+        public void Clear()
+        {
+            while (_arcs.Any())
+            {
+                _arcs.Remove(_arcs.First());
+            }
+        }
         #endregion
 
         public void ClearPotentialCircleEventList()
