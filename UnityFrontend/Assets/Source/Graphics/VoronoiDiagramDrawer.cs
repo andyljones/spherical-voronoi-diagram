@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Generator;
 using UnityEngine;
@@ -25,7 +24,7 @@ namespace Graphics
             _sweeplineDrawer = new SweeplineDrawer(diagram.Beachline.Sweepline);
             _beachlineDrawer = new BeachlineDrawer(diagram.Beachline);
             _circleEventDrawer = new CircleEventsDrawer(diagram.CircleEventQueue);
-            _edgeDrawer = new EdgeDrawer(diagram.Edges, diagram.Beachline);
+            _edgeDrawer = new EdgeDrawer(diagram.Edges);
         }
 
         public void UpdateVoronoiDiagram()

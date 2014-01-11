@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Generator
 {
     public class EdgeSet
     {
-        private readonly Dictionary<IArc, List<IVertex>> _vertexLists = new Dictionary<IArc, List<IVertex>>();
-        private readonly Dictionary<IArc, LiveVertex> _liveVertices = new Dictionary<IArc, LiveVertex>();
+        private readonly Dictionary<IArc, List<Vertex>> _vertexLists = new Dictionary<IArc, List<Vertex>>();
 
         private readonly Sweepline _sweepline;
 
@@ -16,49 +16,35 @@ namespace Generator
         
         public void NewArc(IArc arc, IArc rightNeighbour)
         {
-            var vertex = new LiveVertex(rightNeighbour, _sweepline);
-            var vertexList = new List<IVertex> { vertex };
-            _vertexLists.Add(arc, vertexList);
-            _liveVertices.Add(rightNeighbour, vertex);
+            var rightVertex = new Vertex(rightNeighbour, _sweepline);
+            _vertexLists.Add(rightNeighbour, new List<Vertex> {rightVertex});
+
+            var leftVertex = new Vertex(arc, _sweepline);
+            _vertexLists.Add(arc, new List<Vertex> {rightVertex, leftVertex});
         }
 
         public void CircleEvent(CircleEvent circle)
         {
-            if (_liveVertices.ContainsKey(circle.MiddleArc))
-            {
-                _liveVertices[circle.MiddleArc].Position = circle.Center();
-                _liveVertices.Remove(circle.MiddleArc);
-
-            }
-            if (_liveVertices.ContainsKey(circle.RightArc))
-            {
-                _liveVertices[circle.RightArc].Position = circle.Center();
-                _liveVertices.Remove(circle.RightArc);
-            }
-
-            var newVertex = new DeadVertex(circle);
-            TryAdd(circle.MiddleArc, newVertex);
-            TryAdd(circle.RightArc, newVertex);
+            var intersection = circle.Center();
+            FixPosition(circle.MiddleArc, intersection);
+            FixPosition(circle.RightArc, intersection);
 
             if (circle.LeftArc.LeftNeighbour == circle.RightArc.Site)
             {
-                TryAdd(circle.LeftArc, newVertex);
-            }
-        }
-
-        private void TryAdd(IArc arc, IVertex vertex)
-        {
-            if (_vertexLists.ContainsKey(arc))
-            {
-                _vertexLists[arc].Add(vertex);                
+                FixPosition(circle.LeftArc, intersection);
             }
             else
             {
-                _vertexLists.Add(arc, new List<IVertex> { vertex });
+                _vertexLists[circle.RightArc].Add(new Vertex(circle.RightArc, _sweepline));
             }
         }
 
-        public Dictionary<IArc, List<IVertex>> CurrentEdgeDict()
+        private void FixPosition(IArc arc, Vector3 position)
+        {
+            _vertexLists[arc].Last().Position = position;
+        }
+
+        public Dictionary<IArc, List<Vertex>> VertexLists()
         {
             return _vertexLists;
         }

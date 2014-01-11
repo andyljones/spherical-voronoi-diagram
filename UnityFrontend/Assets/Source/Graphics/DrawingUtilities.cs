@@ -76,6 +76,11 @@ namespace Graphics
 
         public static IEnumerable<Vector3> VerticesOnGreatArc(Vector3 a, Vector3 b, int numberOfVertices)
         {
+            if (a == b)
+            {
+                return new List<Vector3>();
+            }
+
             var normal = Vector3.Cross(a, b);
             var perpendicularToA = Vector3.Cross(normal, a).normalized;
 

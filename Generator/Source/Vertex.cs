@@ -1,6 +1,6 @@
 ﻿namespace Generator
 {
-    public class LiveVertex : IVertex
+    public class Vertex
     {
         private readonly IArc _arc;
         private readonly Sweepline _sweepline;
@@ -18,7 +18,7 @@
         }
         private Vector3 _position;
 
-        public LiveVertex(IArc arc, Sweepline sweepline)
+        public Vertex(IArc arc, Sweepline sweepline)
         {
             _arc = arc;
             _sweepline = sweepline;
