@@ -10,7 +10,7 @@ namespace Graphics
 {
     public class BeachlineDrawer
     {
-        public static int NumberOfVerticesPerArc = 100;
+        public static int NumberOfVerticesPerArc = 25;
 
         private GameObject _gameObject;
         private readonly Beachline _beachline;

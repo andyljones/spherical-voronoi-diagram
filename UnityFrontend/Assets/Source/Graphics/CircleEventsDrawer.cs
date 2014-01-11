@@ -9,7 +9,7 @@ namespace Graphics
 {
     public class CircleEventsDrawer
     {
-        public static int NumberOfVerticesPerCircle = 1000;
+        public static int NumberOfVerticesPerCircle = 50;
 
         private GameObject _parentObject;
         private Dictionary<CircleEvent, GameObject> _gameObjects;
