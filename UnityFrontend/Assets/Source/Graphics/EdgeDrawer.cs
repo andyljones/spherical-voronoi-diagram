@@ -87,7 +87,7 @@ namespace Graphics
                 vertices.Add(destination);
             }
 
-            _activeEdges.SetIndices(Enumerable.Range(0, 0).ToArray(), MeshTopology.Lines, 0);
+            _activeEdges.SetIndices(new int[] {}, MeshTopology.Lines, 0);
             _activeEdges.vertices = vertices.ToArray();
             _activeEdges.SetIndices(Enumerable.Range(0, _activeEdges.vertexCount).ToArray(), MeshTopology.Lines, 0);
             _activeEdges.RecalculateNormals();
@@ -107,23 +107,10 @@ namespace Graphics
             var vertices = new List<Vector3>();
             for (int i = 1; i < edgeList.Count; i++)
             {
-                var verticesOfArc = VerticesOnGreatArc(edgeList[i-1].ToUnityVector3(), edgeList[i].ToUnityVector3());
+                var verticesOfArc = DrawingUtilities.VerticesOnGreatArc(edgeList[i-1].ToUnityVector3(), edgeList[i].ToUnityVector3(), NumberOfVerticesPerEdge);
                 vertices.AddRange(verticesOfArc); 
             }
             return vertices.ToArray();
-        }
-
-        private static IEnumerable<Vector3> VerticesOnGreatArc(Vector3 a, Vector3 b)
-        {
-            var normal = Vector3.Cross(a, b);
-            var perpendicularToA = Vector3.Cross(normal, a).normalized;
-
-            var maxAngle = Mathf.Acos(Vector3.Dot(a, b));
-            var angles = DrawingUtilities.AzimuthsInRange(0, maxAngle, NumberOfVerticesPerEdge);
-
-            var vertices = angles.Select(angle => Mathf.Cos(angle) * a + Mathf.Sin(angle) * perpendicularToA);
-
-            return vertices;
         }
     }
 }

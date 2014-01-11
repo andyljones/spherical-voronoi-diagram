@@ -47,7 +47,7 @@ namespace Graphics
 
         private Vector3[] CircleEventVertices(CircleEvent circle)
         {
-            var angles = DrawingUtilities.AzimuthsInRange(0, 2 * Mathf.PI, NumberOfVerticesPerCircle);
+            var angles = DrawingUtilities.AnglesInRange(0, 2 * Mathf.PI, NumberOfVerticesPerCircle);
 
             var points = angles.Select(angle => VertexOfCircleEvent(circle, angle)).ToArray();
 

@@ -8,7 +8,7 @@ namespace Graphics
 {
     public static class DrawingUtilities
     {
-        public static IEnumerable<float> AzimuthsInRange(float leftAzimuth, float rightAzimuth, int pointsPerRange)
+        public static IEnumerable<float> AnglesInRange(float leftAzimuth, float rightAzimuth, int pointsPerRange)
         {
             float distance;
             if (rightAzimuth >= leftAzimuth)
@@ -45,7 +45,7 @@ namespace Graphics
 
         public static void UpdateLineMesh(Mesh mesh, Vector3[] vertices)
         {
-            mesh.SetIndices(Enumerable.Range(0, 0).ToArray(), MeshTopology.LineStrip, 0);
+            mesh.SetIndices(new int[] {}, MeshTopology.LineStrip, 0);
             mesh.vertices = vertices;
             mesh.SetIndices(Enumerable.Range(0, mesh.vertexCount).ToArray(), MeshTopology.LineStrip, 0);
             mesh.RecalculateNormals();
@@ -63,6 +63,11 @@ namespace Graphics
             return Mathf.Atan2(-v.y, v.x);
         }
 
+        public static float ColatitudeOf(Vector3 v)
+        {
+            return Mathf.Acos(v.z);
+        }
+
         public static Vector3 CreateVectorAt(float colatitude, float azimuth)
         {
             var x = Mathf.Sin(colatitude)*Mathf.Cos(azimuth);
@@ -70,6 +75,19 @@ namespace Graphics
             var z = Mathf.Cos(colatitude);
 
             return new Vector3(x, y, z);
+        }
+
+        public static IEnumerable<Vector3> VerticesOnGreatArc(Vector3 a, Vector3 b, int numberOfVertices)
+        {
+            var normal = Vector3.Cross(a, b);
+            var perpendicularToA = Vector3.Cross(normal, a).normalized;
+
+            var maxAngle = Mathf.Acos(Vector3.Dot(a, b));
+            var angles = AnglesInRange(0, maxAngle, numberOfVertices);
+
+            var vertices = angles.Select(angle => Mathf.Cos(angle) * a + Mathf.Sin(angle) * perpendicularToA);
+
+            return vertices;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Graphics
 {
     public class BeachlineDrawer
     {
-        public static int NumberOfVerticesPerArc = 25;
+        public static int NumberOfVerticesPerArc = 100;
 
         private GameObject _gameObject;
         private readonly Beachline _beachline;
@@ -56,21 +56,30 @@ namespace Graphics
 
         private static IEnumerable<Vector3> ArcVertices(IArc arc, IArc nextArc, Sweepline sweepline)
         {
-            IEnumerable<float> azimuths;
             if (arc.LeftNeighbour == arc.Site)
             {
-                azimuths = DrawingUtilities.AzimuthsInRange(0, 2 * Mathf.PI, NumberOfVerticesPerArc);
+                var azimuths = DrawingUtilities.AnglesInRange(0, 2 * Mathf.PI, NumberOfVerticesPerArc);
+                var vertices = azimuths.Select(azimuth => PointOnEllipse(arc, azimuth, sweepline)).ToList();
+                return vertices;
+
+            }
+            else if (Mathf.Approximately((float) arc.Site.Priority, (float) sweepline.Priority))
+            {
+                var intersection = arc.PointOfIntersection(sweepline).ToUnityVector3();
+                var site = arc.Site.Position.ToUnityVector3();
+                var downArc = DrawingUtilities.VerticesOnGreatArc(intersection, site, NumberOfVerticesPerArc);
+                var upArc = DrawingUtilities.VerticesOnGreatArc(site, intersection, NumberOfVerticesPerArc);
+                var vertices = downArc.Concat(upArc);
+                return vertices;
             }
             else
             {
                 var leftLimit = DrawingUtilities.AzimuthOf(arc.LeftIntersection(sweepline).ToUnityVector3());
                 var rightLimit = DrawingUtilities.AzimuthOf(nextArc.LeftIntersection(sweepline).ToUnityVector3());
-                azimuths =  DrawingUtilities.AzimuthsInRange(leftLimit, rightLimit, NumberOfVerticesPerArc);
+                var azimuths =  DrawingUtilities.AnglesInRange(leftLimit, rightLimit, NumberOfVerticesPerArc);
+                var vertices = azimuths.Select(azimuth => PointOnEllipse(arc, azimuth, sweepline)).ToList();
+                return vertices;
             }
-
-            var vertices = azimuths.Select(azimuth => PointOnEllipse(arc, azimuth, sweepline)).ToList();
-
-            return vertices;
         }
 
         public static Vector3 PointOnEllipse(IArc arc, float azimuth, Sweepline sweepline)

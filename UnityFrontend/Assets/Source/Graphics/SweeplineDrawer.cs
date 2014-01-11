@@ -41,7 +41,7 @@ namespace Graphics
                 return new Vector3[0];
             }
 
-            var azimuths = DrawingUtilities.AzimuthsInRange(0, 2 * Mathf.PI, NumberOfVertices);
+            var azimuths = DrawingUtilities.AnglesInRange(0, 2 * Mathf.PI, NumberOfVertices);
             var vertices = azimuths.Select(azimuth => VertexOnSweepline(sweepline, azimuth)).ToArray();
 
             return vertices;

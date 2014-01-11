@@ -36,7 +36,7 @@ namespace Graphics
 
         private static GameObject DrawLatitude(float colatitude)
         {
-            var azimuths = DrawingUtilities.AzimuthsInRange(0, 2*Mathf.PI, NumberOfPointsPerLatitude);
+            var azimuths = DrawingUtilities.AnglesInRange(0, 2*Mathf.PI, NumberOfPointsPerLatitude);
 
             var vertices = 
                 azimuths.Select(
@@ -55,7 +55,7 @@ namespace Graphics
 
         private static GameObject DrawLongitude(float azimuth)
         {
-            var azimuths = DrawingUtilities.AzimuthsInRange(0, Mathf.PI, NumberOfPointsPerLongitude);
+            var azimuths = DrawingUtilities.AnglesInRange(0, Mathf.PI, NumberOfPointsPerLongitude);
 
             var vertices = 
                 azimuths.Select(
@@ -73,7 +73,7 @@ namespace Graphics
 
         private static GameObject DrawLabelsAtColatitude(float colatitude)
         {
-            var azimuths = DrawingUtilities.AzimuthsInRange(0, 2 * Mathf.PI, 36);
+            var azimuths = DrawingUtilities.AnglesInRange(0, 2 * Mathf.PI, 36);
 
             var labels = azimuths.Take(36).Select(azimuth => DrawLabel(colatitude, azimuth));
 
