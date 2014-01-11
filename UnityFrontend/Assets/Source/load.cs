@@ -31,10 +31,7 @@ public class load : MonoBehaviour
         positions = Enumerable.Range(0, 1000).Select(i => CreateSphericalVector()).ToList();
 
         _diagram = new VoronoiDiagram(positions);
-
 	    _drawer = new VoronoiDiagramDrawer(_diagram);
-        
-        Debug.Log(_diagram.Beachline);
 	}
 	
 	// Update is called once per frame

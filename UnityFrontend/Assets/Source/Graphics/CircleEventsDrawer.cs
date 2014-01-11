@@ -11,8 +11,8 @@ namespace Graphics
     {
         public static int NumberOfVerticesPerCircle = 50;
 
-        private GameObject _parentObject;
-        private Dictionary<CircleEvent, GameObject> _gameObjects;
+        private readonly GameObject _parentObject;
+        private readonly Dictionary<CircleEvent, GameObject> _gameObjects;
         private readonly CircleEventQueue _circleEvents;
 
         public CircleEventsDrawer(CircleEventQueue circleEvents)
@@ -29,8 +29,7 @@ namespace Graphics
             foreach (var circleEvent in newCircleEvents)
             {
                 var vertices = CircleEventVertices(circleEvent);
-                var gameObject = DrawingUtilities.CreateLineObject("Circle " + circleEvent, vertices,
-                    "CircleEventMaterial");
+                var gameObject = DrawingUtilities.CreateLineObject("Circle " + circleEvent, vertices, "CircleEventMaterial");
                 gameObject.transform.parent = _parentObject.transform;
 
                 _gameObjects.Add(circleEvent, gameObject);

@@ -15,6 +15,7 @@ namespace Graphics
 
         //private HashSet<Edge> _edgesAlreadyDrawn;
         private readonly Dictionary<IArc, Mesh> _edgeMeshes;
+        private readonly Mesh _activeEdges;
 
         private readonly Dictionary<IArc, List<IridiumVector3>> _arcToEdges;
         private readonly Dictionary<IArc, int> _edgeListCounts; 
@@ -29,7 +30,18 @@ namespace Graphics
             _edgeListCounts = new Dictionary<IArc, int>();
 
             _parentObject = new GameObject("Edges");
+            _activeEdges = CreateActiveEdgesObject();
 
+        }
+
+        private Mesh CreateActiveEdgesObject()
+        {
+            var gameObject = new GameObject("Active Edges");
+            var meshFilter = gameObject.AddComponent<MeshFilter>();
+            var renderer = gameObject.AddComponent<MeshRenderer>();
+            renderer.material = Resources.Load("EdgeMaterial", typeof(Material)) as Material;
+
+            return meshFilter.mesh;
         }
 
         public void Update()
@@ -54,6 +66,32 @@ namespace Graphics
                     _edgeListCounts[arc] = edgeList.Count;
                 }
             }
+
+            UpdateActiveEdges();
+        }
+
+        private void UpdateActiveEdges()
+        {
+            if (_beachline.Count() < 2)
+            {
+                return;
+            }
+
+            var vertices = new List<Vector3>();
+            foreach (var arc in _beachline)
+            {
+                var origin = _arcToEdges[arc].Last().ToUnityVector3();
+                var destination = arc.PointOfIntersection(_beachline.Sweepline).ToUnityVector3();
+
+                vertices.Add(origin);
+                vertices.Add(destination);
+            }
+
+            _activeEdges.SetIndices(Enumerable.Range(0, 0).ToArray(), MeshTopology.Lines, 0);
+            _activeEdges.vertices = vertices.ToArray();
+            _activeEdges.SetIndices(Enumerable.Range(0, _activeEdges.vertexCount).ToArray(), MeshTopology.Lines, 0);
+            _activeEdges.RecalculateNormals();
+            _activeEdges.uv = Enumerable.Repeat(new Vector2(0, 0), _activeEdges.vertexCount).ToArray();
         }
 
         private static GameObject DrawEdgeList(List<IridiumVector3> edgeList)
