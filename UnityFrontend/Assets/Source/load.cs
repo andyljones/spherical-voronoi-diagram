@@ -28,7 +28,7 @@ public class load : MonoBehaviour
             VectorAt(90, 0),
             VectorAt(90, 90)
 	    };
-        positions = Enumerable.Range(0, 1000).Select(i => CreateSphericalVector()).ToList();
+        positions = Enumerable.Range(0, 100).Select(i => CreateSphericalVector()).ToList();
 
         _diagram = new VoronoiDiagram(positions);
 
@@ -40,13 +40,12 @@ public class load : MonoBehaviour
 	// Update is called once per frame
 	void Update () {
 
-	    if (!_hasFailed && (Input.GetKey(KeyCode.N) || Input.GetKeyDown(KeyCode.F)))
+        //if (!_hasFailed && (Input.GetKey(KeyCode.N) || Input.GetKeyDown(KeyCode.F)))
+        if (!_hasFailed)
 	    {
 	        try
 	        {
 	            _diagram.ProcessNextEvent();
-	            Debug.Log(_diagram.Beachline);
-	            Debug.Log(_diagram.CircleEventQueue);
 	        }
 	        catch (Exception exception)
 	        {

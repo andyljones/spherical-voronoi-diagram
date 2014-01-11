@@ -15,7 +15,7 @@ namespace Graphics
         private BeachlineDrawer _beachlineDrawer;
         private SweeplineDrawer _sweeplineDrawer;
         private CircleEventsDrawer _circleEventDrawer;
-        //private EdgeDrawer _edgeDrawer;
+        private EdgeDrawer _edgeDrawer;
 
         public VoronoiDiagramDrawer(VoronoiDiagram diagram)
         {
@@ -25,7 +25,7 @@ namespace Graphics
             _sweeplineDrawer = new SweeplineDrawer(diagram.Beachline.Sweepline);
             _beachlineDrawer = new BeachlineDrawer(diagram.Beachline);
             _circleEventDrawer = new CircleEventsDrawer(diagram.CircleEventQueue);
-            //_edgeDrawer = new EdgeDrawer(diagram.FinishedEdges, diagram.Beachline);
+            _edgeDrawer = new EdgeDrawer(diagram.Edges, diagram.Beachline);
         }
 
         public void UpdateVoronoiDiagram()
@@ -33,7 +33,7 @@ namespace Graphics
             _sweeplineDrawer.Update();
             _beachlineDrawer.Update();
             _circleEventDrawer.Update();
-            //_edgeDrawer.Update();
+            _edgeDrawer.Update();
         }
 
         private static void DrawSites(IEnumerable<SiteEvent> sites)

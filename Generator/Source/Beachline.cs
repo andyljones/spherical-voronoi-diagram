@@ -78,6 +78,7 @@ namespace Generator
             neighbourhood[4].LeftNeighbour = neighbourhood[3].Site;
 
             PotentialCircleEvents.Add(new CircleEvent(neighbourhood[0], neighbourhood[1], neighbourhood[2]));
+            PotentialCircleEvents.Add(new CircleEvent(neighbourhood[1], neighbourhood[2], neighbourhood[3]));
             PotentialCircleEvents.Add(new CircleEvent(neighbourhood[2], neighbourhood[3], neighbourhood[4]));
         }
 

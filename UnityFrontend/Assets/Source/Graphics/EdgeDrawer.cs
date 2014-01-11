@@ -1,115 +1,90 @@
-﻿//using System.Collections.Generic;
-//using System.Linq;
-//using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Generator;
+using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
+using IridiumVector3 = Generator.Vector3;
 
-//namespace Graphics
-//{
-//    public class EdgeDrawer
-//    {
-//        public const int NumberOfVerticesPerEdge = 100;
+namespace Graphics
+{
+    public class EdgeDrawer
+    {
+        public const int NumberOfVerticesPerEdge = 100;
 
-//        private GameObject _parentObject;
+        private GameObject _parentObject;
 
-//        private HashSet<Edge> _edgesAlreadyDrawn;
-//        private Dictionary<Arc, GameObject> _activeEdges; 
-        
-//        private IEnumerable<Edge> _edges;
-//        private Beachline _beachline;
+        //private HashSet<Edge> _edgesAlreadyDrawn;
+        private readonly Dictionary<IArc, GameObject> _edgeObjects;
 
-//        public EdgeDrawer(IEnumerable<Edge> edges, Beachline beachline)
-//        {
-//            _edges = edges;
-//            _edgesAlreadyDrawn = new HashSet<Edge>();
+        private readonly Dictionary<IArc, List<IridiumVector3>> _arcToEdges;
+        private Beachline _beachline;
 
-//            _beachline = beachline;
-//            _activeEdges = new Dictionary<Arc, GameObject>();
+        public EdgeDrawer(EdgeSet edgeSet, Beachline beachline)
+        {
+            _arcToEdges = edgeSet.CurrentEdgeDict();
 
-//            _parentObject = new GameObject("Edges");
+            _beachline = beachline;
+            _edgeObjects = new Dictionary<IArc, GameObject>();
 
-//        }
+            _parentObject = new GameObject("Edges");
 
-//        //TODO: Refactor.
-//        public void Update()
-//        {
-//            var undrawnEdges = _edges.Except(_edgesAlreadyDrawn).ToList();
-//            foreach (var edge in undrawnEdges)
-//            {
-//                var edgeObject = DrawEdgeList(edge);
-//                edgeObject.transform.parent = _parentObject.transform;
-//                _edgesAlreadyDrawn.Add(edge);
-//            }
+        }
 
-//            foreach (var arc in _beachline)
-//            {
-//                Vector3 focus;
-//                if (Mathf.Abs(arc.SiteEvent.Position.z - arc.Sweepline.Z) >= Mathf.Abs(arc.LeftNeighbour.Position.z - arc.Sweepline.Z))
-//                {
-//                    focus = arc.SiteEvent.Position;
-//                }
-//                else
-//                {
-//                    focus = arc.LeftNeighbour.Position;
-//                }
+        //TODO: Refactor.
+        public void Update()
+        {
+            foreach (var arcAndEdgeList in _arcToEdges)
+            {
+                var arc = arcAndEdgeList.Key;
+                var edgeList = arcAndEdgeList.Value;
 
-//                var endpoint = EllipseCalculator.PointOnEllipseAboveVector(arc.DirectionOfLeftIntersection, focus, arc.Sweepline);
-//                var newEdge = new Edge(endpoint, arc.LeftEdge);
+                if (!_edgeObjects.ContainsKey(arc))
+                {
+                    var edgeListObject = DrawEdgeList(edgeList);
+                    edgeListObject.transform.parent = _parentObject.transform;
+                    _edgeObjects.Add(arc, edgeListObject);
 
-//                if (_activeEdges.ContainsKey(arc))
-//                {
-//                    var edgeObject = _activeEdges[arc];
-//                    var mesh = edgeObject.GetComponent<MeshFilter>().mesh;
-//                    var vertices = VerticesInEdgeList(newEdge);
-//                    DrawingUtilities.UpdateLineMesh(mesh, vertices);
-//                }
-//                else
-//                {
-//                    var edgeObject = DrawEdgeList(newEdge);
-//                    edgeObject.transform.parent = _parentObject.transform;
-//                    _activeEdges.Add(arc, edgeObject);
-//                }
-//            }
+                }
+                else
+                {
+                    var edgeListObject = _edgeObjects[arc];
+                    var edgeListMesh = edgeListObject.GetComponent<MeshFilter>().mesh;
+                    var newVertices = VerticesInEdgeList(edgeList);
+                    DrawingUtilities.UpdateLineMesh(edgeListMesh, newVertices);
+                }
+            }
+        }
 
-//            var deadArcs = _activeEdges.Keys.Except(_beachline).ToList();
+        private static GameObject DrawEdgeList(List<IridiumVector3> edgeList)
+        {
+            var vertices = VerticesInEdgeList(edgeList);
+            var gameObject = DrawingUtilities.CreateLineObject("Edge list", vertices, "");
 
-//            foreach (var arc in deadArcs)
-//            {
-//                var edgeObject = _activeEdges[arc];
-//                Object.Destroy(edgeObject);
-//                _activeEdges.Remove(arc);
-//            }
-//        }
+            return gameObject;
+        }
 
-//        private static GameObject DrawEdgeList(Edge edge)
-//        {
-//            var vertices = VerticesInEdgeList(edge);
-//            var gameObject = DrawingUtilities.CreateLineObject("Edge list", vertices, "");
+        private static Vector3[] VerticesInEdgeList(List<IridiumVector3> edgeList)
+        {
+            var vertices = new List<Vector3>();
+            for (int i = 1; i < edgeList.Count; i++)
+            {
+                var verticesOfArc = VerticesOnGreatArc(edgeList[i-1].ToUnityVector3(), edgeList[i].ToUnityVector3());
+                vertices.AddRange(verticesOfArc); 
+            }
+            return vertices.ToArray();
+        }
 
-//            return gameObject;
-//        }
+        private static IEnumerable<Vector3> VerticesOnGreatArc(Vector3 a, Vector3 b)
+        {
+            var normal = Vector3.Cross(a, b);
+            var perpendicularToA = Vector3.Cross(normal, a).normalized;
 
-//        private static Vector3[] VerticesInEdgeList(Edge edge)
-//        {
-//            var vertices = new List<Vector3>();
-//            while (edge.PreviousEdge != null)
-//            {
-//                var verticesOfArc = VerticesOnGreatArc(edge.Endpoint, edge.PreviousEdge.Endpoint);
-//                vertices.AddRange(verticesOfArc);
-//                edge = edge.PreviousEdge;
-//            }
-//            return vertices.ToArray();
-//        }
+            var maxAngle = Mathf.Acos(Vector3.Dot(a, b));
+            var angles = DrawingUtilities.AzimuthsInRange(0, maxAngle, NumberOfVerticesPerEdge);
 
-//        private static IEnumerable<Vector3> VerticesOnGreatArc(Vector3 a, Vector3 b)
-//        {
-//            var normal = Vector3.Cross(a, b);
-//            var perpendicularToA = Vector3.Cross(normal, a).normalized;
+            var vertices = angles.Select(angle => Mathf.Cos(angle) * a + Mathf.Sin(angle) * perpendicularToA);
 
-//            var maxAngle = Mathf.Acos(Vector3.Dot(a, b));
-//            var angles = DrawingUtilities.AzimuthsInRange(0, maxAngle, NumberOfVerticesPerEdge);
-
-//            var vertices = angles.Select(angle => Mathf.Cos(angle)*a + Mathf.Sin(angle)*perpendicularToA);
-
-//            return vertices;
-//        }
-//    }
-//}
+            return vertices;
+        }
+    }
+}

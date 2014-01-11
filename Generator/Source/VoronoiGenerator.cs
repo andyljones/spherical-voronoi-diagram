@@ -10,6 +10,7 @@ namespace Generator
 
         public IPriorityQueue<SiteEvent> SiteEventQueue { get; private set; }
         public CircleEventQueue CircleEventQueue { get; private set; }
+        public EdgeSet Edges { get; private set; }
 
         public Beachline Beachline;
 
@@ -23,6 +24,8 @@ namespace Generator
             CircleEventQueue = new CircleEventQueue(terminatingPriority);
 
             Beachline = new Beachline();
+
+            Edges = new EdgeSet(Beachline.Sweepline);
         }
 
         public void ProcessNextEvent()
@@ -31,12 +34,16 @@ namespace Generator
             {
                 Beachline.Insert(SiteEventQueue.DeleteMax());
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
+                Edges.CheckForNewEdges(Beachline.PotentialCircleEvents);
                 Beachline.ClearPotentialCircleEventList();
             }
             else if (ACircleEventIsNext())
             {
-                Beachline.Remove(CircleEventQueue.PopHighestPriorityArc());
+                var circleEvent = CircleEventQueue.PopHighestPriorityEvent();
+                Beachline.Remove(circleEvent);
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
+                Edges.CheckForNewEdges(Beachline.PotentialCircleEvents);
+                Edges.TerminateArc(circleEvent.MiddleArc);
                 Beachline.ClearPotentialCircleEventList();
             }
         }

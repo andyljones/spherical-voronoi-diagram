@@ -71,7 +71,7 @@ namespace Generator
             return _queue.IsEmpty;
         }
 
-        public CircleEvent PopHighestPriorityArc()
+        public CircleEvent PopHighestPriorityEvent()
         {
             var maxCircleEvent = _queue.FindMax();
 
