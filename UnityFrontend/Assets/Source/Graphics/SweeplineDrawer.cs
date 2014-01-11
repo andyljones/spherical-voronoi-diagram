@@ -29,9 +29,9 @@ namespace Graphics
 
         public void Update()
         {
-            var mesh = _gameObject.GetComponent<MeshFilter>().mesh;
+            var meshFilter = _gameObject.GetComponent<MeshFilter>();
             var vertices = SweeplineVertices(_sweepline);
-            DrawingUtilities.UpdateLineMesh(mesh, vertices);
+            DrawingUtilities.UpdateLineObject(meshFilter, vertices);
         }
 
         private static Vector3[] SweeplineVertices(Sweepline sweepline)

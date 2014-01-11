@@ -43,13 +43,17 @@ namespace Graphics
             return gameObject;
         }
 
-        public static void UpdateLineMesh(Mesh mesh, Vector3[] vertices)
+        public static void UpdateLineObject(MeshFilter meshFilter, Vector3[] vertices)
         {
-            mesh.SetIndices(new int[] {}, MeshTopology.LineStrip, 0);
-            mesh.vertices = vertices;
-            mesh.SetIndices(Enumerable.Range(0, mesh.vertexCount).ToArray(), MeshTopology.LineStrip, 0);
-            mesh.RecalculateNormals();
-            mesh.uv = Enumerable.Repeat(new Vector2(0, 0), mesh.vertexCount).ToArray();
+            var newMesh = new Mesh
+            {
+                vertices = vertices,
+                uv = Enumerable.Repeat(new Vector2(0, 0), vertices.Count()).ToArray()
+            };
+            newMesh.SetIndices(Enumerable.Range(0, vertices.Count()).ToArray(), MeshTopology.LineStrip, 0);
+            newMesh.RecalculateNormals();
+
+            meshFilter.mesh = newMesh;
         }
 
         public static Vector3 ToUnityVector3(this IridiumVector3 iridiumVector)

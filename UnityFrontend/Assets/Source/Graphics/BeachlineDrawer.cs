@@ -12,7 +12,7 @@ namespace Graphics
     {
         public static int NumberOfVerticesPerArc = 100;
 
-        private GameObject _gameObject;
+        private readonly GameObject _gameObject;
         private readonly Beachline _beachline;
 
         public BeachlineDrawer(Beachline beachline)
@@ -31,9 +31,9 @@ namespace Graphics
 
         public void Update()
         {
-            var mesh = _gameObject.GetComponent<MeshFilter>().mesh;
+            var meshFilter = _gameObject.GetComponent<MeshFilter>();
             var vertices = BeachlineVertices(_beachline);
-            DrawingUtilities.UpdateLineMesh(mesh, vertices);
+            DrawingUtilities.UpdateLineObject(meshFilter, vertices);
         }
 
         private static Vector3[] BeachlineVertices(Beachline beachline)
