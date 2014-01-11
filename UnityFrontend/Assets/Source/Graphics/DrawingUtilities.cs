@@ -31,29 +31,22 @@ namespace Graphics
             var renderer = gameObject.AddComponent<MeshRenderer>();
             renderer.material = Resources.Load(materialName, typeof(Material)) as Material;
 
-            meshFilter.mesh.vertices = points;
-            meshFilter.mesh.SetIndices(
-                Enumerable.Range(0, points.Count()).ToArray(),
-                MeshTopology.LineStrip,
-                0);
-
-            meshFilter.mesh.RecalculateNormals();
-            meshFilter.mesh.uv = Enumerable.Repeat(new Vector2(0, 0), points.Count()).ToArray();
+            var mesh = meshFilter.mesh;
+            mesh.vertices = points;
+            mesh.SetIndices(Enumerable.Range(0, points.Count()).ToArray(), MeshTopology.LineStrip, 0);
+            mesh.RecalculateNormals();
+            mesh.uv = Enumerable.Repeat(new Vector2(0, 0), points.Count()).ToArray();
 
             return gameObject;
         }
 
-        public static void UpdateLineObject(MeshFilter meshFilter, Vector3[] vertices)
+        public static void UpdateLineObject(Mesh mesh, Vector3[] vertices)
         {
-            var newMesh = new Mesh
-            {
-                vertices = vertices,
-                uv = Enumerable.Repeat(new Vector2(0, 0), vertices.Count()).ToArray()
-            };
-            newMesh.SetIndices(Enumerable.Range(0, vertices.Count()).ToArray(), MeshTopology.LineStrip, 0);
-            newMesh.RecalculateNormals();
-
-            meshFilter.mesh = newMesh;
+            mesh.Clear();
+            mesh.vertices = vertices;
+            mesh.uv = Enumerable.Repeat(new Vector2(0, 0), vertices.Count()).ToArray();
+            mesh.SetIndices(Enumerable.Range(0, vertices.Count()).ToArray(), MeshTopology.LineStrip, 0);
+            mesh.RecalculateNormals();
         }
 
         public static Vector3 ToUnityVector3(this IridiumVector3 iridiumVector)

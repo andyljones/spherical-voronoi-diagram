@@ -12,10 +12,10 @@ namespace Graphics
         public static int NumberOfSweeplineVertices = 100;
         public static int NumberOfVerticesPerCircle = 100;
 
-        private BeachlineDrawer _beachlineDrawer;
-        private SweeplineDrawer _sweeplineDrawer;
-        private CircleEventsDrawer _circleEventDrawer;
-        private EdgeDrawer _edgeDrawer;
+        private readonly BeachlineDrawer _beachlineDrawer;
+        private readonly SweeplineDrawer _sweeplineDrawer;
+        private readonly CircleEventsDrawer _circleEventDrawer;
+        private readonly EdgeDrawer _edgeDrawer;
 
         public VoronoiDiagramDrawer(VoronoiDiagram diagram)
         {
@@ -44,7 +44,7 @@ namespace Graphics
             var siteRenderer = siteObject.AddComponent<MeshRenderer>();
             siteRenderer.material = Resources.Load("SiteMaterial", typeof(Material)) as Material;
 
-            var vertices = sites.SelectMany(site => new List<Vector3> {site.Position.ToUnityVector3(), 1.01f*site.Position.ToUnityVector3()}).ToArray();
+            var vertices = sites.SelectMany(site => new List<Vector3> {site.Position.ToUnityVector3(), 1.02f*site.Position.ToUnityVector3()}).ToArray();
 
             mesh.vertices = vertices;
             mesh.SetIndices(

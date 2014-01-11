@@ -31,9 +31,9 @@ namespace Graphics
 
         public void Update()
         {
-            var meshFilter = _gameObject.GetComponent<MeshFilter>();
+            var mesh = _gameObject.GetComponent<MeshFilter>().mesh;
             var vertices = BeachlineVertices(_beachline);
-            DrawingUtilities.UpdateLineObject(meshFilter, vertices);
+            DrawingUtilities.UpdateLineObject(mesh, vertices);
         }
 
         private static Vector3[] BeachlineVertices(Beachline beachline)

@@ -5,7 +5,6 @@ using Generator;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 using IridiumVector3 = Generator.Vector3;
-using Object = UnityEngine.Object;
 
 namespace Graphics
 {
@@ -16,7 +15,7 @@ namespace Graphics
         private readonly GameObject _parentObject;
 
         private readonly Dictionary<IArc, GameObject> _edgeListObjects;
-        private readonly Dictionary<IArc, GameObject> _activeEdgeObjects;
+        private readonly Dictionary<IArc, GameObject> _activeEdgeObject;
 
         private readonly Dictionary<IArc, List<IridiumVector3>> _arcToEdges;
         private readonly Dictionary<IArc, int> _edgeListCounts; 
@@ -31,9 +30,18 @@ namespace Graphics
             _edgeListCounts = new Dictionary<IArc, int>();
 
             _parentObject = new GameObject("Edges");
+            _activeEdgeObject = CreateActiveEdgesObject();
 
-            _activeEdgeObjects = new Dictionary<IArc, GameObject>();
+        }
 
+        private GameObject CreateActiveEdgesObject()
+        {
+            var gameObject = new GameObject("Active Edges");
+            var meshFilter = gameObject.AddComponent<MeshFilter>();
+            var renderer = gameObject.AddComponent<MeshRenderer>();
+            renderer.material = Resources.Load("EdgeMaterial", typeof(Material)) as Material;
+
+            return gameObject;
         }
 
         public void Update()
@@ -52,9 +60,9 @@ namespace Graphics
                 }
                 else if (_edgeListCounts[arc] != edgeList.Count)
                 {
+                    var edgeListMeshFilter = _edgeListObjects[arc].GetComponent<MeshFilter>();
                     var newVertices = VerticesInEdgeList(edgeList);
-                    var mesh = _edgeListObjects[arc].GetComponent<MeshFilter>().mesh;
-                    DrawingUtilities.UpdateLineObject(mesh, newVertices);
+                    DrawingUtilities.UpdateLineObject(edgeListMeshFilter, newVertices);
                     _edgeListCounts[arc] = edgeList.Count;
                 }
             }
@@ -70,47 +78,33 @@ namespace Graphics
                 return;
             }
 
+            var vertices = new List<Vector3>();
+            var indexArrays = new List<int[]>();
             foreach (var arc in _beachline)
             {
-                if (!_activeEdgeObjects.ContainsKey(arc))
-                {
-                    var vertices = VerticesInActiveEdge(arc);
-                    var edgeObject = DrawingUtilities.CreateLineObject("Active edge", vertices, "EdgeMaterial");
-                    edgeObject.transform.parent = _parentObject.transform;
-                    _activeEdgeObjects.Add(arc, edgeObject);
-                }
-                else
-                {
-                    var vertices = VerticesInActiveEdge(arc);
-                    var mesh = _activeEdgeObjects[arc].GetComponent<MeshFilter>().mesh;
-                    DrawingUtilities.UpdateLineObject(mesh, vertices);
-                }
+                var origin = _arcToEdges[arc].Last().ToUnityVector3();
+                var destination = arc.PointOfIntersection(_beachline.Sweepline).ToUnityVector3();
+
+                var edgeVertices = DrawingUtilities.VerticesOnGreatArc(origin, destination, NumberOfVerticesPerEdge).ToList();
+                var edgeIndices = Enumerable.Range(vertices.Count, edgeVertices.Count()).ToArray();
+
+                vertices.AddRange(edgeVertices);
+                indexArrays.Add(edgeIndices);
             }
 
-            var deadArcs = _activeEdgeObjects.Keys.Except(_beachline).ToList();
-
-            foreach (var deadArc in deadArcs)
+            var newMesh = new Mesh
             {
-                var deadEdgeObject = _activeEdgeObjects[deadArc];
-                Object.Destroy(deadEdgeObject);
-                _activeEdgeObjects.Remove(deadArc);
-            }
-        }
-
-        private Vector3[] VerticesInActiveEdge(IArc arc)
-        {
-            var origin = _arcToEdges[arc].Last().ToUnityVector3();
-            var destination = arc.PointOfIntersection(_beachline.Sweepline).ToUnityVector3();
-
-            if (origin != destination)
+                vertices = vertices.ToArray(),
+                uv = Enumerable.Repeat(new Vector2(0, 0), vertices.Count).ToArray(),
+                subMeshCount = indexArrays.Count
+            };
+            for (int i = 0; i < indexArrays.Count; i++)
             {
-                var vertices = DrawingUtilities.VerticesOnGreatArc(origin, destination, NumberOfVerticesPerEdge);
-                return vertices.ToArray();
+                newMesh.SetIndices(indexArrays[i], MeshTopology.LineStrip, i);
             }
-            else
-            {
-                return new Vector3[] {};
-            }
+            newMesh.RecalculateNormals();
+
+            _activeEdgeObject.GetComponent<MeshFilter>().mesh = newMesh;
         }
 
         private static GameObject DrawEdgeList(List<IridiumVector3> edgeList)
