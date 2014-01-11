@@ -29,9 +29,9 @@ public class load : MonoBehaviour
             VectorAt(90, 90)
 	    };
         positions = Enumerable.Range(0, 100).Select(i => CreateSphericalVector()).ToList();
-        var positions1 = Enumerable.Range(0, 3).Select(i => VectorAt(10, 360 * i / 10.0f)).ToList();
-        var positions2 = Enumerable.Range(0, 3).Select(i => VectorAt(20, 360 * i / 10.0f)).ToList();
-        positions = positions1.Concat(positions2).ToList();
+        //var positions1 = Enumerable.Range(0, 3).Select(i => VectorAt(10, 360 * i / 10.0f)).ToList();
+        //var positions2 = Enumerable.Range(0, 3).Select(i => VectorAt(20, 360 * i / 10.0f)).ToList();
+        //positions = positions1.Concat(positions2).ToList();
 
         _diagram = new VoronoiDiagram(positions);
 	    _drawer = new VoronoiDiagramDrawer(_diagram);
