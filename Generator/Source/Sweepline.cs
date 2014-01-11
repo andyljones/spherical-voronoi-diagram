@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using MathNet.Numerics;
 
 namespace Generator
@@ -18,17 +19,17 @@ namespace Generator
         }
 
         //TODO: Move from Z to priority.
-        public double Z;
-        //{
-        //    get
-        //    {
-        //        return Math.Abs(Priority) - 1;
-        //    }
-        //    set
-        //    {
-        //        Priority = Z + 1;
-        //    }
-        //}
+        public double Z
+        {
+            get
+            {
+                return Math.Abs(Priority) - 1;
+            }
+            set
+            {
+                Priority = value + 1;
+            }
+        }
 
         public double Priority;
         

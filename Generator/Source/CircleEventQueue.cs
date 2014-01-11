@@ -41,14 +41,14 @@ namespace Generator
 
         private bool HasThreeDistinctSites(CircleEvent circleEvent)
         {
-            return (circleEvent.LeftArc.Site != circleEvent.MiddleArc.Site ||
-                    circleEvent.MiddleArc.Site != circleEvent.RightArc.Site ||
+            return (circleEvent.LeftArc.Site != circleEvent.MiddleArc.Site &&
+                    circleEvent.MiddleArc.Site != circleEvent.RightArc.Site &&
                     circleEvent.RightArc.Site != circleEvent.LeftArc.Site);
         }
 
         private bool WillOccurBeforeTermination(CircleEvent circleEvent)
         {
-            return circleEvent.Priority > _terminatingPriority;
+            return circleEvent.Priority >= _terminatingPriority;
         }
 
         private void TryRemoveEventCorrespondingTo(IArc arc)

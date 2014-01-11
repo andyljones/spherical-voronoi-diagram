@@ -20,7 +20,7 @@ namespace Generator
 
         public Beachline()
         {
-            Sweepline = new Sweepline {Z = 1};
+            Sweepline = new Sweepline {Priority = 2};
             
             var orderer = new ArcOrderer(Sweepline);
             _arcs = new FakeSkiplist<IArc> {InOrder = orderer.AreInOrder};
@@ -106,7 +106,7 @@ namespace Generator
 
         private INode<IArc> InsertIntoSkiplist(IArc arc)
         {
-            Sweepline.Z = arc.Site.Position.Z;
+            Sweepline.Priority = arc.Site.Priority;
             _count++;
             return _arcs.Insert(arc);
         }
@@ -116,9 +116,10 @@ namespace Generator
         public void Remove(CircleEvent circleEvent)
         {
             Remove(circleEvent.MiddleArc);
-            Sweepline.Z = circleEvent.Priority - 1;
+            Sweepline.Priority = circleEvent.Priority;
         }
 
+        //TODO: Clean this up.
         public void Remove(IArc arc)
         {
             var node = _arcs.Remove(arc);

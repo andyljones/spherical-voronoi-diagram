@@ -35,7 +35,6 @@ namespace Generator
                 Beachline.Insert(SiteEventQueue.DeleteMax());
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
                 Edges.UpdateArcs(Beachline.EdgeUpdates);
-                //Edges.CheckForNewEdges(Beachline.PotentialCircleEvents);
                 Beachline.ClearPotentialCircleEventList();
                 Beachline.ClearEdgeUpdates();
             }
@@ -45,8 +44,6 @@ namespace Generator
                 Beachline.Remove(circleEvent);
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
                 Edges.UpdateArcs(Beachline.EdgeUpdates);
-                //Edges.CheckForNewEdges(Beachline.PotentialCircleEvents);
-                //Edges.TerminateArc(circleEvent.MiddleArc);
                 Beachline.ClearPotentialCircleEventList();
                 Beachline.ClearEdgeUpdates();
             }
