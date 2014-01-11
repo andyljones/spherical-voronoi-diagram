@@ -17,12 +17,22 @@ namespace Generator
             MiddleArc = middleArc;
             RightArc = rightArc;
 
-            Priority = CalculatePriority(leftArc.Site.Position, middleArc.Site.Position, rightArc.Site.Position);
+            Priority = CalculatePriority();
         }
 
-        private static double CalculatePriority(Vector3 a, Vector3 b, Vector3 c)
+        public Vector3 Center()
         {
-            var v = (a - b).CrossMultiply(c - b).Normalize();
+            var a = LeftArc.Site.Position;
+            var b = MiddleArc.Site.Position;
+            var c = RightArc.Site.Position;
+
+            return (a - b).CrossMultiply(c - b).Normalize().ToVector3();
+        }
+
+        private double CalculatePriority()
+        {
+            var a = LeftArc.Site.Position;
+            var v = Center();
 
             var vz = v[2];
             var va = v.ScalarMultiply(a);
@@ -40,7 +50,7 @@ namespace Generator
 
         public override string ToString()
         {
-            return String.Format("({0}, {1,3:N2})", MiddleArc, Priority);
+            return String.Format("({0}, {1,10:N9})", MiddleArc, Priority);
         }
     }
 }

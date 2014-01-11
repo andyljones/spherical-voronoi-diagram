@@ -89,5 +89,10 @@ namespace Generator
         {
             return _queue.ToArray();
         }
+
+        public int Count()
+        {
+            return _queue.Count;
+        }
     }
 }

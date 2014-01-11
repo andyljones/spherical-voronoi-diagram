@@ -44,7 +44,7 @@ namespace Graphics
             var siteRenderer = siteObject.AddComponent<MeshRenderer>();
             siteRenderer.material = Resources.Load("SiteMaterial", typeof(Material)) as Material;
 
-            var vertices = sites.SelectMany(site => new List<Vector3> {site.Position.ToUnityVector3(), 1.02f*site.Position.ToUnityVector3()}).ToArray();
+            var vertices = sites.SelectMany(site => new List<Vector3> {site.Position.ToUnityVector3(), 1.01f*site.Position.ToUnityVector3()}).ToArray();
 
             mesh.vertices = vertices;
             mesh.SetIndices(

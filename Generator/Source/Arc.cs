@@ -9,7 +9,7 @@ namespace Generator
 
         public override string ToString()
         {
-            return Site.ToString();
+            return String.Format("[{0}|{1}]", LeftNeighbour, Site);
         }
     }
 }

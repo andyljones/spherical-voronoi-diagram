@@ -13,10 +13,10 @@ namespace Generator
     {
         public readonly Sweepline Sweepline;        
         public List<CircleEvent> PotentialCircleEvents { get; private set; }
-        public List<IArc> EdgeUpdates { get; private set; } 
+        public List<List<IArc>> NewArcs { get; private set; } 
 
         private readonly FakeSkiplist<IArc> _arcs;
-        private int _count;
+        public int Count;
 
         public Beachline()
         {
@@ -24,20 +24,20 @@ namespace Generator
             
             var orderer = new ArcOrderer(Sweepline);
             _arcs = new FakeSkiplist<IArc> {InOrder = orderer.AreInOrder};
-            _count = 0;
+            Count = 0;
 
             PotentialCircleEvents = new List<CircleEvent>();
-            EdgeUpdates = new List<IArc>();
+            NewArcs = new List<List<IArc>>();
         }
 
         #region Insert methods
         public void Insert(SiteEvent site)
         {
-            if (_count == 0)
+            if (Count == 0)
             {
                 InsertFirstSite(site);
             }
-            else if (_count == 1)
+            else if (Count == 1)
             {
                 InsertSecondSite(site);
             }
@@ -61,8 +61,7 @@ namespace Generator
             oldArc.LeftNeighbour = site;
 
             InsertIntoSkiplist(newArc);
-            EdgeUpdates.Add(oldArc);
-            EdgeUpdates.Add(newArc);
+            NewArcs.Add(new List<IArc> {newArc, oldArc});
         }
 
         private void InsertSite(SiteEvent site)
@@ -84,8 +83,7 @@ namespace Generator
             PotentialCircleEvents.Add(new CircleEvent(neighbourhood[0], neighbourhood[1], neighbourhood[2]));
             PotentialCircleEvents.Add(new CircleEvent(neighbourhood[2], neighbourhood[3], neighbourhood[4]));
 
-            EdgeUpdates.Add(neighbourhood[2]);
-            EdgeUpdates.Add(neighbourhood[3]);
+            NewArcs.Add(new List<IArc> { neighbourhood[2], neighbourhood[3] });
         }
 
         private List<IArc> FindNeighbourhoodOf(INode<IArc> node)
@@ -107,7 +105,7 @@ namespace Generator
         private INode<IArc> InsertIntoSkiplist(IArc arc)
         {
             Sweepline.Priority = arc.Site.Priority;
-            _count++;
+            Count++;
             return _arcs.Insert(arc);
         }
         #endregion
@@ -119,7 +117,6 @@ namespace Generator
             Sweepline.Priority = circleEvent.Priority;
         }
 
-        //TODO: Clean this up.
         public void Remove(IArc arc)
         {
             var node = _arcs.Remove(arc);
@@ -128,21 +125,15 @@ namespace Generator
                 throw new DataException("Failed to remove arc " + arc);
             }
             node.Right.Key.LeftNeighbour = node.Left.Key.Site;
-            _count--;
+            Count--;
 
             PotentialCircleEvents.Add(new CircleEvent(node.Left.Left.Key, node.Left.Key, node.Right.Key));
             PotentialCircleEvents.Add(new CircleEvent(node.Left.Key, node.Right.Key, node.Right.Right.Key));
-            
-            EdgeUpdates.Add(arc);
-            EdgeUpdates.Add(node.Right.Key);
         }
 
         public void Clear()
         {
-            while (_arcs.Any())
-            {
-                _arcs.Remove(_arcs.First());
-            }
+            _arcs.Clear();
         }
         #endregion
 
@@ -151,9 +142,9 @@ namespace Generator
             PotentialCircleEvents = new List<CircleEvent>();
         }
 
-        public void ClearEdgeUpdates()
+        public void ClearNewArcs()
         {
-            EdgeUpdates = new List<IArc>();
+            NewArcs = new List<List<IArc>>();
         }
 
         #region IEnumerator<IArc> methods

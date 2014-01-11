@@ -36,17 +36,25 @@ namespace Generator
                 var circleEvent = CircleEventQueue.PopHighestPriorityEvent();
                 Beachline.Remove(circleEvent);
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
-                Edges.UpdateArcs(Beachline.EdgeUpdates);
+                Edges.CircleEvent(circleEvent);
                 Beachline.ClearPotentialCircleEventList();
-                Beachline.ClearEdgeUpdates();
+                Beachline.ClearNewArcs();
             }
             else if (ASiteEventIsNext())
             {
                 Beachline.Insert(SiteEventQueue.DeleteMax());
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
-                Edges.UpdateArcs(Beachline.EdgeUpdates);
+                if (Beachline.NewArcs.Any())
+                {
+                    Edges.NewArc(Beachline.NewArcs[0][0], Beachline.NewArcs[0][1]);
+                }
                 Beachline.ClearPotentialCircleEventList();
-                Beachline.ClearEdgeUpdates();
+                Beachline.ClearNewArcs();
+            }
+            
+            if (CircleEventQueue.IsEmpty() && SiteEventQueue.IsEmpty)
+            {
+                Beachline.Clear();
             }
         }
 

@@ -104,5 +104,10 @@ namespace Generator
         {
             return GetEnumerator();
         }
+
+        public void Clear()
+        {
+            head = null;
+        }
     }
 }

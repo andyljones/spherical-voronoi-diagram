@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using MathNet.Numerics.LinearAlgebra;
 
 namespace Generator
 {
     public class EdgeSet
     {
-        private readonly Dictionary<IArc, List<Vector3>> _edges = new Dictionary<IArc, List<Vector3>>();
+        private readonly Dictionary<IArc, List<IVertex>> _vertexLists = new Dictionary<IArc, List<IVertex>>();
+        private readonly Dictionary<IArc, LiveVertex> _liveVertices = new Dictionary<IArc, LiveVertex>();
 
         private readonly Sweepline _sweepline;
 
@@ -13,27 +13,54 @@ namespace Generator
         {
             _sweepline = sweepline;
         }
-
-        public void UpdateArcs(List<IArc> arcs)
+        
+        public void NewArc(IArc arc, IArc rightNeighbour)
         {
-            arcs.ForEach(arc => UpdateArc(arc));
+            var vertex = new LiveVertex(rightNeighbour, _sweepline);
+            var vertexList = new List<IVertex> { vertex };
+            _vertexLists.Add(arc, vertexList);
+            _liveVertices.Add(rightNeighbour, vertex);
         }
 
-        public void UpdateArc(IArc arc)
+        public void CircleEvent(CircleEvent circle)
         {
-            if (!_edges.ContainsKey(arc))
+            if (_liveVertices.ContainsKey(circle.MiddleArc))
             {
-                _edges.Add(arc, new List<Vector3> { arc.PointOfIntersection(_sweepline) });
+                _liveVertices[circle.MiddleArc].Position = circle.Center();
+                _liveVertices.Remove(circle.MiddleArc);
+
+            }
+            if (_liveVertices.ContainsKey(circle.RightArc))
+            {
+                _liveVertices[circle.RightArc].Position = circle.Center();
+                _liveVertices.Remove(circle.RightArc);
+            }
+
+            var newVertex = new DeadVertex(circle);
+            TryAdd(circle.MiddleArc, newVertex);
+            TryAdd(circle.RightArc, newVertex);
+
+            if (circle.LeftArc.LeftNeighbour == circle.RightArc.Site)
+            {
+                TryAdd(circle.LeftArc, newVertex);
+            }
+        }
+
+        private void TryAdd(IArc arc, IVertex vertex)
+        {
+            if (_vertexLists.ContainsKey(arc))
+            {
+                _vertexLists[arc].Add(vertex);                
             }
             else
             {
-                _edges[arc].Add(arc.PointOfIntersection(_sweepline));
+                _vertexLists.Add(arc, new List<IVertex> { vertex });
             }
         }
 
-        public Dictionary<IArc, List<Vector3>> CurrentEdgeDict()
+        public Dictionary<IArc, List<IVertex>> CurrentEdgeDict()
         {
-            return _edges;
+            return _vertexLists;
         }
     }
 }
