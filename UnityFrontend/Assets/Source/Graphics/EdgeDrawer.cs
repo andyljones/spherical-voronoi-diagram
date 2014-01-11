@@ -9,7 +9,7 @@ namespace Graphics
 {
     public class EdgeDrawer
     {
-        public const int NumberOfVerticesPerEdge = 100;
+        public const int NumberOfVerticesPerEdge = 25;
 
         private GameObject _parentObject;
 

@@ -13,6 +13,7 @@ namespace Generator
     {
         public readonly Sweepline Sweepline;        
         public List<CircleEvent> PotentialCircleEvents { get; private set; }
+        public List<IArc> EdgeUpdates { get; private set; } 
 
         private readonly FakeSkiplist<IArc> _arcs;
         private int _count;
@@ -26,6 +27,7 @@ namespace Generator
             _count = 0;
 
             PotentialCircleEvents = new List<CircleEvent>();
+            EdgeUpdates = new List<IArc>();
         }
 
         #region Insert methods
@@ -59,6 +61,8 @@ namespace Generator
             oldArc.LeftNeighbour = site;
 
             InsertIntoSkiplist(newArc);
+            EdgeUpdates.Add(oldArc);
+            EdgeUpdates.Add(newArc);
         }
 
         private void InsertSite(SiteEvent site)
@@ -78,13 +82,14 @@ namespace Generator
             neighbourhood[4].LeftNeighbour = neighbourhood[3].Site;
 
             PotentialCircleEvents.Add(new CircleEvent(neighbourhood[0], neighbourhood[1], neighbourhood[2]));
-            PotentialCircleEvents.Add(new CircleEvent(neighbourhood[1], neighbourhood[2], neighbourhood[3]));
             PotentialCircleEvents.Add(new CircleEvent(neighbourhood[2], neighbourhood[3], neighbourhood[4]));
+
+            EdgeUpdates.Add(neighbourhood[2]);
+            EdgeUpdates.Add(neighbourhood[3]);
         }
 
         private List<IArc> FindNeighbourhoodOf(INode<IArc> node)
         {
-
             if (node.Right.Key.Site == node.Key.Site)
             {
                 return new List<IArc> {node.Left.Left.Key, node.Left.Key, node.Key, node.Right.Key, node.Right.Right.Key};
@@ -126,12 +131,20 @@ namespace Generator
 
             PotentialCircleEvents.Add(new CircleEvent(node.Left.Left.Key, node.Left.Key, node.Right.Key));
             PotentialCircleEvents.Add(new CircleEvent(node.Left.Key, node.Right.Key, node.Right.Right.Key));
+            
+            EdgeUpdates.Add(arc);
+            EdgeUpdates.Add(node.Right.Key);
         }
         #endregion
 
         public void ClearPotentialCircleEventList()
         {
             PotentialCircleEvents = new List<CircleEvent>();
+        }
+
+        public void ClearEdgeUpdates()
+        {
+            EdgeUpdates = new List<IArc>();
         }
 
         #region IEnumerator<IArc> methods

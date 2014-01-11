@@ -34,17 +34,21 @@ namespace Generator
             {
                 Beachline.Insert(SiteEventQueue.DeleteMax());
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
-                Edges.CheckForNewEdges(Beachline.PotentialCircleEvents);
+                Edges.UpdateArcs(Beachline.EdgeUpdates);
+                //Edges.CheckForNewEdges(Beachline.PotentialCircleEvents);
                 Beachline.ClearPotentialCircleEventList();
+                Beachline.ClearEdgeUpdates();
             }
             else if (ACircleEventIsNext())
             {
                 var circleEvent = CircleEventQueue.PopHighestPriorityEvent();
                 Beachline.Remove(circleEvent);
                 CircleEventQueue.TryInsertAll(Beachline.PotentialCircleEvents);
-                Edges.CheckForNewEdges(Beachline.PotentialCircleEvents);
-                Edges.TerminateArc(circleEvent.MiddleArc);
+                Edges.UpdateArcs(Beachline.EdgeUpdates);
+                //Edges.CheckForNewEdges(Beachline.PotentialCircleEvents);
+                //Edges.TerminateArc(circleEvent.MiddleArc);
                 Beachline.ClearPotentialCircleEventList();
+                Beachline.ClearEdgeUpdates();
             }
         }
 

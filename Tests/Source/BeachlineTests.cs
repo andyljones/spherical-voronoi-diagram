@@ -110,7 +110,7 @@ namespace SphericalVoronoiTests
 
         [Theory]
         [ZOrderedVectorData]
-        public void Insert_ingThreeSitesIntoTheBeachline_ShouldInsertThreeItemsIntoThePotentialCircleEventsList
+        public void Insert_ingThreeSitesIntoTheBeachline_ShouldInsertTwoItemsIntoThePotentialCircleEventsList
             (Beachline beachline, SiteEvent site1, SiteEvent site2, SiteEvent site3)
         {
             // Fixture setup
@@ -128,7 +128,7 @@ namespace SphericalVoronoiTests
                               "Modified arcs list was {1}", 
                               beachline, 
                               Utilities.ToString(beachline.PotentialCircleEvents));
-            Assert.True(result == 3, failureString);
+            Assert.True(result == 2, failureString);
 
             // Teardown
         }
