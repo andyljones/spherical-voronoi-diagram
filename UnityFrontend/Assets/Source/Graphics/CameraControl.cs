@@ -26,7 +26,7 @@ public class CameraControl : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButton("Fire2"))
         {
             azi = azi + Input.GetAxis("Mouse X") * xSpeed;
             pol = pol + Input.GetAxis("Mouse Y") * ySpeed;
