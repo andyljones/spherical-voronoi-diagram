@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Generator;
+using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 using IridiumVector3 = Generator.Vector3;
@@ -64,10 +65,26 @@ namespace Graphics
             var vertices = new List<Vector3>();
             for (int i = 1; i < edgeList.Count; i++)
             {
-                var verticesOfArc = DrawingUtilities.VerticesOnGreatArc(edgeList[i-1].Position.ToUnityVector3(), edgeList[i].Position.ToUnityVector3(), NumberOfVerticesPerEdge);
-                vertices.AddRange(verticesOfArc); 
+                var verticesOfEdge = VerticesInEdge(edgeList[i-1], edgeList[i]);
+                vertices.AddRange(verticesOfEdge); 
             }
             return vertices.ToArray();
+        }
+
+        private static IEnumerable<Vector3> VerticesInEdge(Vertex origin, Vertex destination)
+        {
+            var originVector = origin.Position.ToUnityVector3();
+            var destinationVector = destination.Position.ToUnityVector3();
+            if (originVector == destinationVector || Vector3.Cross(originVector, destinationVector) != new Vector3(0, 0, 0))
+            {
+                return DrawingUtilities.VerticesOnGeodesic(originVector, destinationVector, NumberOfVerticesPerEdge);
+            }
+            else
+            {
+                var commonSites = origin.Sites.Intersect(destination.Sites).ToList();
+                var normal = -(commonSites.First().Position.ToUnityVector3() - commonSites.Last().Position.ToUnityVector3()).normalized;
+                return DrawingUtilities.VerticesOnHalfOfGreatCircle(originVector, normal, NumberOfVerticesPerEdge);
+            }
         }
     }
 }

@@ -1,9 +1,13 @@
-﻿namespace Generator
+﻿using System.Collections.Generic;
+
+namespace Generator
 {
     public class Vertex
     {
         private readonly IArc _arc;
         private readonly Sweepline _sweepline;
+
+        public List<SiteEvent> Sites = new List<SiteEvent>();
 
         public Vector3 Position
         {

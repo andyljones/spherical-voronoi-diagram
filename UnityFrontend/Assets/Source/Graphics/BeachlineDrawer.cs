@@ -67,8 +67,8 @@ namespace Graphics
             {
                 var intersection = arc.PointOfIntersection(sweepline).ToUnityVector3();
                 var site = arc.Site.Position.ToUnityVector3();
-                var downArc = DrawingUtilities.VerticesOnGreatArc(intersection, site, NumberOfVerticesPerArc);
-                var upArc = DrawingUtilities.VerticesOnGreatArc(site, intersection, NumberOfVerticesPerArc);
+                var downArc = DrawingUtilities.VerticesOnGeodesic(intersection, site, NumberOfVerticesPerArc);
+                var upArc = DrawingUtilities.VerticesOnGeodesic(site, intersection, NumberOfVerticesPerArc);
                 var vertices = downArc.Concat(upArc);
                 return vertices;
             }

@@ -74,7 +74,8 @@ namespace Graphics
             return new Vector3(x, y, z);
         }
 
-        public static IEnumerable<Vector3> VerticesOnGreatArc(Vector3 a, Vector3 b, int numberOfVertices)
+        //TODO: There is a bug with edges between antipodal points.
+        public static IEnumerable<Vector3> VerticesOnGeodesic(Vector3 a, Vector3 b, int numberOfVertices)
         {
             if (a == b)
             {
@@ -85,6 +86,24 @@ namespace Graphics
             var perpendicularToA = Vector3.Cross(normal, a).normalized;
 
             var maxAngle = Mathf.Acos(Vector3.Dot(a, b));
+            var angles = AnglesInRange(0, maxAngle, numberOfVertices);
+
+            var vertices = angles.Select(angle => Mathf.Cos(angle) * a + Mathf.Sin(angle) * perpendicularToA);
+
+            return vertices;
+        }
+
+        public static IEnumerable<Vector3> VerticesOnHalfOfGreatCircle(Vector3 a, Vector3 b, int numberOfVertices)
+        {
+            if (a == b)
+            {
+                return new List<Vector3>();
+            }
+
+            var normal = Vector3.Cross(a, b);
+            var perpendicularToA = Vector3.Cross(normal, a).normalized;
+
+            var maxAngle = Mathf.PI;
             var angles = AnglesInRange(0, maxAngle, numberOfVertices);
 
             var vertices = angles.Select(angle => Mathf.Cos(angle) * a + Mathf.Sin(angle) * perpendicularToA);
